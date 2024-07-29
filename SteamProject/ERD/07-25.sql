@@ -21,7 +21,7 @@ CREATE TABLE Comment
 
 CREATE TABLE Game
 (
-  appId             INT           NOT NULL AUTO_INCREMENT,
+  appId             INT           NOT NULL,
   gameName          VARCHAR(100)  NOT NULL,
   developers        VARCHAR(500)  NOT NULL,
   is_free           BOOLEAN       NOT NULL,
