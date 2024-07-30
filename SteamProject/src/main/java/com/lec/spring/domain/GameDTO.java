@@ -1,6 +1,7 @@
 package com.lec.spring.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,9 +9,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "S_Game")
-public class Game {
+@Entity(name = "S_GameDTO")
+public class GameDTO {
+
     @Id
-    @Column(unique = true)
     private Long id;
+    private String name;
 }
