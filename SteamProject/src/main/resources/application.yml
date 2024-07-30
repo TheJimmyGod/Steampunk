@@ -17,3 +17,8 @@ spring:
         format_sql: true
 server:
   port: 8080
+#cors 관련 설정값들
+jwt:
+  secret: b91255b9c1f0579c57dd21e5d71947b002374b58900a7d0e118bab42fdf09daa
+cors:
+  allowed-origins: http://localhost:3000,http://localhost:3001
