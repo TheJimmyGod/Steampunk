@@ -1,38 +1,49 @@
 import axios from 'axios';
-import React, { useEffect } from 'react';
-
+import React, { useEffect, useRef, useState } from 'react';
+import { Button,Form } from 'react-bootstrap';
 
 const COUNT_PER_PAGE = 1000;
 const new_regex = /^[가-힣0-9\s]*$/;
-
 const RegisterForm = ({register}) => {
-   let keyword = "안산천동로";
-    useEffect(()=>{findPath(keyword)},[keyword]);
+  let [keyword, setKeyword] = useState("");
+    useEffect(()=>{
+      findPath(keyword)}, [keyword]);
+    let addrData = useRef([]);
 
     const findPath = (keyword) => {
-
       if(new_regex.test(keyword))
       {
+        addrData.current = [];
     // 	devU01TX0FVVEgyMDI0MDczMDE1NTM1MDExNDk3NTU=
         let encodedKeyword = encodeURIComponent(keyword);
         let apiKey = "devU01TX0FVVEgyMDI0MDczMDE1NTM1MDExNDk3NTU=";
         axios({
-        method: "post",
-        url: `https://business.juso.go.kr/addrlink/addrLinkApiJsonp.do?resultType=json&confmKey=${apiKey}&currentPage=1&countPerPage=${COUNT_PER_PAGE}&keyword=${encodedKeyword}`,
+        method: "get",
+        url: `https://business.juso.go.kr/addrlink/addrLinkApi.do?resultType=json&confmKey=${apiKey}&currentPage=1&countPerPage=${COUNT_PER_PAGE}&keyword=${encodedKeyword}`,
+        headers:{
+          "Content-Type" : "application/json"
+        }
         }).then(response=>{
           const {data, status, statusText} = response;
           if(status === 200)
           {
+            for(let item of data.results.juso){
+              let road = item.rn + " " + item.buldMnnm;
+              if(!addrData.current.some(entry=>entry === road))
+                  addrData.current.push({key: road, value: item.jibunAddr});
+            }
+            console.log(addrData.current.length);
           }
         }).catch(()=>{
-          console.log("Error!");
+          return;
         });
       }
-      
     }
+    const [selected, setSelected] = useState('');
 
-
-
+    const handleChangeSelect = (e) => {
+      setSelected(e.target.value);
+    };
     const onRegister = (e) => {
         e.preventDefault();
         const username = e.target.username.value;
@@ -45,10 +56,10 @@ const RegisterForm = ({register}) => {
     return (
 <div className="form">
       <h2 className="login-title">회원가입</h2>
-      <form className="login-form" onSubmit={(e) => onRegister(e)}>
+      <Form className="login-form" onSubmit={(e) => onRegister(e)}>
         <div>
-          <label htmlFor="username">유저 ID</label>
-          <input
+          <Form.Label htmlFor="username">유저 ID</Form.Label>
+          <Form.Control
             id="username"
             type="text"
             placeholder="유저 ID를 입력해주세요"
@@ -58,8 +69,8 @@ const RegisterForm = ({register}) => {
           />
         </div>
         <div>
-          <label htmlFor="password">패스워드</label>
-          <input
+          <Form.Label htmlFor="password">패스워드</Form.Label>
+          <Form.Control
             id="password"
             type="password"
             placeholder="패스워드를 입력해주세요"
@@ -69,8 +80,8 @@ const RegisterForm = ({register}) => {
           />
         </div>     
         <div>
-          <label htmlFor="re_password">패스워드 재입력</label>
-          <input
+          <Form.Label htmlFor="re_password">패스워드 재입력</Form.Label>
+          <Form.Control
             id="re_password"
             type="re_password"
             placeholder="패스워드를 다시 입력해주세요"
@@ -80,18 +91,27 @@ const RegisterForm = ({register}) => {
           />
         </div>
         <div>
-          <label htmlFor="path_address">도로명주소</label>
-          <input
+          <Form.Label htmlFor="path_address">도로명주소</Form.Label>
+          <Form.Control
             id="path"
             type="text"
             placeholder="도로명주소를 입력해주세요"
             name="path"
             autoComplete="path"
             required
+            onChange={(e)=>{setKeyword(e.target.value);
+            }}
           />
         </div>
         <div>
-          <input
+          <Form.Select onChange={handleChangeSelect}>
+              <option>
+                {/* TODO */}
+              </option>
+          </Form.Select>
+        </div>
+        <div>
+          <Form.Control
             id="address_main"
             type="text"
             name="address_main"
@@ -100,8 +120,8 @@ const RegisterForm = ({register}) => {
           />
         </div>
         <div>
-          <label htmlFor="address_sub">상세주소</label>
-          <input
+          <Form.Label htmlFor="address_sub">상세주소</Form.Label>
+          <Form.Control
             id="address_sub"
             type="text"
             placeholder="상세주소를 입력해주세요"
@@ -110,12 +130,12 @@ const RegisterForm = ({register}) => {
             required
           />
         </div>
-        <button className="btn btn--form btn-login" type="submit">
+        <Button className="btn btn--form btn-login" type="submit">
           Register
-        </button>
+        </Button>
 
 
-      </form>
+      </Form>
     </div>
     );
 };
