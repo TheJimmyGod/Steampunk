@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -16,23 +17,23 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column
     private Long appId;
 
-    @Column(length = 100)
+    @Column
     private String gameName;
 
-    @Column(length = 100)
+    @Column
     private String developers;
     // unknown
 
     @Column(name = "is_free")
     private Boolean isFree;
 
-    @Column(name = "header_image", length = 2000)
+    @Column(name = "header_image")
     private String headerImage;
 
-    @Column(name = "capsule_image", length = 2000)
+    @Column(name = "capsule_image")
     private String capsuleImage;
 
     @Column(name = "short_description", length = 2000)
@@ -45,17 +46,17 @@ public class Game {
     private String recommended;
 
     @Column(name = "price")
-    private String price;
+    private String price = "0";
 
     @Column(name = "discount")
-    private Integer discount = 0;
+    private Long discount;
 
-    @Column(name = "genres", length = 1000)
+    @Column(name = "genres")
     private String genres;
 
-    @Column(name = "website", length = 1000)
+    @Column(name = "website", length = 2000)
     private String website;
 
     @Column(name = "release_date")
-    private LocalDateTime releaseDate;
+    private String releaseDate;
 }
