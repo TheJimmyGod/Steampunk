@@ -5,53 +5,95 @@ import { Button,Form } from 'react-bootstrap';
 const COUNT_PER_PAGE = 1000;
 const new_regex = /^[가-힣0-9\s]*$/;
 const RegisterForm = ({register}) => {
-  let [keyword, setKeyword] = useState("");
-    useEffect(()=>{
-      findPath(keyword)}, [keyword]);
-    let addrData = useRef([]);
 
-    const findPath = (keyword) => {
+  const [addrData, setAddrData] = useState([]);
+  const [keyword, setKeyword] = useState("");
+  const prev = useRef("");
+  
+  useEffect(()=>{
+    document.getElementById('birth').value = new Date().toISOString().substring(0, 10);;
+  },[]);
+
+  useEffect(()=>{
+    if(keyword.trim() === "")
+    {
+      setAddrData([]);
+      console.log(document.getElementById("address_main").value);
+      document.getElementById("address_main").value = "";
+      return;
+    }
+      
+    if(prev.current !== keyword)
+      findPath();
+  },[keyword]);
+
+    const findPath = () => {      
       if(new_regex.test(keyword))
       {
-        addrData.current = [];
-    // 	devU01TX0FVVEgyMDI0MDczMDE1NTM1MDExNDk3NTU=
-        let encodedKeyword = encodeURIComponent(keyword);
-        let apiKey = "devU01TX0FVVEgyMDI0MDczMDE1NTM1MDExNDk3NTU=";
-        axios({
-        method: "get",
-        url: `https://business.juso.go.kr/addrlink/addrLinkApi.do?resultType=json&confmKey=${apiKey}&currentPage=1&countPerPage=${COUNT_PER_PAGE}&keyword=${encodedKeyword}`,
-        headers:{
-          "Content-Type" : "application/json"
-        }
-        }).then(response=>{
-          const {data, status, statusText} = response;
-          if(status === 200)
-          {
-            for(let item of data.results.juso){
-              let road = item.rn + " " + item.buldMnnm;
-              if(!addrData.current.some(entry=>entry === road))
-                  addrData.current.push({key: road, value: item.jibunAddr});
-            }
-            console.log(addrData.current.length);
-          }
-        }).catch(()=>{
-          return;
-        });
+// 	devU01TX0FVVEgyMDI0MDczMDE1NTM1MDExNDk3NTU=
+let encodedKeyword = encodeURIComponent(keyword);
+let apiKey = "devU01TX0FVVEgyMDI0MDczMDE1NTM1MDExNDk3NTU=";
+axios({
+method: "get",
+url: `https://business.juso.go.kr/addrlink/addrLinkApi.do?resultType=json&confmKey=${apiKey}&currentPage=1&countPerPage=${COUNT_PER_PAGE}&keyword=${encodedKeyword}`,
+headers:{
+  "Content-Type" : "application/json"
+}
+}).then(response=>{
+  const {data, status, statusText} = response;
+  if(status === 200)
+  {
+    setAddrData([]);
+    if(!Array.isArray(data.results.juso))
+      return;
+    for(let item of data.results.juso){
+      let road = item.rn + " " + item.buldMnnm;
+      
+      if(item.rn.includes(keyword) === false)
+      {
+         continue;
+      }
+      if(!addrData.some(entry=>entry.key.includes(road)))
+      {
+          addrData.push({key: road, value: item.jibunAddr});
       }
     }
+    setAddrData(sortArr(addrData).filter(x=>x.key.includes(keyword)));
+    prev.current = keyword;
+  }
+}).catch(err=>{
+  console.log(err);
+  return;
+});
+      }
+
+    }
+
+    function sortArr() {
+      const entries = [];
+      for (const item of addrData) {
+        entries.push(item);
+      }
+      setAddrData(entries.sort());
+      return addrData;
+    }
+
     const [selected, setSelected] = useState('');
 
     const handleChangeSelect = (e) => {
       setSelected(e.target.value);
+      document.getElementById("address_main").value = selected;
     };
     const onRegister = (e) => {
         e.preventDefault();
         const username = e.target.username.value;
         const password = e.target.password.value;
-
-        console.log(username, password);
-
-        register({username, password});
+        const re_password = e.target.re_password.value;
+        const address_main = e.target.address_main.value;
+        const address_sub = e.target.address_sub.value;
+        const birth = e.target.birth.value;
+        
+        register({username, password, re_password, address_main, address_sub, birth});
     };
     return (
 <div className="form">
@@ -83,7 +125,7 @@ const RegisterForm = ({register}) => {
           <Form.Label htmlFor="re_password">패스워드 재입력</Form.Label>
           <Form.Control
             id="re_password"
-            type="re_password"
+            type="password"
             placeholder="패스워드를 다시 입력해주세요"
             name="re_password"
             autoComplete="current-password"
@@ -99,15 +141,31 @@ const RegisterForm = ({register}) => {
             name="path"
             autoComplete="path"
             required
-            onChange={(e)=>{setKeyword(e.target.value);
+            onChange={(e)=>{
+              let str = e.target.value.trim();
+              setKeyword(str);
             }}
           />
         </div>
         <div>
           <Form.Select onChange={handleChangeSelect}>
-              <option>
-                {/* TODO */}
-              </option>
+            <option value={""} key={""} readOnly>&lt;도로명주소를 검색해주십시오&gt;</option>
+          {
+            addrData.length > 0 ?
+           addrData.map((option, index) => (
+          <option
+            value={option.value}
+            key={`${option.value}-${index}`}
+            defaultValue={"" === option.value}
+          >
+            {option.key}
+          </option>
+        )) :
+        
+        <option value={""} defaultValue={""} disabled>
+       &lt;조회 결과 없습니다&gt;
+        </option>
+        }
           </Form.Select>
         </div>
         <div>
@@ -116,7 +174,9 @@ const RegisterForm = ({register}) => {
             type="text"
             name="address_main"
             autoComplete="address_main"
+            value={selected ? selected : ""}
             readOnly
+            disabled
           />
         </div>
         <div>
@@ -127,6 +187,17 @@ const RegisterForm = ({register}) => {
             placeholder="상세주소를 입력해주세요"
             name="address_sub"
             autoComplete="address_sub"
+            required
+          />
+        </div>
+        <div>
+          <Form.Label htmlFor="birth">유저 생년월일</Form.Label>
+          <Form.Control
+           type="date"
+            id="birth"
+            name="birth"
+            max="2024-08-29"
+            min="1990-08-29"
             required
           />
         </div>

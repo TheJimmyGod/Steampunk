@@ -20,28 +20,26 @@ public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(length = 50,nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String username;
 
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\\d~!@#$%^&*()+|=]{4,8}$", message = "비밀번호는 4~8자 영문 대 소문자, 숫자, 특수문자를 사용하세요.")
-    @Column(length = 20,nullable = false)
+    @Column(nullable = false)
     @JsonIgnore
     private String password;
 
     @Transient
     @JsonIgnore
     @ToString.Exclude
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\\d~!@#$%^&*()+|=]{4,8}$", message = "비밀번호는 4~8자 영문 대 소문자, 숫자, 특수문자를 사용하세요.")
-    @Column(length = 20, nullable = false)
+    @Column(nullable = false)
     private String re_password;
 
-    @Column(length = 200, nullable = false)
+    @Column(nullable = false)
     private String address_main;
 
-    @Column(length = 100, nullable = false)
+    @Column(nullable = false)
     private String address_sub;
 
-    @Column(length = 20, nullable = false)
+    @Column(nullable = false)
     private String birth;
 
 
