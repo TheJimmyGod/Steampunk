@@ -15,4 +15,4 @@ export const userInfo = () => api.get(`${SERVER_HOST}/user`);
 export const authInfo = () => api.get(`${SERVER_HOST}/auth`);
 
 // 회원가입 요청
-export const register = (data) => api.post(`${SERVER_HOST}/steam/register`, data); // json으로 전달
+export const register = (data) => api.post(`${SERVER_HOST}/register`, data); // json으로 전달

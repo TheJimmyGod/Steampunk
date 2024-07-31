@@ -23,7 +23,7 @@ const Header = () => {
             </>:
             <>
             {
-                userInfo.role.includes("ROLE_MEMBER") ?
+                userInfo.role === "ROLE_MEMBER" ?
                 <>
                         <Link className="nav-link" to="/">정회원</Link>
                 </>
@@ -32,7 +32,7 @@ const Header = () => {
                 </>
             }
             {
-                userInfo.role.includes("ROLE_ADMIN") ?
+                userInfo.role === "ROLE_ADMIN" ?
                 <>
                     <Link className="nav-link" to="/">관리자</Link>
                 </>

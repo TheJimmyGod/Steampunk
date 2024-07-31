@@ -15,43 +15,53 @@ const LoginContextProvider = ({children}) => {
     const [roles, setRoles] = useState({isMember: false, isAdmin:false});
 
     const loginCheck = async (isAuthPage = false) =>{
-        const accessToken = Cookies.get('accessToken');
-        console.log(`accessToken: ${accessToken}`);
-        let response;
-        let data;
-        if(!accessToken){
-            console.log('쿠키에 JWT이 없음');
-            logoutSetting();
-            return;
-        }
-        else if(!accessToken && isAuthPage){
-            navigate("/login");
-            return;
-        }
-        else
-        {
-            console.log('쿠키에 JWT가 저장되어 있음');
-            api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-        }
-        try{
-            response = await auth.userInfo();
-        }catch(error){
-            console.error(`error: ${error}`);
-            console.log(`status: ${response.status}`);
-            return;
-        }
-
-        if(!response) return;
-        console.log(`JWT (accessToken) 토큰으로 사용자 인증 정보 요청 성공`);
-
-        data = response.data;
-        console.log(`data: ${data}`);
-        if(data === 'UNAUTHORIZED' || response.status === 401){
-            console.log('JWT(accessToken)이 만료되었거나 인증에 실패했습니다.');
-            return;
-        }
-
-        loginSetting(data, accessToken);
+                // 쿠키에 access token (JWT)가 있는지 꺼내본다.
+                const accessToken = Cookies.get('accessToken');
+                console.log(`accessToken: ${accessToken}`);
+        
+                let response;
+                let data;
+        
+                // 만일 JWT이 없다면
+                if(!accessToken){
+                    console.log('쿠키에 JWT(accesssToken)이 없음');
+                    logoutSetting();
+                    return;
+                }
+        
+                // JWT가 없는데, 인증이 필요한 페이지라면? -> 로그인 페이지로 리다이렉트
+                if(!accessToken && isAuthPage){
+                    navigate("/login");
+                }
+        
+                // JWT 토큰이 있다면
+                console.log('쿠키에 JWT(accessToken)이 저장되어 있음');
+                api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+        
+                try{
+                    response = await auth.userInfo();
+                }catch(error){
+                    console.error(`error: ${error}`);
+                    return;
+                }
+        
+                // 응답 실패시
+                if(!response) return;
+        
+                // user 정보 획득 성공
+                console.log(`JWT (accessToken) 토큰으로 사용자 인증 정보 요청 성공`);
+        
+                data = response.data;
+                console.log(`data: ${data}`);
+        
+                // 인증 실패시
+                if(data === 'UNAUTHORIZED' || response.status === 401){
+                    console.log('JWT(accessToken)이 만료되었거나 인증에 실패했습니다.');
+                    return;
+                }
+        
+                // 인증 성공!
+                loginSetting(data, accessToken);
     }
 
     useEffect(()=>{loginCheck()},[]);
@@ -111,10 +121,14 @@ const LoginContextProvider = ({children}) => {
         setIsLogin(true);
         setUserInfo({id, username, role});
         const updatedRoles = {isMember: false, isAdmin: false};
-        role.split(',').forEach((role) => {
-            role === 'ROLE_MEMBER' && (updatedRoles.isMember = true);
-            role === 'ROLE_ADMIN' && (updatedRoles.isAdmin = true);
-        });
+        if(role !== undefined)
+        {
+            role.split(',').forEach((role) => {
+                role === 'ROLE_MEMBER' && (updatedRoles.isMember = true);
+                role === 'ROLE_ADMIN' && (updatedRoles.isAdmin = true);
+            });
+        }
+
         setRoles(updatedRoles);
     };
 

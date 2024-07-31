@@ -86,7 +86,7 @@ public class SecurityConfig {
         // .addFilterAt(필터, 삽일할 위치)
         //   LoginFilter 를 SecurityFilter Chain 의 UsernamePasswordAuthenticationFilter 위치에 삽입 (그 위치를 replace 하게된다!)
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil),
+                .addFilterAt(jwtAuthorizationFilter(),
                         UsernamePasswordAuthenticationFilter.class);
         // ----------------------------------------------------------------
         // CORS 설정
@@ -115,4 +115,9 @@ public class SecurityConfig {
         return http.build();
     }
 
+    public LoginFilter jwtAuthorizationFilter() throws Exception {
+        LoginFilter jwtAuthenticationFilter = new LoginFilter(authenticationManager(authenticationConfiguration),jwtUtil);
+        jwtAuthenticationFilter.setFilterProcessesUrl("/steam/login");
+        return jwtAuthenticationFilter;
+    }
 }
