@@ -1,6 +1,8 @@
 package com.lec.spring.service;
 
+import com.lec.spring.domain.Game;
 import com.lec.spring.domain.GameDTO;
+import com.lec.spring.repository.GameDTORepository;
 import com.lec.spring.repository.GameRepository;
 import com.lec.spring.repository.NewsRepository;
 import org.springframework.stereotype.Service;
@@ -8,13 +10,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class GameService {
     private final GameRepository gameRepository;
+    private final GameDTORepository gameDTORepository;
 
-    public GameService(GameRepository gameRepository) {
+    public GameService(GameRepository gameRepository, GameDTORepository gameDTORepository) {
         this.gameRepository = gameRepository;
+        this.gameDTORepository = gameDTORepository;
     }
 
-    public GameDTO save(GameDTO gameDTO) {
-        return gameRepository.save(gameDTO);
+    public Game saveGame(Game game) {
+        return gameRepository.save(game);
+    }
+
+    public GameDTO saveGameDTO(GameDTO gameDTO) {
+        return gameDTORepository.save(gameDTO);
     }
 
 }
