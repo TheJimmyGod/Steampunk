@@ -2,6 +2,8 @@ package com.lec.spring.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lec.spring.domain.GameDTO;
+import com.lec.spring.service.GameService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,9 +18,11 @@ import java.net.URL;
 public class GameController {
 
     private final ObjectMapper jacksonObjectMapper;
+    private final GameService gameService;
 
-    public GameController(ObjectMapper jacksonObjectMapper) {
+    public GameController(ObjectMapper jacksonObjectMapper, GameService gameService) {
         this.jacksonObjectMapper = jacksonObjectMapper;
+        this.gameService = gameService;
     }
 
     @GetMapping("/save")
@@ -51,6 +55,12 @@ public class GameController {
                     long appid = appNode.path("appid").asLong();
                     String name = appNode.path("name").asText();
                     System.out.println("App ID: " + appid + ", Name: " + name);
+
+                    GameDTO game = new GameDTO();
+                    game.setId(appid);
+                    game.setName(name);
+                    gameService.save(game);
+
                 }
             }
 
