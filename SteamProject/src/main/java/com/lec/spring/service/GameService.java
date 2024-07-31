@@ -24,4 +24,5 @@ public class GameService {
     public GameDTO saveGameDTO(GameDTO gameDTO) {
         return gameDTORepository.save(gameDTO);
     }
+
 }
