@@ -2,6 +2,7 @@ package com.lec.spring.service;
 
 import com.lec.spring.domain.Game;
 import com.lec.spring.domain.GameDTO;
+import com.lec.spring.domain.Rank;
 import com.lec.spring.repository.GameDTORepository;
 import com.lec.spring.repository.GameRepository;
 import com.lec.spring.repository.NewsRepository;
@@ -24,5 +25,8 @@ public class GameService {
     public GameDTO saveGameDTO(GameDTO gameDTO) {
         return gameDTORepository.save(gameDTO);
     }
+
+    public Game findByAppId(Long appId) {return gameRepository.findByAppId(appId);}
+
 
 }

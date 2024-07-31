@@ -22,7 +22,7 @@ CREATE TABLE Comment
 CREATE TABLE Game
 (
   appId             INT           NOT NULL,
-  gameName          VARCHAR(100)  NOT NULL,
+  gameName          VARCHAR(1000)  NOT NULL,
   developers        VARCHAR(500)  NOT NULL,
   is_free           BOOLEAN       NOT NULL,
   header_Image      VARCHAR(2000) NULL    ,
