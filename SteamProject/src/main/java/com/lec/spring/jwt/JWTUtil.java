@@ -23,6 +23,7 @@ public class JWTUtil {
                 secret.getBytes(StandardCharsets.UTF_8),
                 Jwts.SIG.HS256.key().build().getAlgorithm()
                 );
+        System.out.println("Key: " +  secretKey);
     }
     //------------------------------------------------------------------
     // JWT 생성

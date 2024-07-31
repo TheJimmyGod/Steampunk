@@ -1,6 +1,9 @@
 package com.lec.spring.controller;
 
+import com.lec.spring.config.PrincipalDetails;
+import com.lec.spring.domain.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +17,6 @@ public class HomeController {
 
     @GetMapping("/")
     public String home() { return "Home";}
-
     // 추천게임 : http://store.steampowered.com/api/featured/
 
     // 금주의 차트 :

@@ -2,6 +2,6 @@
 select * from s_game;
 
 select *
-from rank;
+from s_rank;
 
 
