@@ -1,3 +1,3 @@
 
-select * from game;
+select * from s_gamedto;
 
