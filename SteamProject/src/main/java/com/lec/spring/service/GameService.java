@@ -8,6 +8,8 @@ import com.lec.spring.repository.GameRepository;
 import com.lec.spring.repository.NewsRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class GameService {
     private final GameRepository gameRepository;
@@ -26,7 +28,10 @@ public class GameService {
         return gameDTORepository.save(gameDTO);
     }
 
-    public Game findByAppId(Long appId) {return gameRepository.findByAppId(appId);}
-
-
+    public List<Game> findAll(){
+        return gameRepository.findAll();
+    }
+    public Game findByAppId(Long appId) {
+        return gameRepository.findByAppId(appId);
+    }
 }

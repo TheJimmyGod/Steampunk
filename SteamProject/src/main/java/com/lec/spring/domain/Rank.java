@@ -1,5 +1,6 @@
 package com.lec.spring.domain;
 
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

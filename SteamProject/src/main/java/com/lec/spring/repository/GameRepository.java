@@ -5,5 +5,6 @@ import com.lec.spring.domain.GameDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface GameRepository extends JpaRepository<Game, Long> {
-    Game findByAppId (Long AppId);
+    Game findByAppId(Long appId);
+
 }
