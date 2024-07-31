@@ -1,3 +1,7 @@
 
-select * from s_gamedto;
+select * from s_game;
+
+select *
+from rank;
+
 

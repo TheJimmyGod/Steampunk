@@ -4,8 +4,8 @@
   "settings": {
     "width": 2000,
     "height": 2000,
-    "scrollTop": -1059,
-    "scrollLeft": -367.9255,
+    "scrollTop": -1201,
+    "scrollLeft": -324.9255,
     "zoomLevel": 0.8,
     "show": 511,
     "database": 4,
@@ -345,12 +345,15 @@
         "comment": "게임순위",
         "columnIds": [
           "lTfjmSWk9m1M-QlxJTEtE",
+          "GZltzV7sz3RnfHcMwYlGZ",
           "wOHu9KmEJ8_OgW-L-VX51",
           "1HD4_pjzGY9wmf0DKK_d3",
           "2qREhdMyEdNMgUIa-_pCx"
         ],
         "seqColumnIds": [
           "lTfjmSWk9m1M-QlxJTEtE",
+          "GZltzV7sz3RnfHcMwYlGZ",
+          "jtpkultA9L0OOQkACgCg_",
           "wOHu9KmEJ8_OgW-L-VX51",
           "1HD4_pjzGY9wmf0DKK_d3",
           "2qREhdMyEdNMgUIa-_pCx",
@@ -365,7 +368,7 @@
           "color": ""
         },
         "meta": {
-          "updateAt": 1722390901131,
+          "updateAt": 1722392394471,
           "createAt": 1722390609548
         }
       }
@@ -1610,6 +1613,46 @@
           "updateAt": 1722390895303,
           "createAt": 1722390875372
         }
+      },
+      "jtpkultA9L0OOQkACgCg_": {
+        "id": "jtpkultA9L0OOQkACgCg_",
+        "tableId": "PJxeObbenN74P9HAIhsf3",
+        "name": "",
+        "comment": "",
+        "dataType": "",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1722392371838,
+          "createAt": 1722392371838
+        }
+      },
+      "GZltzV7sz3RnfHcMwYlGZ": {
+        "id": "GZltzV7sz3RnfHcMwYlGZ",
+        "tableId": "PJxeObbenN74P9HAIhsf3",
+        "name": "gameName",
+        "comment": "",
+        "dataType": "VARCHAR(100)",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 63,
+          "widthComment": 60,
+          "widthDataType": 81,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1722392410652,
+          "createAt": 1722392389509
+        }
       }
     },
     "relationshipEntities": {
@@ -1884,7 +1927,7 @@
           "columnIds": [
             "lTfjmSWk9m1M-QlxJTEtE"
           ],
-          "x": 558.4947,
+          "x": 568.9947,
           "y": 1558.75,
           "direction": 4
         },
@@ -2666,6 +2709,21 @@
         "name": 1722390884645,
         "dataType": 1722390886024,
         "comment": 1722390895302
+      }
+    ],
+    "jtpkultA9L0OOQkACgCg_": [
+      "tableColumnEntities",
+      1722392371838,
+      1722392376890,
+      {}
+    ],
+    "GZltzV7sz3RnfHcMwYlGZ": [
+      "tableColumnEntities",
+      1722392389508,
+      -1,
+      {
+        "name": 1722392399171,
+        "dataType": 1722392410652
       }
     ]
   }
