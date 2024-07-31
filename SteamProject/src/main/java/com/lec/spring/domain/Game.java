@@ -13,4 +13,5 @@ public class Game {
     @Id
     @Column(unique = true)
     private Long id;
+
 }
