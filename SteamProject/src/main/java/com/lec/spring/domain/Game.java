@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -16,10 +17,13 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+//    @OneToMany(mappedBy = "game")
+//    private List<Rank> ranks;
+
     @Column(unique = true)
     private Long appId;
 
-    @Column(length = 100)
+    @Column(length = 500)
     private String gameName;
 
     @Column(length = 100)
