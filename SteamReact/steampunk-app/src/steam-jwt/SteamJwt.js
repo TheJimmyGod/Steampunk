@@ -4,9 +4,11 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import LoginContextProvider from './contexts/LoginContextProvider';
+
 import FindPW from './pages/FindPW';
 import FindID from './pages/FindID';
 import ResetPW from './pages/ResetPW';
+import TestMoon from './pages/TestMoon';
 
 const SteamJwt = () => {
     return (
@@ -19,6 +21,7 @@ const SteamJwt = () => {
                     <Route path='/steam/findId' element={<FindID/>}/>
                     <Route path='/steam/findPw' element={<FindPW/>}/>
                     <Route path='/steam/resetPw' element={<ResetPW/>}/>
+                    <Route path="/TestMoon" element={<TestMoon/>}/>
                 </Routes>
             </LoginContextProvider>
 

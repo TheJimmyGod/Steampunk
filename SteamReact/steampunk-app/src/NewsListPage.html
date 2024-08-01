@@ -1,0 +1,89 @@
+    <!DOCTYPE html>
+    <html lang="ko">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Steam News</title>
+        <link rel="stylesheet" href="SteamNewsCss.css">
+        <script src="https://kit.fontawesome.com/fb1902a4fa.js" crossorigin="anonymous"></script>
+    </head>
+
+    <body>
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fa-brands fa-hubspot"> Steam News </i>
+            </div>
+            <nav>
+                <ul>
+                    <li><i class="fas fa-home"></i> 홈</li>
+                    <li><i class="fas fa-search"></i> 뉴스검색</li>
+                    <li><i class="fa-regular fa-newspaper"> 뉴스페이지</i></li>
+                    <li><i class="fa-solid fa-user"> 마이페이지</i></li>
+                    <li><i class="fa-solid fa-right-to-bracket"> 로그인</i></li>
+                    <li><i class="fa-solid fa-right-from-bracket"> 로그아웃</i></li>
+                </ul>
+            </nav>
+
+            <ul class="social-media">
+                <li><i class="fa-brands fa-square-steam"></i></li>
+                <li><i class="fa-brands fa-square-youtube"></i></li>
+                <li><i class="fa-brands fa-instagram"></i></li>
+                <li><i class="fa-brands fa-square-facebook"></i></li>
+            </ul>
+        </aside>
+
+        <!-- 메인 콘텐츠 -->
+        <main>
+            <header class="main-header">
+
+            </header>
+
+            <section class="banner">
+                <h1>STEAM NEWS</h1>
+                <p>최신 스팀 뉴스를 알려드립니다</p>
+                <div class="search-bar">
+                    <i class="fa-solid fa-bars filter-toggle"></i>
+                    <input class="search-news" placeholder="Search..." />
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <!-- 햄버거 클릭시 등장하게 -->
+                <!-- 필터 메뉴 -->
+                <div class="filter-menu">
+                    <label>
+                        <input type="radio" name="filter" value="all" checked />
+                        전체
+                    </label>
+                    <label>
+                        <input type="radio" name="filter" value="free" />
+                        무료게임
+                    </label>
+                    <label>
+                        <input type="radio" name="filter" value="paid" />
+                        유료게임
+                    </label>
+                </div>
+            </section>
+            
+            <section class="news-list">
+                <div class="news-item">
+                    <img src="" alt="뉴스 이미지" class="news-image" />
+                    <div class="news-content">
+                        <h2 class="news-title">뉴스 제목</h2>
+                        <p class="game-name">게임명</p>
+                        <p class="author">저자</p>
+                    </div>
+                    <div class="bookmark">
+                        <i class="fa-regular fa-bookmark"></i>
+                        <i class="fa-solid fa-bookmark"></i>
+                    </div>
+                </div>
+                <div class="add-news">
+                    <i class="fa-solid fa-down-long"> 뉴스 더보기</i>
+                </div>             
+            </section>
+            
+        </main>
+    </body>
+
+    </html>
