@@ -1,7 +1,10 @@
 select * FROM S_GameDTO;
 select * FROM S_Game;
-select count(*) from S_Game where appId = 0;
+select * FROM S_Game where appId = 56437;
+select count(*) from S_Game where appId = 10;
+select count(*) From S_Game;
 delete FROM S_Game where appId = 0;
+delete FROM S_Game where id > 10000;
 INSERT INTO S_Game (appId) VALUES (10);
 INSERT INTO S_Game (appId) VALUES (20);
 INSERT INTO S_Game (appId) VALUES (30);

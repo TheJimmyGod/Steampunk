@@ -37,13 +37,13 @@ public class Game {
     @Column(name = "capsule_image")
     private String capsuleImage;
 
-    @Column(name = "short_description", length = 2000)
+    @Column(name = "short_description", length = 4000)
     private String shortDescription;
 
-    @Column(name = "minimum", length = 2000)
+    @Column(name = "minimum", length = 4000)
     private String minimum;
 
-    @Column(name = "recommended", length = 2000)
+    @Column(name = "recommended", length = 4000)
     private String recommended;
 
     @Column(name = "price")
