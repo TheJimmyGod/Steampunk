@@ -3,6 +3,7 @@ package com.lec.spring.config;
 import com.lec.spring.jwt.JWTFilter;
 import com.lec.spring.jwt.JWTUtil;
 import com.lec.spring.jwt.LoginFilter;
+import com.lec.spring.repository.AuthorityRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -30,9 +31,11 @@ public class SecurityConfig {
     @Value("${cors.allowed-origins}")
     private List<String> corsAllowedOrigins;
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final AuthorityRepository authorityRepository;
     private final JWTUtil jwtUtil;
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, AuthorityRepository authorityRepository) {
         this.authenticationConfiguration = authenticationConfiguration;
+        this.authorityRepository = authorityRepository;
         this.jwtUtil = jwtUtil;
     }
 
@@ -80,7 +83,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         // JWTFilter 등록. LoginFilter 앞에 위치
         http
-                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
+                .addFilterBefore(new JWTFilter(jwtUtil, authorityRepository), LoginFilter.class);
         //필터 추가 LoginFilter()는 AuthenticationManager 인자를 받음
         // authenticationManager() 메소드에 authenticationConfiguration 객체를 넣어야 함) 따라서 등록 필요
         // .addFilterAt(필터, 삽일할 위치)

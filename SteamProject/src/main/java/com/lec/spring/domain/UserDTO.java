@@ -13,4 +13,5 @@ public class UserDTO {
     private String address_main;
     private String address_sub;
     private String birth;
+    private Boolean admin;
 }

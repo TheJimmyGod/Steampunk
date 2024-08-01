@@ -14,5 +14,5 @@ public class Authority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(length = 40, nullable = false, unique = true)
-    private String role;
+    private String name;
 }

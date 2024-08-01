@@ -1,8 +1,5 @@
 package com.lec.spring.jwt;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lec.spring.domain.Authority;
-import com.lec.spring.domain.AuthorityDTO;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

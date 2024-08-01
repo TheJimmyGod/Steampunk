@@ -8,8 +8,11 @@
     border-radius: 11px;
     box-shadow: 0 2.4rem 4.8rem rgba(0, 0, 0, 0.15);
   }
-  
-  
+  #top{margin-top: 10%;}
+  #bottom{margin-bottom: 10%;}
+  #err{
+    color: skyblue;
+}
   .login-title {
     padding: 15px;
     font-size: 22px;

@@ -87,7 +87,7 @@ const LoginContextProvider = ({children}) => {
                 Cookies.set("accessToken", accessToken);
               }
             loginCheck();
-           Swal.alert("로그인 성공", "메인화면으로 이동합니다", "success", () => {navigate("/");}); 
+           Swal.alert("로그인 성공", "메인화면으로 이동합니다", "success", () => {navigate("/steam");}); 
         }
         catch(error)
         {
@@ -97,38 +97,55 @@ const LoginContextProvider = ({children}) => {
     const logout = (force = false) => {
         if(force){
             logoutSetting();
-            navigate("/");
+            navigate("/steam");
             return;
         }
         Swal.confirm("로그아웃 하시겠습니까", "로그아웃을 진행합니다", "warning",
             (result)=>{ // confirm을 누르면 result로 리턴해서 발동한다
                 if(result.isConfirmed){
                     logoutSetting();
-                    navigate("/");
+                    navigate("/steam");
                 }
             }
         );
     }
     const loginSetting = (userData, accessToken) =>{
-        const {id, username, role} = userData;
+        const {id, username, authorities} = userData;
+        let authList = [];
+
+        if(Array.isArray(authorities))
+        {
+            for(let i = 0; i < authorities.length; ++i)
+            {
+                if(authorities[i] === null)
+                    continue;
+                authList.push(authorities[i].name);
+            }
+        }
+
         console.log(`
             loginSetting()
                id : ${id}
                username : ${username}
-               role : ${role}
+               authorities : ${authList.join(",")}
             `);
         api.defaults.headers.common.Authorization = `Bearer ${accessToken}`; 
         setIsLogin(true);
-        setUserInfo({id, username, role});
+        setUserInfo({id, username, authorities});
         const updatedRoles = {isMember: false, isAdmin: false};
-        if(role !== undefined)
+        if(Array.isArray(authList))
         {
-            role.split(',').forEach((role) => {
-                role === 'ROLE_MEMBER' && (updatedRoles.isMember = true);
-                role === 'ROLE_ADMIN' && (updatedRoles.isAdmin = true);
-            });
+            for(let it = 0; it < authList.length; ++it)
+            {
+                (authList[it] === 'ROLE_MEMBER')&& (updatedRoles.isMember = true);
+                (authList[it] === 'ROLE_ADMIN') &&(updatedRoles.isAdmin = true);
+            }
         }
-
+        else
+        {
+            (authorities.name === 'ROLE_MEMBER')&& (updatedRoles.isMember = true);
+            (authorities.name === 'ROLE_ADMIN') &&(updatedRoles.isAdmin = true);
+        }
         setRoles(updatedRoles);
     };
 

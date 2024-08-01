@@ -1,11 +1,14 @@
 package com.lec.spring.jwt;
 
 import com.lec.spring.config.PrincipalDetails;
+import com.lec.spring.domain.Authority;
 import com.lec.spring.domain.User;
+import com.lec.spring.repository.AuthorityRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,6 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 스프링에서, 디스패처 서블릿이 서블릿 컨테이너 앞에서 모든 요청을 컨트롤러에 전달한다.
@@ -26,9 +30,11 @@ import java.util.ArrayList;
 public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
+    AuthorityRepository authorityRepository;
 
-    public JWTFilter(JWTUtil jwtUtil) {
+    public JWTFilter(JWTUtil jwtUtil, AuthorityRepository authorityRepository) {
         this.jwtUtil = jwtUtil;
+        this.authorityRepository = authorityRepository;
     }
 
     @Override
@@ -59,13 +65,19 @@ public class JWTFilter extends OncePerRequestFilter {
         Long id = jwtUtil.getId(token);
         String username = jwtUtil.getUsername(token);
         String role = jwtUtil.getRole(token);
+        String[] roles = role.split(",");
+        List<Authority> authArr = new ArrayList<>();
+        for (int i = 0; i < roles.length; i++) {
+            var item  =authorityRepository.findByName(roles[i]).orElse(null);
+            authArr.add(item);
+        }
 
         // User 생성하여 로그인 진행
         User user = User.builder()
                 .id(id)
                 .username(username)
                 .password("temppassword") // 임시 비밀번호 (Session에 저장하는 용도)
-                .authorities(new ArrayList<>())
+                .authorities(authArr)
                 .build();
 
         // UserDetails 에 User 담아 생성
