@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import './LoginForm.css'
+import './LoginForm.css';
 import { LoginContext } from '../../contexts/LoginContextProvider';
 import Cookies from 'js-cookie';
 import { Button,Form } from 'react-bootstrap';
@@ -32,6 +32,7 @@ const LoginForm = () => {
 
     return (
         <div className="form">
+          <div id='top'/>
       <h2 className="login-title">로그인</h2>
       <Form className="login-form" onSubmit={ (e) => onLogin(e) }>
         <Form.Group>
@@ -59,17 +60,15 @@ const LoginForm = () => {
                 />
         </div>
         </Form.Group>
-
-
         <div>
         <span style={{float:"left"}}>
-        <Button className="btn--form" value="" style={{width: "150px"}}>
-          아이디어 찾기
+        <Button className="btn--form"  onClick={()=>{navigate("/steam/findId")}} style={{width: "150px"}}>
+          아이디 찾기
         </Button>
         <br/>
         <br/>
-        <Button className="btn--form" value="" style={{width: "150px"}}>
-          비밀번호 찾기
+        <Button className="btn--form" onClick={()=>{navigate("/steam/findPw")}} style={{width: "200px"}}>
+          비밀번호 재발급
         </Button>
         </span>
         
@@ -97,7 +96,7 @@ const LoginForm = () => {
         </span>
 
         </div>
-
+        <div id='bottom'/>
       </Form>
   </div>
     );
