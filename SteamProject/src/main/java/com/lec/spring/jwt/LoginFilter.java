@@ -63,8 +63,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String username = userDetails.getUsername();
         // Collection<? extends GrantedAuthority> -> 'ROLE_MEMBER, ROLE_ADMIN' 문자열로 만들기
         Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
-        String role = authorities.stream().map(grantedAuthority -> grantedAuthority.getAuthority())
+        String role = authorities.stream().map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
+        System.out.println("Role: " + role);
         String token = jwtUtil.createJwt(id, username, role, 30 * 60 * 1000L);
         response.addHeader("Authorization", "Bearer " + token);
     }

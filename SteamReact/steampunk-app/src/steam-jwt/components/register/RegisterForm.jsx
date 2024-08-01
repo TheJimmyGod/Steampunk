@@ -1,17 +1,34 @@
+import "./RegisterForm.css";
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { Button,Form } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+
+
 
 const COUNT_PER_PAGE = 1000;
 const new_regex = /^[가-힣0-9\s]*$/;
 const RegisterForm = ({register}) => {
 
   const [addrData, setAddrData] = useState([]);
+  const [errors, setErrors] = useState({});
   const [keyword, setKeyword] = useState("");
   const prev = useRef("");
   
+  const navigate = useNavigate();
+
   useEffect(()=>{
-    document.getElementById('birth').value = new Date().toISOString().substring(0, 10);;
+    document.getElementById('birth').value = new Date().toISOString().substring(0, 10);
+
+    console.log(errors);
+
+    setErrors({
+      username: false,
+      password: false,
+      re_password: false,
+      address_main: false,
+      address_sub: false
+    });
   },[]);
 
   useEffect(()=>{
@@ -40,7 +57,7 @@ headers:{
   "Content-Type" : "application/json"
 }
 }).then(response=>{
-  const {data, status, statusText} = response;
+  const {data, status} = response;
   if(status === 200)
   {
     setAddrData([]);
@@ -92,11 +109,25 @@ headers:{
         const address_main = e.target.address_main.value;
         const address_sub = e.target.address_sub.value;
         const birth = e.target.birth.value;
+        const admin = e.target.admin.checked;
         
-        register({username, password, re_password, address_main, address_sub, birth});
+        errors.username = (username.trim() === "") ? true : false;
+        errors.password = (password.trim() === "" || password.trim().length < 3 || password.trim().length > 9) ? true : false;
+        errors.re_password = (re_password.trim() === "" || re_password.trim() !== password.trim()) ? true : false;
+        errors.address_main = (address_main.trim() === "") ? true : false;
+        errors.address_sub = (address_sub.trim() === "") ? true : false;
+
+        if(errors.username || errors.password || errors.re_password || errors.address_main || errors.address_sub)
+        {
+            navigate("/steam/register");
+            return;
+        }
+        
+        register({username, password, re_password, address_main, address_sub, birth, admin});
     };
     return (
 <div className="form">
+<div id='top'/>
       <h2 className="login-title">회원가입</h2>
       <Form className="login-form" onSubmit={(e) => onRegister(e)}>
         <div>
@@ -107,9 +138,11 @@ headers:{
             placeholder="유저 ID를 입력해주세요"
             name="username"
             autoComplete="username"
-            required
           />
         </div>
+        <br/>
+        {errors != null && errors.username ? (<span id='err'>유저 ID를 입력해주세요.</span>) : (<></>)}
+        <hr/>
         <div>
           <Form.Label htmlFor="password">패스워드</Form.Label>
           <Form.Control
@@ -118,9 +151,11 @@ headers:{
             placeholder="패스워드를 입력해주세요"
             name="password"
             autoComplete="current-password"
-            required
           />
-        </div>     
+        </div>
+        <br/>
+        {errors != null && errors.password ? (<span id='err'>패스워드가 입력 안 되었거나, 4~8 자리를 쓰셔야 합니다.</span>) : (<></>)}
+        <hr/>
         <div>
           <Form.Label htmlFor="re_password">패스워드 재입력</Form.Label>
           <Form.Control
@@ -129,9 +164,11 @@ headers:{
             placeholder="패스워드를 다시 입력해주세요"
             name="re_password"
             autoComplete="current-password"
-            required
           />
         </div>
+        <br/>
+        {errors != null && errors.re_password ? (<span id='err'>재입력 패스워드가 일치하지 않습니다.</span>) : (<></>)}
+        <hr/>
         <div>
           <Form.Label htmlFor="path_address">도로명주소</Form.Label>
           <Form.Control
@@ -140,7 +177,6 @@ headers:{
             placeholder="도로명주소를 입력해주세요"
             name="path"
             autoComplete="path"
-            required
             onChange={(e)=>{
               let str = e.target.value.trim();
               setKeyword(str);
@@ -173,12 +209,16 @@ headers:{
             id="address_main"
             type="text"
             name="address_main"
+            placeholder='도로명주소를 입력시 자동으로 출력됩니다.'
             autoComplete="address_main"
             value={selected ? selected : ""}
             readOnly
-            disabled
+            style={{backgroundColor:"grey", color:"white"}}
           />
         </div>
+        <br/>
+        {errors != null && errors.address_main ? (<span id='err'>도로명주소를 입력해주세요.</span>) : (<></>)}
+        <hr/>
         <div>
           <Form.Label htmlFor="address_sub">상세주소</Form.Label>
           <Form.Control
@@ -187,9 +227,11 @@ headers:{
             placeholder="상세주소를 입력해주세요"
             name="address_sub"
             autoComplete="address_sub"
-            required
           />
         </div>
+        <br/>
+        {errors != null && errors.address_main ? (<span id='err'>상세주소를 입력해주세요.</span>) : (<></>)}
+        <hr/>
         <div>
           <Form.Label htmlFor="birth">유저 생년월일</Form.Label>
           <Form.Control
@@ -198,15 +240,24 @@ headers:{
             name="birth"
             max="2024-08-29"
             min="1990-08-29"
-            required
           />
         </div>
-        <Button className="btn btn--form btn-login" type="submit">
-          Register
+        <br/>
+        <hr/>
+        <div style={{textAlign:"left"}}>
+        <Form.Label htmlFor="admin">관리자로 등록</Form.Label>
+          <Form.Check 
+          style={{width: "32px"}}
+          id="admin"
+          name="admin"
+          >
+          </Form.Check>
+        </div>
+        <Button className="btn--form btn-login" type="submit">
+          등록 완료
         </Button>
-
-
       </Form>
+      <div id='bottom'/>
     </div>
     );
 };

@@ -27,25 +27,25 @@ public class PrincipalDetails implements UserDetails {
         System.out.println("getAuthorities() 호출");
 
         Collection<GrantedAuthority> collect = new ArrayList<>();
-
+        System.out.println(user.getId() + " " + user.getUsername() + " " + (user.getAuthorities() == null ? "권한 없음" : user.getAuthorities().size()));
         // user.getRole() 은 현재 "ROLE_MEMBER,ROLE_ADMIN" 과 같은 형태이기에
         if(user.getAuthorities() == null ||
         user.getAuthorities().isEmpty()) return collect;
 
-        user.getAuthorities().stream().map(
-                authority -> collect.add(new GrantedAuthority() {
-                    @Override
-                    public String getAuthority() {
-                        return authority.getRole();
-                    }
+        for(var item : user.getAuthorities())
+        {
+            collect.add(new GrantedAuthority() {
+                @Override
+                public String getAuthority() {
+                    return item.getName().trim();
+                }
 
-                    @Override
-                    public String toString(){
-                        return authority.getRole();
-                    }
-                })
-        );
-
+                @Override
+                public String toString(){
+                    return item.toString().trim();
+                }
+            });
+        }
         return collect;
     }
 

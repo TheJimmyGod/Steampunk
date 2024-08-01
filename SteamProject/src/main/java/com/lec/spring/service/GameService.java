@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -84,7 +85,7 @@ public class GameService {
 
                 Long id = game.getAppId();
                 System.out.println("appid : " + id + "appid 찾기완료");
-                if(id == null || id == 0L || id < 56437L) continue;
+                if(id == null || id == 0L || id < 221100) continue;
                 // if(id == null || id == 0L || id < 45300L) continue;
                 // 중단했다가 이어가고 싶으면 id 값을 위처럼 처리 (appid = 45300 부터 저장하고 싶을때)
 
@@ -175,50 +176,58 @@ public class GameService {
         }
         return "";
     }
-//    public List<Game> getFeaturedGames() {
-//        try {
-//            List<Long> ids;
-//            URL url = new URL("https://store.steampowered.com/api/featured/");
-//            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//
-//            conn.setRequestMethod("GET"); // http 메서드
-//            conn.setRequestProperty("Content-Type", "application/json"); // header Content-Type 정보
-//            conn.setDoOutput(true); // 서버로부터 받는 값이 있다면 true
-//
-//            // 서버로부터 데이터 읽어오기
-//            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-//            StringBuilder sb = new StringBuilder();
-//            String line = null;
-//
-//            while ((line = br.readLine()) != null) { // 읽을 수 있을 때 까지 반복
-//                sb.append(line);
-//            }
-//            br.close();
-//
-//            // JSON 응답 파싱
-//            JsonNode rootNode = jacksonObjectMapper.readTree(sb.toString());
-//            JsonNode appsNode = rootNode.path("featured_win");
-//
-//            // 각 게임의 `id` 값 추출
-//            if (appsNode.isArray()) {
-//                for (JsonNode appNode : appsNode) {
-//                    long appid = appNode.path("id").asLong();
-//
-//                    // 이미 저장된 appId인지 확인
-//                    Game existingGame = gameRepository.findByAppId(appid);
-//                    if (existingGame == null) {
-//                        Game g = new Game();
-//                        g.setAppId(appid);
-//                        g.setGameName(name);
-//                        gameRepository.save(g);
-//                    } else {
-//                        System.out.println("appId =" + appid + " 존재하는 appid 스킵.");
-//                    }
-//                }
-//            }
-//            System.out.println("appIds, gameName 저장완료 !!!");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+    public List<Game> getFeaturedGames() {
+        try {
+            List<Long> ids;
+            URL url = new URL("https://store.steampowered.com/api/featured/");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+            conn.setRequestMethod("GET"); // http 메서드
+            conn.setRequestProperty("Content-Type", "application/json"); // header Content-Type 정보
+            conn.setDoOutput(true); // 서버로부터 받는 값이 있다면 true
+
+            // 서버로부터 데이터 읽어오기
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            StringBuilder sb = new StringBuilder();
+            String line = null;
+
+            while ((line = br.readLine()) != null) { // 읽을 수 있을 때 까지 반복
+                sb.append(line);
+            }
+            br.close();
+
+            // JSON 응답 파싱
+            JsonNode rootNode = jacksonObjectMapper.readTree(sb.toString());
+            JsonNode appsNode = rootNode.path("featured_win");
+
+            List<Long> idsList = new ArrayList<>();
+            // 각 게임의 `id` 값 추출
+            if (appsNode.isArray()) {
+                for (JsonNode appNode : appsNode) {
+                    long appid = appNode.path("id").asLong();
+
+                    idsList.add(appid);
+                    System.out.println("idsList 상태 : " + idsList.toString());
+                }
+            }
+            System.out.println("idsList 로 추출완료");
+
+            List<Game> gamesList = new ArrayList<>();
+            for (Long id : idsList) {
+                gamesList.add(gameRepository.findByAppId(id));
+                System.out.println("gamesList 상태 : " + gamesList.toString());
+            }
+            return gamesList;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public List<Game> getTestGames(){
+        List<Game> gamesList = new ArrayList<>();
+        for (Long i = 10L; i < 60L; i+=10L) {
+            gamesList.add(gameRepository.findByAppId(i));
+        }
+        return gamesList;
+    }
 }

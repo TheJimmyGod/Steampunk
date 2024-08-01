@@ -1,0 +1,15 @@
+/* 기본 스타일 */
+body {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.app {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+h4 {
+    margin-bottom: 1rem;
+}

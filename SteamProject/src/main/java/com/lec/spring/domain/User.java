@@ -44,9 +44,12 @@ public class User extends BaseEntity {
 
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "s_user_authorities",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "authority_id")
+    )
     @Builder.Default
-    @JsonIgnore
-    @ToString.Exclude
     private List<Authority> authorities = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -58,7 +61,8 @@ public class User extends BaseEntity {
     public void addAuthorities(Authority... authorities) {
         Collections.addAll(this.authorities,authorities);
     }
-    public void addAuthority(Authority authority) {
-        this.authorities.add(authority);
-    }
+
+    // OAuth2 Client
+    private String provider;
+    private String providerId;
 }

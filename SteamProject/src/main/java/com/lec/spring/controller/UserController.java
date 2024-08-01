@@ -5,6 +5,7 @@ import com.lec.spring.domain.User;
 import com.lec.spring.domain.UserDTO;
 import com.lec.spring.service.UserService;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,21 +30,29 @@ public class UserController {
 
     // 회원가입
     @PostMapping("/register")
-    public String register(@RequestBody UserDTO userDTO) {
-        User user = User.builder()
-                .username(userDTO.getUsername())
-                .password(userDTO.getPassword())
-                .re_password(userDTO.getRe_password())
-                .address_main(userDTO.getAddress_main())
-                .address_sub(userDTO.getAddress_sub())
-                .birth(userDTO.getBirth())
-                .build();
-        user = userService.register(user);
-        if (user == null) return "REGISTER FAILED";
-        return "REGISTER OK : " + user;
+    public ResponseEntity<?> register(@RequestBody UserDTO userDTO) {
+        return new ResponseEntity<>(userService.register(userDTO), HttpStatus.OK);
     }
-    // 개인정보 수정
 
+    @RequestMapping("/findId")
+    public ResponseEntity<?> findIDPage() { return new ResponseEntity<>("OK", HttpStatus.OK);}
+
+    @GetMapping("/findId/{name}")
+    public ResponseEntity<?> findID(@PathVariable String name) {
+        return new ResponseEntity<>(userService.Find(name) != null, HttpStatus.OK);}
+
+    @RequestMapping("/findPw")
+    public ResponseEntity<?> findPWPage() { return new ResponseEntity<>("OK", HttpStatus.OK);}
+
+    @GetMapping("/findPw/{name}/{birth}")
+    public ResponseEntity<?> findPW(@PathVariable String name, @PathVariable String birth) {
+        return new ResponseEntity<>(userService.FindPassword(name,birth), HttpStatus.OK);}
+    // 개인정보 수정
+    @PostMapping("/resetPw/{id}/{password}")
+    public ResponseEntity<?> resetPw(@PathVariable Long id, @PathVariable String newPassword)
+    {
+        return new ResponseEntity<>(userService.ResetPassword(id, newPassword),HttpStatus.OK);
+    }
     // 탈퇴
 
     @GetMapping("/list")

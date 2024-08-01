@@ -34,19 +34,27 @@ public class GameController {
         this.rankService = rankService;
     }
 
+    // appId, name 전부 저장하는 코드
     @GetMapping("/saveGame")
     public void getJsonGame() {
         gameService.saveGame();
     }
-
+  
+    // appId 를 기반으로 detail 데이터를 가져와 모든 게임 db 업데이트 (saveGame 완료 후 실행)
     @GetMapping("/saveGameInfo")
     public void getJsonGameInfo() {
         gameService.saveGameInfo();
     }
-
+  
+    // 추천게임 appId 를 받아와서 그걸 토대로 Game 10개를 조회하고 해당 Game 객체들을 리턴 (saveGameInfo 완료 후 실행)
     @GetMapping("/featuredGames")
-    public List<Game> getFeaturedGames() {
-        return null;
+    public List<Game> getFeaturedGames(){
+        return gameService.getFeaturedGames();
+    }
+
+    @GetMapping("/testGames")
+    public List<Game> getTestGames(){
+        return gameService.getTestGames();
     }
 
     @GetMapping("/saveRank")
