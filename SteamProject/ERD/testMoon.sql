@@ -1,6 +1,6 @@
 select * FROM S_GameDTO;
 select * FROM S_Game;
-select * FROM S_Game where appId = 56437;
+select * FROM S_Game where appId = 221100;
 select count(*) from S_Game where appId = 10;
 select count(*) From S_Game;
 delete FROM S_Game where appId = 0;
