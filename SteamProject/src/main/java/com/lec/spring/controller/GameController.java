@@ -8,6 +8,7 @@ import com.lec.spring.repository.GameRepository;
 import com.lec.spring.service.GameService;
 import com.lec.spring.service.RankService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -56,6 +57,12 @@ public class GameController {
     public List<Game> getTestGames(){
         return gameService.getTestGames();
     }
+
+    @GetMapping("/findGame/{appId}")
+    public Game findGame(@PathVariable Long appId) {
+        return gameService.findGame(appId);
+    }
+
 
     @GetMapping("/saveRank")
     public void getJsonRank() {

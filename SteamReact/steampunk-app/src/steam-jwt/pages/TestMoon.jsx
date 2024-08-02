@@ -10,10 +10,11 @@ const TestMoon = () => {
 
     const [youtube, setYoutube] = useState({ items: []});
     const [games, setGames] = useState([]);
+    const [news, setNews] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const navigate = useNavigate();
 
-    const key = "AIzaSyCOaXfLbU-uxGuK4UXWVGO80QuhzOXQ7Ds";
+    // const key = "AIzaSyCOaXfLbU-uxGuK4UXWVGO80QuhzOXQ7Ds";
 
     // 게임 정보 가져오기 (뉴스로 바뀔 예정)
     useEffect(()=>{
@@ -28,17 +29,29 @@ const TestMoon = () => {
 
     },[]);
 
-    // 유튜브 정보 가져오기
     useEffect(()=>{
         axios({
             method: "get",
-            url: "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=%EC%8A%A4%ED%8C%80&type=video&key="+key,
+            url: "http://localhost:8080/news/findAllNews"
         })
         .then((response) => {
-            
-            setYoutube(response.data);
+            setNews(response.data);
+            console.log("news ======== ",news);
         })
-    },[])
+
+    },[]);
+
+    // 유튜브 정보 가져오기
+    // useEffect(()=>{
+    //     axios({
+    //         method: "get",
+    //         url: "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=%EC%8A%A4%ED%8C%80&type=video&key="+key,
+    //     })
+    //     .then((response) => {
+            
+    //         setYoutube(response.data);
+    //     })
+    // },[])
 
     // 슬라이드 변경 타이머
     useEffect(() => {
@@ -73,13 +86,13 @@ const TestMoon = () => {
             <Container fluid="md" className="my-4">
                 <Row>
                     <Col md={3}>
-                        {/* <h4>Categories</h4>
+                        <h4>Categories</h4>
                         <Nav className="flex-column">
                             <Nav.Link href="#">Action</Nav.Link>
                             <Nav.Link href="#">Adventure</Nav.Link>
                             <Nav.Link href="#">RPG</Nav.Link>
                             <Nav.Link href="#">Shooter</Nav.Link>
-                        </Nav> */}
+                        </Nav>
                     </Col>
                     <Col md={9}>
                         <h4>Featured Games</h4>
@@ -96,6 +109,46 @@ const TestMoon = () => {
                         </Carousel>
                     </Col>
                 </Row>
+                <div className="news-container">
+            <h1 className="text-center my-4">최신 뉴스</h1>
+            {news.length === 0 ? (
+                <p className="text-center">로딩 중...</p>
+            ) : (
+                <div className="news-list">
+                    {news.map((item) => (
+                        <Card className="news-card mb-4" key={item.id}>
+                            <Row noGutters>
+                                <Col xs={12} md={5} className="news-card-image-col">
+                                    <Card.Img
+                                        src={item.capsuleImage}
+                                        alt={item.title}
+                                        className="news-card-image"
+                                    />
+                                </Col>
+                                <Col xs={12} md={7} className="news-textbox">
+                                    <div>
+                                    <Card.Body>
+                                        <Card.Title className="news-title">{item.title}</Card.Title>
+                                        <Card.Subtitle className="mb-2 text-muted news-date">
+                                            {item.gameName}
+                                        </Card.Subtitle>
+                                        <Card.Subtitle className="mb-2 text-muted news-author">
+                                            {item.author}
+                                        </Card.Subtitle>
+                                        <Card.Text className="news-content">
+                                            {item.content.length > 100
+                                                ? `${item.content.substring(0, 170)}...`
+                                                : item.content}
+                                        </Card.Text>
+                                    </Card.Body>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </Card>
+                    ))}
+                </div>
+            )}
+        </div>
             </Container>
             {/* 유튜브  */}
             {/* {hasData ? (<iframe 

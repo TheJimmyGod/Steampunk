@@ -27,10 +27,6 @@ public class GameService {
         this.jacksonObjectMapper = jacksonObjectMapper;
     }
 
-    public Game findByAppId(Long appId) {
-        return gameRepository.findByAppId(appId);
-    }
-
     public void saveGame() {
         try {
             URL url = new URL("https://api.steampowered.com/IStoreService/GetAppList/v1/?key=2E0DEAF02393FA04974AFB40ADFAABD1&max_results=10000");
@@ -60,7 +56,7 @@ public class GameService {
                     long appid = appNode.path("appid").asLong();
                     String name = appNode.path("name").asText();
 
-                    // 이미 저장된 appId인지 확인
+                    // 이미 저장된 appId 인지 확인
                     Game existingGame = gameRepository.findByAppId(appid);
                     if (existingGame == null) {
                         Game g = new Game();
@@ -229,5 +225,8 @@ public class GameService {
             gamesList.add(gameRepository.findByAppId(i));
         }
         return gamesList;
+    }
+    public Game findGame(Long appId){
+        return gameRepository.findByAppId(appId);
     }
 }
