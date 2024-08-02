@@ -31,6 +31,7 @@ const navigate = useNavigate();
                     <li><FontAwesomeIcon icon={faInstagram} /></li>
                     <li><FontAwesomeIcon icon={faFacebook} /></li>
                 </ul>
+                
             </aside>
 
             <main>
