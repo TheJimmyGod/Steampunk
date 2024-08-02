@@ -1,162 +1,200 @@
-.form {
-    width: 800px;
-    margin: auto;
-    padding: 36px 48px 48px 48px;
-    background-color: #172233;
-    color: white;
+/* 기본 스타일 */
+* {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
   
-    border-radius: 11px;
-    box-shadow: 0 2.4rem 4.8rem rgba(0, 0, 0, 0.15);
-  }
-  #top{margin-top: 10%;}
-  #bottom{margin-bottom: 10%;}
-  #err{
-    color: skyblue;
 }
-  .login-title {
-    padding: 15px;
-    font-size: 22px;
-    font-weight: 600;
-    text-align: center;
-  }
+
+/* 폼 전체 스타일 */
+.form {
+  width: 400px;
+  margin: auto;
+  margin-top: 5%;
+  padding: 20px 30px;
+  background-color: #1B1D1F;
+  color: white;
+  border-radius: 10px;
+  box-shadow: 0 2.4rem 4.8rem rgba(0, 0, 0, 0.15);
+}
+.find-id-form {
+  margin-bottom: 20px;
+}
+.find-password{
+  margin-bottom: 20px;
+}
+
+.login-title {
+  padding: 15px 0;
+  font-size: 22px;
+  font-weight: 600;
+  text-align: center;
   
+}
+
+/* 로그인 폼 스타일 */
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form label {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  border: none;
+  background-color: aliceblue;
+  color: black; /* 인풋 필드 텍스트 색상 */
+}
+
+.select-adress {
+  margin-bottom: 8px;
+}
+
+.login-form input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(233, 237, 253, 0.5);
+}
+
+.login-form::placeholder {
+  color: white;
+}
+
+/* 로그인 옵션 */
+.login-options {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.form-check {
+  display: flex;
+  align-items: center; /* 토글과 텍스트를 수직 중앙 정렬 */
+  padding-left: 0px;
+}
+
+.check-label {
+  user-select: none;
+  cursor: pointer;
+  margin-left: 10px; /* 토글과 텍스트 사이의 간격 */
+}
+
+/* 슬라이드 토글 스타일 */
+.toggle-btn {
+  background-color: #ccc; /* 기본 배경색 (체크되지 않은 상태) */
+  border-radius: 14px; /* 버튼 모서리 둥글게 */
+  position: relative;
+  display: inline-block;
+  width: 34px;
+  height: 14px;
+  z-index: 1; /* .slider를 위로 올리기 위해 z-index 설정 */
+}
+
+.toggle-btn input {
+  opacity: 0; /* input을 숨깁니다 */
+  width: 0;
+  height: 0;
+}
+
+.toggle-btn .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc; /* 체크되지 않은 상태의 배경색 */
+  transition: .4s;
+  border-radius: 14px; /* 버튼 모서리 둥글게 */
+  z-index: 0; /* .slider의 z-index를 .toggle-btn보다 낮게 설정 */
+}
+
+.toggle-btn input:checked + .slider {
+  background-color: #2196F3; /* 체크된 상태의 배경색 */
   
-  .login-form {
-    display: grid;
-    grid-template-columns: 1fr;
-    row-gap: 16px;
-  }
+}
+
+.toggle-btn .slider:before {
+  position: absolute;
+  content: "";
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  left: 2px;
+  top: 2px;
+  background-color: white;
+  transition: .4s;
+  z-index: 1; 
+}
+
+.toggle-btn input:checked + .slider:before {
+  transform: translateX(20px); /* 체크된 상태에서 원의 위치 조정 */
+  background-color: #2196F3;
   
-  
-  .login-form label {
-    display: block;
-    margin-bottom: 8px;
-  }
-  
-  
-  .login-form input {
-    width: 100%;
-    padding: 1.2rem;
-    border-radius: 9px;
-    border: none;
-  }
-  
-  
-  .login-form input:focus {
-    outline: none;
-    box-shadow: 0 0 0 4px rgba(233, 237, 253, 0.5);
-  }
-  
-  
-  .btn--form {
-    background-color: #0d3c7c;
-    color: white;
-    align-self: end;
-    padding: 8px;
-  }
-  
-  
-  .btn,
-  .btn:link,
-  .btn:visited {
-    display: inline-block;
-    text-decoration: none;
-    font-size: 20px;
-    font-weight: 600;
-    border-radius: 9px;
-    border: none;
-  
-  
-    cursor: pointer;
-    font-family: inherit;
-  
-  
-    transition: all 0.3s;
-  }
-  
-  
-  .btn-login:hover {
-    outline: 1px solid #143468;
-  }
-  
-  
-  .btn--form:hover {
-    background-color: #e9edfd;
-    color: #265089;
-  }
-  
-  
-  
-  
-  
-  
-  /* 토글 버튼 */
-  .form-check {
-    display: flex;
-    justify-content: center;
-    column-gap: 10px;
-    font-size: 14px;
-  }
-  
-  
-  .check-label {
-    user-select: none;
-    cursor: pointer;
-    margin-bottom: 0 !important;
-  }
-  
-  
-  /* 토글 버튼 스타일 */
-  .toggle-btn {
-    position: relative;
-    display: inline-block;
-    width: 30px;
-    height: 18px;
-    margin-bottom: 0 !important;
-  }
-  
-  
-  /* 체크박스 숨기기 */
-  .toggle-btn input {
-    display: none;
-  }
-  
-  
-  /* 토글 버튼 배경 */
-  .toggle-btn .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: .4s;
-    border-radius: 34px;
-  }
-  
-  
-  /* 토글 버튼 상태에 따른 배경색 변경 */
-  .toggle-btn input:checked + .slider {
-    background-color: #2196F3;
-  }
-  
-  
-  /* 토글 버튼 둥근 원형 슬라이더 */
-  .toggle-btn .slider:before {
-    position: absolute;
-    content: "";
-    height: 12px;
-    width: 12px;
-    left: 4px;
-    bottom: 3px;
-    background-color: white;
-    transition: .4s;
-    border-radius: 50%;
-  }
-  
-  
-  /* 체크된 상태에서의 슬라이더 위치 변경 */
-  .toggle-btn input:checked + .slider:before {
-    transform: translateX(10px);
-  }  
+}
+/* 로그인 찾기 */
+.login-find {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px; /* 토글과 찾기 링크 사이의 간격 */
+  text-decoration: none;
+}
+
+.login-find span {
+  cursor: pointer;
+  color: #2196F3;
+}
+
+.login-find span:hover {
+  text-decoration: none;
+}
+
+/* 버튼 스타일 */
+.btn-form {
+  background-color: #2A475E;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-form:hover {
+  background-color: #265089;
+}
+
+.login-buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+.btn-login {
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.btn-register {
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.manager-form {
+  display: flex;
+  justify-content: center;
+}
+.manager-form label {
+  margin-top:2px;
+  margin-right: 8px;
+}
+
+.manager-check {
+
+}

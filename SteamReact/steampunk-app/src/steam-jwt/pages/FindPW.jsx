@@ -4,7 +4,7 @@ import FindPWLoginForm from '../components/login/FindPWLoginForm';
 
 const FindPW = () => {
     return (<>
-    <Header/>
+    {/* <Header/> */}
     <div className='container'>
             <FindPWLoginForm/>
             </div>
