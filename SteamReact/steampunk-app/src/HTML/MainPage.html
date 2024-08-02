@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steam News</title>
+    <link rel="stylesheet" href="SteamNewsCss.css">
+    <script src="https://kit.fontawesome.com/fb1902a4fa.js" crossorigin="anonymous"></script>
+    <script>
+        function openLoginPopup() {
+            var popup = document.getElementById("loginPopup");
+            popup.style.display = "block";
+            setTimeout(function() {
+                popup.classList.add("show");
+            }, 10);
+        }
+
+        function closeLoginPopup() {
+            var popup = document.getElementById("loginPopup");
+            popup.classList.remove("show");
+            setTimeout(function() {
+                popup.style.display = "none";
+            }, 300);
+        }
+    </script>
+    <style>
+        /* 로그인 팝업 스타일 */
+        #loginPopup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            background-color: #1B1D1F;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            opacity: 0;
+            width: 400px;
+            height: 400px;
+        }
+
+        #loginPopup.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        #loginPopup .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: black;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* 로그인 박스 스타일 */
+        .login-box {
+            text-align: center;
+        }
+
+        .login-box h1 {
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .textbox {
+            margin-bottom: 15px;
+        }
+
+        .textbox input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            outline: none;
+            color: #fff;
+            background: #333;
+            border-radius: 5px;
+        }
+
+        .remember-me {
+            color: #fff;
+            margin-bottom: 15px;
+            float: left;
+            padding-left: 8px;
+        }
+
+        .remember-me input {
+            margin-right: 5px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background: #1b2838;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .btn:hover {
+            background: #2a475e;
+        }
+
+        .links {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .link {
+            color: #00bfff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .link:hover {
+            text-decoration: underline;
+        }
+
+        .signup-btn {
+            background: #4a90e2;
+        }
+
+        .signup-btn:hover {
+            background: #357ab8;
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="fa-brands fa-hubspot"> Steam News</i>
+        </div>
+        <nav>
+            <ul>
+                <li><i class="fas fa-home"></i> 홈</li>
+                <li><i class="fas fa-search"></i> 뉴스검색</li>
+                <li><i class="fa-regular fa-newspaper"> 뉴스페이지</i></li>
+                <li><i class="fa-solid fa-user"> 마이페이지</i></li>
+                <li onclick="openLoginPopup()"><i class="fa-solid fa-right-to-bracket"> 로그인</i></li>
+                <li><i class="fa-solid fa-right-from-bracket"> 로그아웃</i></li>
+            </ul>
+        </nav>
+        <ul class="social-media">
+            <li><i class="fa-brands fa-square-steam"></i></li>
+            <li><i class="fa-brands fa-square-youtube"></i></li>
+            <li><i class="fa-brands fa-instagram"></i></li>
+            <li><i class="fa-brands fa-square-facebook"></i></li>
+        </ul>
+    </aside>
+
+    <!-- 메인 콘텐츠 -->
+    <main>
+        <header class="main-header"></header>
+        <section class="banner">
+            <h1>STEAM NEWS</h1>
+            <p>다양한 Steam 소식을 알려드립니다</p>
+        </section>
+        <section class="slider">
+            <div class="grid-item recommended">
+                <!-- 추천 게임 슬라이더 콘텐츠 -->
+                추천게임 슬라이더 자리
+            </div>
+        </section>
+        <section class="content-grid">
+            <div class="grid-item chart">
+                <!-- 차트 콘텐츠 -->
+                차트 자리
+            </div>
+            <div class="grid-item video">
+                <!-- 비디오 콘텐츠 -->
+                유튜브 영상 자리
+            </div>
+        </section>
+    </main>
+
+    <!-- 로그인 팝업 -->
+    <div id="loginPopup">
+        <button class="close-btn" onclick="closeLoginPopup()">X</button>
+        <div class="login-box">
+            <h1>로그인</h1>
+            <form>
+                <div class="textbox">
+                    <input type="text" placeholder="아이디 입력" name="username" required>
+                </div>
+                <div class="textbox">
+                    <input type="password" placeholder="비밀번호 입력" name="password" required>
+                </div>
+                <div class="remember-me">
+                    <label>
+                        <input type="checkbox" name="remember"> 아이디 기억
+                    </label>
+                </div>
+                <button type="submit" class="btn">로그인</button>
+                <div class="links">
+                    <a href="#" class="link">아이디 찾기</a>
+                    <a href="#" class="link">비밀번호 찾기</a>
+                </div>
+                <button type="button" class="btn signup-btn">회원가입</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

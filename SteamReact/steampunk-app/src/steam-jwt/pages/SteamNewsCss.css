@@ -1,0 +1,280 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+ul {
+    padding-left: 0rem;
+}
+html, body {
+    height: 100%;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #192F41, #1F2F51);
+    color: white;
+}
+
+/* 사이드바 스타일 */
+.sidebar {
+    width: 200px;
+    height: 100%;
+    background-color: #1b1d1f;
+    color: floralwhite;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+}
+
+.sidebar .logo img {
+    width: 100px;
+    margin-bottom: 30px;
+}
+
+.sidebar nav ul {
+    list-style: none;
+    width: 100%;
+    padding-left: 0;
+    margin-top: 20px;
+}
+
+.sidebar nav ul li {
+    width: 100%;
+    padding: 15px 20px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.sidebar nav ul li i {
+    margin-right: 10px;
+}
+
+.sidebar nav ul li:hover {
+    background-color: #26292b;
+}
+
+.sidebar .social-media {
+    display: flex;
+    margin-top: auto;
+    list-style: none;
+}
+
+.sidebar .social-media li:nth-child(1) {
+    padding-left: 0px;
+}
+
+.sidebar .social-media li:nth-child(2) {
+    padding-left: 20px;
+}
+.sidebar .social-media li:nth-child(3) {
+    padding-left: 20px;
+}
+.sidebar .social-media li:nth-child(4) {
+    padding-left: 20px;
+}
+
+/* 메인 콘텐츠 스타일 */
+main {
+    background: linear-gradient(to right, #192F41, #1F2F51);
+    margin-left: 200px;
+    padding: 20px;
+}
+
+.main-header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 0;
+}
+
+.login-btn {
+    background-color: #00bfff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.banner {
+    text-align: center;
+    padding: 60px 0;
+    background-color: #1f2123;
+    margin-bottom: 20px;
+}
+
+.banner h1 {
+    font-size: 2.5em;
+    color: #00bfff;
+    margin-bottom: 10px;
+}
+
+.banner p {
+    font-size: 1.2em;
+    color: #a9a9a9;
+    margin-bottom: 20px;
+}
+
+.content-grid {
+    display: flex;
+    justify-content: space-between;
+}
+
+.grid-item {
+    flex: 1;
+    margin: 0 10px;
+    height: 300px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #2a2c2e;
+}
+
+/* 슬라이드 쇼 */
+.slider {
+    margin-bottom: 20px;
+}
+
+/* 게임순위 차트 */
+.chart {
+    
+}
+
+/* 유튜브 영상 */
+.video {
+    
+}
+
+
+/* 뉴스 검색 */
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: #2a2d2f; 
+    border-radius: 5px;
+    padding: 5px 10px; 
+    width: 60%; 
+    max-width: 600px; 
+    margin: 0 auto; 
+}
+
+.search-bar i {
+    color: #00bfff; 
+    font-size: 20px; 
+    margin-right: 10px; 
+}
+
+.search-news {
+    background-color: #2a2d2f;
+    border: none; 
+    color: white; 
+    font-size: 1em;
+    flex: 1; 
+    padding: 10px; 
+    border-radius: 5px;
+}
+
+.search-news::placeholder {
+    color: #a9a9a9; 
+}
+
+/* 모바일 및 작은 화면에서 검색바 조정 */
+@media (max-width: 768px) {
+    .search-bar {
+        width: 90%;
+    }
+}
+
+
+/* 뉴스 리스트 스타일 */
+.news-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; 
+}
+
+.news-item {
+    display: flex;
+    align-items: center;
+    background-color: #2a2c2e; 
+    border-radius: 8px; 
+    padding: 10px;
+    gap: 15px; 
+}
+
+.news-image {
+    width: 100px; 
+    height: 60px; 
+    object-fit: cover; 
+    border-radius: 5px;
+}
+
+.news-content {
+    flex: 1; 
+}
+
+.news-title {
+    display: flex;
+    font-size: 1.2em; 
+}
+
+.news-title label {
+    margin-right: 8px;
+}
+
+.game-name, .author {
+    font-size: 0.9em; 
+    color: #a9a9a9; 
+}
+
+.bookmark {
+    display: flex;
+    align-items: center;
+    gap: 5px; 
+}
+
+.bookmark i {
+    color: #00bfff;
+    font-size: 20px; 
+    cursor: pointer; 
+}
+
+.news-list .add-news {
+    display: flex;
+    width: 20%;
+    align-self: center;
+    justify-content: center;
+    background-color: #1f2123; 
+    border-radius: 8px; 
+    padding: 10px;
+    cursor: pointer; 
+}
+
+.news-detail-header {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    background-color: #1f2123;
+    margin-bottom: 20px;
+}
+
+.news-detail-header .capsule-img {
+    padding: 20px;
+}
+
+.news-detail-header .news-title {
+    padding: 20px;
+    flex-direction: row;
+}
+
+.news-detail-content {
+    display: flex;
+    flex-direction: column;
+    background-color: #2a2c2e; 
+    border-radius: 8px; 
+    padding: 10px;
+    gap: 15px; 
+}

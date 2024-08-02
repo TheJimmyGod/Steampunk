@@ -67,31 +67,30 @@ const FindIDLoginForm = () => {
 
     return (
         <div className="form">
-            <div style={{marginTop: "5%"}}></div>
             <h2 className="login-title">아이디 찾기</h2>
             <Form onSubmit={submitForm}>
                <Form.Label htmlFor='ID'>
-                아이디 입력창
+            
                </Form.Label>
-                <Form.Control
+                <Form.Control className='find-id-form'
                 type='text'
                 id='ID'
                 name='ID'
                 value={id}
-                placeholder='아이디를 입력해주세요'
+                placeholder='찾으실 아이디를 입력해주세요'
                 autoComplete='ID'
                 onChange={handleInput}
                  >
                 </Form.Control>
-                <br/>
+                
                 {error ? (<span id='err'>입력 창이 비어있거나 아이디가 존재하지 않습니다.</span>) : (<></>)}
                 {success ? (<span id='err'>입력하신 {id}는 존재합니다. </span>) : (<></>)}
-                <hr/>
-                <Button className='btn--form' style={{float: "right"}} type='submit'>
+                
+                <Button className='btn-form'type='submit'>
                 입력
                </Button>
             </Form>
-            <div style={{marginBottom: "5%"}}></div>
+            
         </div>
     );
 };

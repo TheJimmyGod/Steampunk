@@ -5,7 +5,7 @@ import FindIDLoginForm from '../components/login/FindIDLoginForm';
 const FindID = () => {
     return (
         <>
-            <Header/>
+            {/* <Header/> */}
             <div className='container'>
                 <FindIDLoginForm/>
             </div>

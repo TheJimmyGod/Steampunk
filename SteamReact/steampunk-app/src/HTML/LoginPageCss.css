@@ -1,0 +1,91 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: url('steam-background.jpg') no-repeat center center fixed; 
+    background-size: cover;
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-box {
+    background: #1C2F49(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    width: 500px;
+}
+
+.login-box h1 {
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+.textbox {
+    margin-bottom: 15px;
+}
+
+.textbox input {
+    width: 400px;
+    padding: 10px;
+    border: none;
+    outline: none;
+    color: #fff;
+    background: #333;
+    border-radius: 5px;
+}
+
+.remember-me {
+    color: #fff;
+    margin-bottom: 15px;
+}
+
+.remember-me input {
+    margin-right: 5px;
+}
+
+.btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background: #1b2838;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.btn:hover {
+    background: #2a475e;
+}
+
+.links {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.link {
+    color: #00bfff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.link:hover {
+    text-decoration: underline;
+}
+
+.signup-btn {
+    background: #4a90e2;
+}
+
+.signup-btn:hover {
+    background: #357ab8;
+}
