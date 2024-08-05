@@ -64,8 +64,4 @@ public class GameController {
     }
 
 
-    @GetMapping("/saveRank")
-    public void getJsonRank() {
-        rankService.saveRank();
-    }
 }

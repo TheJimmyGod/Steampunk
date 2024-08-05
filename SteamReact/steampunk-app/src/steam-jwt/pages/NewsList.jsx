@@ -1,14 +1,21 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHubspot, faSteam, faYoutube, faInstagram, faFacebook } from '@fortawesome/free-brands-svg-icons';
 import { faHome, faNewspaper, faUser, faRightToBracket, faRightFromBracket, faBars, faMagnifyingGlass, faBookmark, faDownLong } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark as farBookmark } from '@fortawesome/free-regular-svg-icons';
 import { useNavigate } from 'react-router-dom';
+import { LoginContext } from '../contexts/LoginContextProvider';
 import SideBar from '../components/sidebar/SideBar';
 
 const NewsList = () => {
 
-    const navigator = useNavigate();
+    const navigate = useNavigate();
+    console.log(LoginContext);
+    const { isLogin } = useContext(LoginContext);
+    const { logout } = useContext(LoginContext);
+
+    console.log(isLogin);
+    console.log(logout);
 
     return (
         <>
