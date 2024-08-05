@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import * as auth from '../apis/auth'
 import * as Swal from '../apis/alert'
 import RegisterForm from '../components/register/RegisterForm';
-import Header from '../components/header/Header';
 
 const Register = () => {
     const navigate = useNavigate();
@@ -28,7 +27,6 @@ const Register = () => {
     }
     return (
         <>
-          {/* <Header/> */}
           <div className='container'>
                 <RegisterForm register={register}/>
             </div>  

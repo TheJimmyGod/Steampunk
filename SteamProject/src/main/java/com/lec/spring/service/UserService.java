@@ -8,6 +8,7 @@ import com.lec.spring.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -76,28 +77,19 @@ public class UserService {
         User user = userRepository.findById(id).orElse(null);
         if(user == null)
             return null;
-
-        user.setPassword(passwordEncoder.encode(newPassword));
-        return user;
+        var n_password = passwordEncoder.encode(newPassword);
+        if(passwordEncoder.matches(user.getPassword(), n_password))
+            return null;
+        user.setPassword(n_password);
+        return userRepository.save(user);
     }
 
     public User Find(String username) {return userRepository.findByUsername(username);}
-    public Long FindPassword(String username, String birth){
+    public Long FindPassword(String username, String birth) throws ParseException {
         System.out.println(username);
         User user = userRepository.findByUsername(username);
         if(user == null)
-        {
-            System.out.println("0");
             return -1L;
-        }
-        if(birth.length() <= 8)
-        {
-            System.out.println("1");
-            SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy-MM-dd");
-            birth = dtFormat.format(birth);
-        }
-        System.out.println(birth + " " + user.getBirth());
-        System.out.println("2");
         if(birth.equals(user.getBirth()))
             return user.getId();
         return -1L;
