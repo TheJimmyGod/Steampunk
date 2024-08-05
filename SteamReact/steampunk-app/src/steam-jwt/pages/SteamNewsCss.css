@@ -13,6 +13,18 @@ html, body {
     color: white;
 }
 
+.carousel-inner {
+    left: 15%;
+    height: 405px;
+    width: 70%;
+    overflow: hidden;
+}
+
+.carousel-inner .carousel-item {
+    width: 100%;  
+}
+
+
 /* 사이드바 스타일 */
 .sidebar {
     width: 200px;
@@ -123,29 +135,39 @@ main {
     justify-content: space-between;
 }
 
-.grid-item {
-    flex: 1;
-    margin: 0 10px;
-    height: 300px; 
+/* 슬라이드 쇼 */
+.slider .recommended {
     display: flex;
     justify-content: center;
+    margin: 10px;
+    height: 500px;
     align-items: center;
     background-color: #2a2c2e;
 }
 
-/* 슬라이드 쇼 */
-.slider {
-    margin-bottom: 20px;
-}
-
 /* 게임순위 차트 */
-.chart {
-    
+.grid-item.chart {
+    flex: 3; /* 60%에 해당하는 비율 */
+    margin: 0 10px;
 }
 
 /* 유튜브 영상 */
-.video {
-    
+.grid-item.video {
+    flex: 2; /* 40%에 해당하는 비율 */
+    height: 600px;
+    flex-direction: column;
+    justify-content: space-evenly;
+    margin-right: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.grid-item {
+    height: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #2a2c2e;
 }
 
 

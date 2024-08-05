@@ -2,7 +2,7 @@
 CREATE TABLE Authority
 (
   id   INT         NOT NULL AUTO_INCREMENT,
-  role VARCHAR(50) NULL    ,
+  name VARCHAR(50) NULL DEFAULT 'ROLE_MEMBER',
   PRIMARY KEY (id)
 ) COMMENT '권한';
 

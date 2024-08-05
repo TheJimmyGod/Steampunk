@@ -1,13 +1,20 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHubspot, faSteam, faYoutube, faInstagram, faFacebook } from '@fortawesome/free-brands-svg-icons';
 import { faHome, faNewspaper, faUser, faRightToBracket, faRightFromBracket, faBars, faMagnifyingGlass, faBookmark, faDownLong } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark as farBookmark } from '@fortawesome/free-regular-svg-icons';
 import { useNavigate } from 'react-router-dom';
+import { LoginContext } from '../contexts/LoginContextProvider';
 
 const NewsList = () => {
 
-    const navigator = useNavigate();
+    const navigate = useNavigate();
+    console.log(LoginContext);
+    const { isLogin } = useContext(LoginContext);
+    const { logout } = useContext(LoginContext);
+
+    console.log(isLogin);
+    console.log(logout);
 
     return (
         <>
@@ -17,11 +24,11 @@ const NewsList = () => {
                 </div>
                 <nav>
                     <ul>
-                        <li onClick={() => {navigator("/steam")}}><FontAwesomeIcon icon={faHome} /> 홈</li>
-                        <li onClick={() => {navigator("/steam/newsList")}}><FontAwesomeIcon icon={faNewspaper} /> 뉴스페이지</li>
+                        <li onClick={() => {navigate("/steam")}}><FontAwesomeIcon icon={faHome} /> 홈</li>
+                        <li onClick={() => {navigate("/steam/newsList")}}><FontAwesomeIcon icon={faNewspaper} /> 뉴스페이지</li>
                         <li><FontAwesomeIcon icon={faUser} /> 마이페이지</li>
-                        <li onClick={() => {navigator("/steam/login")}}><FontAwesomeIcon icon={faRightToBracket} /> 로그인</li>
-                        <li><FontAwesomeIcon icon={faRightFromBracket} /> 로그아웃</li>
+                        {!isLogin ? <li onClick={() => {navigate("/steam/login")}} ><FontAwesomeIcon icon={faRightToBracket} />로그인</li> : <></>}
+                        {isLogin ? <li onClick={()=>{logout(false)}}><FontAwesomeIcon icon={faRightFromBracket} /> 로그아웃</li> : <></>}
                     </ul>
                 </nav>
                 <ul className="social-media">
