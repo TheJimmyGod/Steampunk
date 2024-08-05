@@ -10,13 +10,14 @@ import FindID from './pages/FindID';
 import ResetPW from './pages/ResetPW';
 import TestMoon from './pages/TestMoon';
 import NewsList from './pages/NewsList';
+import ChartTest from './pages/ChartTest';
 
 const SteamJwt = () => {
     return (
         <BrowserRouter>
             <LoginContextProvider>
                  <Routes>
-                    <Route path="/steam" element={<Home/>}/>
+                   <Route path="/steam" element={<Home/>}/>
                     <Route path="/steam/login" element={<Login/>}/>
                     <Route path="/steam/register" element={<Register/>}/>
                     <Route path='/steam/findId' element={<FindID/>}/>
@@ -24,6 +25,7 @@ const SteamJwt = () => {
                     <Route path='/steam/resetPw' element={<ResetPW/>}/>
                     <Route path="/TestMoon" element={<TestMoon/>}/>
                     <Route path="/steam/newsList" element={<NewsList />}/>
+                    <Route path="/steam/chart" element={<ChartTest />}/>
                 </Routes>
             </LoginContextProvider>
 
