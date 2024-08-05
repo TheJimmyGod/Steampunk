@@ -84,6 +84,28 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public User Update(Long id, UserDTO userDTO)
+    {
+        User user = userRepository.findById(id).orElse(null);
+        if(user == null)
+            return null;
+        if(!userDTO.getPassword().isEmpty())
+            user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setAddress_main(userDTO.getAddress_main());
+        user.setAddress_sub(userDTO.getAddress_sub());
+        user.setBirth(userDTO.getBirth());
+        return userRepository.save(user);
+    }
+
+    public String Remove(Long id){
+        User user = userRepository.findById(id).orElse(null);
+        if(user == null)
+            return "존재하지 않는 유저";
+        String name = user.getUsername();
+        userRepository.deleteById(id);
+        return name + " 계정 탈퇴되었습니다.";
+    }
+
     public User Find(String username) {return userRepository.findByUsername(username);}
     public Long FindPassword(String username, String birth) throws ParseException {
         System.out.println(username);

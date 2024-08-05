@@ -90,7 +90,9 @@ const FindIDLoginForm = () => {
                 입력
                </Button>
             </Form>
-            
+            <div style={{marginTop: "20px"}}>
+                <Button className='btn-form' onClick={()=>{navigate(-1)}}>이전</Button>
+            </div>
         </div>
     );
 };

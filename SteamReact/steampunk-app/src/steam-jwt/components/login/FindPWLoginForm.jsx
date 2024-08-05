@@ -114,7 +114,9 @@ const FindPWLoginForm = () => {
                 입력
                </Button>
             </Form>
-            <div style={{marginBottom: "5%"}}></div>
+            <div style={{marginTop: "20px"}}>
+                <Button className='btn-form' onClick={()=>{navigate(-1)}}>이전</Button>
+            </div>
         </div>
     );
 };

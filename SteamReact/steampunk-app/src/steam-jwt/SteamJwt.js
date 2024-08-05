@@ -11,12 +11,16 @@ import ResetPW from './pages/ResetPW';
 import TestMoon from './pages/TestMoon';
 import NewsList from './pages/NewsList';
 import ChartTest from './pages/ChartTest';
+import MyPage from './pages/MyPage';
+import EditPersonalForm from './pages/EditPersonalInfo'
+import AddressContextProvider from './contexts/AddressContextProvider';
 
 const SteamJwt = () => {
     return (
         <BrowserRouter>
             <LoginContextProvider>
-                 <Routes>
+                <AddressContextProvider>
+                <Routes>
                    <Route path="/steam" element={<Home/>}/>
                     <Route path="/steam/login" element={<Login/>}/>
                     <Route path="/steam/register" element={<Register/>}/>
@@ -26,9 +30,11 @@ const SteamJwt = () => {
                     <Route path="/TestMoon" element={<TestMoon/>}/>
                     <Route path="/steam/newsList" element={<NewsList />}/>
                     <Route path="/steam/chart" element={<ChartTest />}/>
+                    <Route path='/steam/mypage' element={<MyPage/>}/>
+                    <Route path='/steam/edit/:id' element={<EditPersonalForm/>}/>
                 </Routes>
+                </AddressContextProvider>
             </LoginContextProvider>
-
         </BrowserRouter>
     );
 };

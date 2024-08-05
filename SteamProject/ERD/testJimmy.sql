@@ -1,7 +1,8 @@
 SELECT * FROM S_User;
 SELECT * FROM S_Authority;
+SELECT * FROM s_user_authorities;
 
-INSERT INTO S_Authority (role) VALUES ('ROLE_MEMBER'), ('ROLE_ADMIN');
+INSERT INTO S_Authority (name) VALUES ('ROLE_MEMBER'), ('ROLE_ADMIN');
 Truncate s_authority;
 DROP TABLE IF EXISTS s_user_authorities;
 DROP TABLE IF EXISTS s_role;
