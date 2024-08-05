@@ -101,7 +101,7 @@ const Home = () => {
                     <div className="grid-item recommended">
                         <Col md={6}>
                             <Carousel activeIndex={currentIndex} onSelect={(selectedIndex) => setCurrentIndex(selectedIndex)}>
-                                {/* {games.map((game) => (
+                                {games.map((game) => (
                                     <Carousel.Item key={game.id}>
                                         <img
                                             className="d-block w-100"
@@ -109,7 +109,7 @@ const Home = () => {
                                             alt={game.gameName}
                                         />
                                     </Carousel.Item>
-                                ))} */}
+                                ))}
                             </Carousel>
                         </Col>
                     </div>

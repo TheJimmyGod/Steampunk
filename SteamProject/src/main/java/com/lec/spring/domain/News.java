@@ -34,7 +34,7 @@ public class News {
 
     private String author;
 
-    @Column(length = 5000)
+    @Column(length = 8000)
     private String content;
 
 //    @JsonDeserialize(using= LocalDateTimeDeserializer.class)

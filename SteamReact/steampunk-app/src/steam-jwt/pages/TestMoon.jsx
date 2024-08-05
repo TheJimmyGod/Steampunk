@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import "./TestMoon.css"
 import { Button, Card, Carousel, Col, Container, Nav, Navbar, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const TestMoon = () => {
 
@@ -14,7 +15,41 @@ const TestMoon = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const navigate = useNavigate();
 
-    // const key = "AIzaSyCOaXfLbU-uxGuK4UXWVGO80QuhzOXQ7Ds";
+    const [page, setPage] = useState(0);
+    const [hasMore, setHasMore] = useState(true);
+    const [loading, setLoading] = useState(false);
+
+    // 데이터 요청 함수
+    const fetchNews = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.get('http://localhost:8080/news/findFiveNews', {
+                params: {
+                    page: page,
+                    size: 5
+                }
+            });
+
+            const fetchedNews = response.data.data;
+            console.log("fetchNews  ::  ",fetchNews);
+            setNews(prevNews => [...prevNews, ...fetchedNews]);
+
+            // 페이지가 더 있는지 확인
+            if (fetchedNews.length === 0 || fetchedNews.length < 5) {
+                setHasMore(false);
+            }
+
+            setPage(prevPage => prevPage + 1); // 페이지 번호 증가
+        } catch (error) {
+            console.error('Error fetching news:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchNews(); // 컴포넌트가 처음 렌더링될 때 데이터 요청
+    }, []);
 
     // 게임 정보 가져오기 (뉴스로 바뀔 예정)
     useEffect(()=>{
@@ -23,35 +58,25 @@ const TestMoon = () => {
             url: "http://localhost:8080/game/testGames"
         })
         .then((response) => {
+            console.log(response);
             setGames(response.data);
             console.log("games ======== ",games);
         })
 
     },[]);
 
-    useEffect(()=>{
-        axios({
-            method: "get",
-            url: "http://localhost:8080/news/findAllNews"
-        })
-        .then((response) => {
-            setNews(response.data);
-            console.log("news ======== ",news);
-        })
-
-    },[]);
-
-    // 유튜브 정보 가져오기
     // useEffect(()=>{
     //     axios({
     //         method: "get",
-    //         url: "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=%EC%8A%A4%ED%8C%80&type=video&key="+key,
+    //         url: "http://localhost:8080/news/findAllNews"
     //     })
     //     .then((response) => {
-            
-    //         setYoutube(response.data);
+    //         console.log(response);
+    //         setNews(response.data);
+    //         console.log("news ======== ",news);
     //     })
-    // },[])
+
+    // },[]);
 
     // 슬라이드 변경 타이머
     useEffect(() => {
@@ -85,16 +110,7 @@ const TestMoon = () => {
             {/* 메인 콘텐츠 */}
             <Container fluid="md" className="my-4">
                 <Row>
-                    <Col md={3}>
-                        <h4>Categories</h4>
-                        <Nav className="flex-column">
-                            <Nav.Link href="#">Action</Nav.Link>
-                            <Nav.Link href="#">Adventure</Nav.Link>
-                            <Nav.Link href="#">RPG</Nav.Link>
-                            <Nav.Link href="#">Shooter</Nav.Link>
-                        </Nav>
-                    </Col>
-                    <Col md={9}>
+                    <Col md={12}>
                         <h4>Featured Games</h4>
                         <Carousel activeIndex={currentIndex} onSelect={(selectedIndex) => setCurrentIndex(selectedIndex)}>
                             {games.map((game) => (
@@ -111,13 +127,13 @@ const TestMoon = () => {
                 </Row>
                 <div className="news-container">
             <h1 className="text-center my-4">최신 뉴스</h1>
-            {news.length === 0 ? (
+            {/* {news.length === 0 ? (
                 <p className="text-center">로딩 중...</p>
             ) : (
                 <div className="news-list">
                     {news.map((item) => (
                         <Card className="news-card mb-4" key={item.id}>
-                            <Row noGutters>
+                            <Row>
                                 <Col xs={12} md={5} className="news-card-image-col">
                                     <Card.Img
                                         src={item.capsuleImage}
@@ -135,11 +151,6 @@ const TestMoon = () => {
                                         <Card.Subtitle className="mb-2 text-muted news-author">
                                             {item.author}
                                         </Card.Subtitle>
-                                        <Card.Text className="news-content">
-                                            {item.content.length > 100
-                                                ? `${item.content.substring(0, 170)}...`
-                                                : item.content}
-                                        </Card.Text>
                                     </Card.Body>
                                     </div>
                                 </Col>
@@ -147,17 +158,25 @@ const TestMoon = () => {
                         </Card>
                     ))}
                 </div>
-            )}
+            )} */}
+            <InfiniteScroll
+                dataLength={news.length} // 현재 로드된 데이터 길이
+                next={fetchNews} // 스크롤이 끝에 도달했을 때 호출되는 함수
+                hasMore={hasMore} // 더 로드할 데이터가 있는지 여부
+                loader={<h4>Loading...</h4>} // 로딩 중 표시할 컴포넌트
+                endMessage={<p>No more news!</p>} // 데이터가 더 이상 없을 때 표시할 메시지
+            >
+                <ul>
+                    {news.map((item, index) => (
+                        <li key={index}>
+                            <h3>{item.title}</h3>
+                            <p>{item.content}</p>
+                        </li>
+                    ))}
+                </ul>
+            </InfiniteScroll>
         </div>
             </Container>
-            {/* 유튜브  */}
-            {/* {hasData ? (<iframe 
-            width="482" 
-            height="270" 
-            src={`https://www.youtube.com/embed/${youtube.items[0].id.videoId}`}
-            title={`https://www.youtube.com/embed/${youtube.items[0].snippet.title}`}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-            referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>) : (<p>로딩중</p>)} */}
 
             {/* 푸터 */}
             <Navbar bg="dark" variant="dark" className="mt-4">

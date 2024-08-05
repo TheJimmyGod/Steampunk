@@ -26,7 +26,7 @@ const ChartTest = () => {
     // Sample data arrays
 
     const [chart, setChart] = useState([]);
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     useEffect(() => {
         axios({
             method: "get",
