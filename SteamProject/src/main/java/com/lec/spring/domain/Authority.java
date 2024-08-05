@@ -18,5 +18,5 @@ public class Authority {
     private Long id;
     @Column(length = 40, nullable = false, unique = true)
     @ColumnDefault("'ROLE_MEMBER'")
-    private String name;
+    private String name = "ROLE_MEMBER";
 }

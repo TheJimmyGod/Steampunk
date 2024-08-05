@@ -34,7 +34,7 @@ const ResetPWForm = () => {
         e.preventDefault();
         const password = e.target.password.value;
         const re_password = e.target.re_password.value;
-        errors.password = (password.trim() === "" || password.trim().length < 3 || password.trim().length > 9) ? true : false;
+        errors.password = (password.trim() === "" || password.trim().length < 3 || password.trim().length > 8) ? true : false;
         errors.re_password = (re_password.trim() === "" || re_password.trim() !== password.trim()) ? true : false;
         if(errors.username || errors.password || errors.re_password || errors.address_main || errors.address_sub)
             {

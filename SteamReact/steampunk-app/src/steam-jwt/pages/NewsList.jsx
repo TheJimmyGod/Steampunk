@@ -4,6 +4,7 @@ import { faHubspot, faSteam, faYoutube, faInstagram, faFacebook } from '@fortawe
 import { faHome, faNewspaper, faUser, faRightToBracket, faRightFromBracket, faBars, faMagnifyingGlass, faBookmark, faDownLong } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark as farBookmark } from '@fortawesome/free-regular-svg-icons';
 import { useNavigate } from 'react-router-dom';
+import SideBar from '../components/sidebar/SideBar';
 
 const NewsList = () => {
 
@@ -11,26 +12,7 @@ const NewsList = () => {
 
     return (
         <>
-            <aside className="sidebar">
-                <div className="logo">
-                    <FontAwesomeIcon icon={faHubspot} /> Steam News
-                </div>
-                <nav>
-                    <ul>
-                        <li onClick={() => {navigator("/steam")}}><FontAwesomeIcon icon={faHome} /> 홈</li>
-                        <li onClick={() => {navigator("/steam/newsList")}}><FontAwesomeIcon icon={faNewspaper} /> 뉴스페이지</li>
-                        <li><FontAwesomeIcon icon={faUser} /> 마이페이지</li>
-                        <li onClick={() => {navigator("/steam/login")}}><FontAwesomeIcon icon={faRightToBracket} /> 로그인</li>
-                        <li><FontAwesomeIcon icon={faRightFromBracket} /> 로그아웃</li>
-                    </ul>
-                </nav>
-                <ul className="social-media">
-                    <li><FontAwesomeIcon icon={faSteam} /></li>
-                    <li><FontAwesomeIcon icon={faYoutube} /></li>
-                    <li><FontAwesomeIcon icon={faInstagram} /></li>
-                    <li><FontAwesomeIcon icon={faFacebook} /></li>
-                </ul>
-            </aside>
+            <SideBar/>
             <main>
                 <header className="main-header"></header>
                 <section className="banner">

@@ -1,19 +1,14 @@
 import "./RegisterForm.css";
+import "../../../HTML/SteamNewsCss.css"
 import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { AddressContext } from "../../contexts/AddressContextProvider";
 
-
-
-const COUNT_PER_PAGE = 1000;
-const new_regex = /^[가-힣0-9\s]*$/;
 const RegisterForm = ({ register }) => {
-
-  const [addrData, setAddrData] = useState([]);
+  const {addrData, insertKeyword} = useContext(AddressContext);
   const [errors, setErrors] = useState({});
-  const [keyword, setKeyword] = useState("");
-  const prev = useRef("");
 
   const navigate = useNavigate();
 
@@ -22,74 +17,7 @@ const RegisterForm = ({ register }) => {
 
     console.log(errors);
 
-    setErrors({
-      username: false,
-      password: false,
-      re_password: false,
-      address_main: false,
-      address_sub: false
-    });
-  }, []);
-
-  useEffect(() => {
-    if (keyword.trim() === "") {
-      setAddrData([]);
-      console.log(document.getElementById("address_main").value);
-      document.getElementById("address_main").value = "";
-      return;
-    }
-
-    if (prev.current !== keyword)
-      findPath();
-  }, [keyword]);
-
-  const findPath = () => {
-    if (new_regex.test(keyword)) {
-      // 	devU01TX0FVVEgyMDI0MDczMDE1NTM1MDExNDk3NTU=
-      let encodedKeyword = encodeURIComponent(keyword);
-      let apiKey = "devU01TX0FVVEgyMDI0MDczMDE1NTM1MDExNDk3NTU=";
-      axios({
-        method: "get",
-        url: `https://business.juso.go.kr/addrlink/addrLinkApi.do?resultType=json&confmKey=${apiKey}&currentPage=1&countPerPage=${COUNT_PER_PAGE}&keyword=${encodedKeyword}`,
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }).then(response => {
-        const { data, status } = response;
-        if (status === 200) {
-          setAddrData([]);
-          if (!Array.isArray(data.results.juso))
-            return;
-          for (let item of data.results.juso) {
-            let road = item.rn + " " + item.buldMnnm;
-
-            if (item.rn.includes(keyword) === false) {
-              continue;
-            }
-            if (!addrData.some(entry => entry.key.includes(road))) {
-              addrData.push({ key: road, value: item.jibunAddr });
-            }
-          }
-          setAddrData(sortArr(addrData).filter(x => x.key.includes(keyword)));
-          prev.current = keyword;
-        }
-      }).catch(err => {
-        console.log(err);
-        return;
-      });
-    }
-
-  }
-
-  function sortArr() {
-    const entries = [];
-    for (const item of addrData) {
-      entries.push(item);
-    }
-    setAddrData(entries.sort());
-    return addrData;
-  }
-
+    setErrors({ username: false, password: false, re_password: false, address_main: false, address_sub: false }); }, []);
   const [selected, setSelected] = useState('');
 
   const handleChangeSelect = (e) => {
@@ -107,7 +35,7 @@ const RegisterForm = ({ register }) => {
     const admin = e.target.admin.checked;
 
     errors.username = (username.trim() === "") ? true : false;
-    errors.password = (password.trim() === "" || password.trim().length < 3 || password.trim().length > 9) ? true : false;
+    errors.password = (password.trim() === "" || password.trim().length < 3 || password.trim().length > 8) ? true : false;
     errors.re_password = (re_password.trim() === "" || re_password.trim() !== password.trim()) ? true : false;
     errors.address_main = (address_main.trim() === "") ? true : false;
     errors.address_sub = (address_sub.trim() === "") ? true : false;
@@ -120,9 +48,13 @@ const RegisterForm = ({ register }) => {
     register({ username, password, re_password, address_main, address_sub, birth, admin });
   };
   return (
-    <div className="form">
-      <div id='top' />
-      <h2 className="login-title">회원가입</h2>
+    <main className="form">
+          <header className="main-header"></header>
+            <div className="banner">
+            <h1 className="login-title">Sign Up</h1>
+            <p>새로운 회원을 환영합니다</p>
+            </div>
+
       <Form className="login-form" onSubmit={(e) => onRegister(e)}>
         <div>
           <Form.Label htmlFor="username">유저 ID</Form.Label>
@@ -165,10 +97,7 @@ const RegisterForm = ({ register }) => {
             placeholder="도로명주소를 입력해주세요"
             name="path"
             autoComplete="path"
-            onChange={(e) => {
-              let str = e.target.value.trim();
-              setKeyword(str);
-            }}
+            onChange={insertKeyword}
           />
         </div>
         <div>
@@ -239,7 +168,7 @@ const RegisterForm = ({ register }) => {
         </Button>
       </Form>
       <div id='bottom' />
-    </div>
+    </main>
   );
 };
 
