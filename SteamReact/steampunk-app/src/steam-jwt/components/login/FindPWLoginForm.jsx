@@ -41,7 +41,7 @@ const FindPWLoginForm = () => {
                     "Content-Type":"application/json;charset=utf-8"
                 }
             }).then(response=>{
-                const {data, status, statusText} = response;
+                const {data, status} = response;
     
                 if(status === 200)
                 {

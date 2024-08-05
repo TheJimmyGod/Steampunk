@@ -11,6 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Objects;
+
 
 @RestController
 @RequestMapping("/steam")
@@ -45,13 +49,30 @@ public class UserController {
     public ResponseEntity<?> findPWPage() { return new ResponseEntity<>("OK", HttpStatus.OK);}
 
     @GetMapping("/findPw/{name}/{birth}")
-    public ResponseEntity<?> findPW(@PathVariable String name, @PathVariable String birth) {
+    public ResponseEntity<?> findPW(@PathVariable String name, @PathVariable String birth) throws ParseException {
+        if(name.isEmpty() || userService.Find(name) == null)
+            return new ResponseEntity<>("아이디가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+        if(birth.isEmpty())
+            return new ResponseEntity<>("생년월일이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+        if(birth.length() <= 8) // ########
+        {
+            SimpleDateFormat originFormat = new SimpleDateFormat("yyyyMMdd");
+            var time = originFormat.parse(birth);
+            SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy-MM-dd");
+            birth = dtFormat.format(time);
+        }
+        if(!Objects.equals(userService.Find(name).getBirth(), birth))
+            return new ResponseEntity<>("생년월일이 존재하지 않거나 일치하지 않습니다.", HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(userService.FindPassword(name,birth), HttpStatus.OK);}
     // 개인정보 수정
     @PostMapping("/resetPw/{id}/{password}")
-    public ResponseEntity<?> resetPw(@PathVariable Long id, @PathVariable String newPassword)
+    public ResponseEntity<?> resetPw(@PathVariable Long id, @PathVariable String password)
     {
-        return new ResponseEntity<>(userService.ResetPassword(id, newPassword),HttpStatus.OK);
+        if(password.length() < 4 || password.length() > 8)
+            return new ResponseEntity<>("패스워드 양식이 올바르지 않습니다.", HttpStatus.BAD_REQUEST);
+        if(userService.findById(id) == null)
+            return new ResponseEntity<>("존재하지 않는 유저입니다.", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(userService.ResetPassword(id, password),HttpStatus.OK);
     }
     // 탈퇴
 

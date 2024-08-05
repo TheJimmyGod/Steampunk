@@ -42,6 +42,7 @@ const ResetPWForm = () => {
                 return;
             }
         const url = `${SERVER_HOST}/resetPw/${(userId !== 0) ? userId : value}/${password}`;
+        console.log(url);
         axios({
             method:"post",
             url: url
@@ -49,10 +50,10 @@ const ResetPWForm = () => {
             const {status} = response;
             if(status === 200)
             {
-                Swal.alert("비밀번호 재발급 성공!", "메인 홈페이지로 이동합니다.", "success", () => {navigate("/steam");}); 
+                Swal.alert("비밀번호 재발급 성공!", "로그인 페이지로 이동합니다.", "success", () => {navigate("/steam/login");}); 
             }
         }).catch(err=>{
-            console.log(err);
+            Swal.alert("비밀번호 재발급 실패!", "비밀번호가 기존과 같거나 유효성 검사에서 실패를 했습니다.", "error", () => {navigate("/steam/login");}); 
         });
     };
 

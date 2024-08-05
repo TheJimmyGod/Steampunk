@@ -17,7 +17,6 @@ const SteamJwt = () => {
         <BrowserRouter>
             <LoginContextProvider>
                  <Routes>
-            
                    <Route path="/steam" element={<Home/>}/>
                     <Route path="/steam/login" element={<Login/>}/>
                     <Route path="/steam/register" element={<Register/>}/>
