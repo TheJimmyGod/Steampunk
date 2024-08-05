@@ -15,6 +15,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class RankService {
@@ -93,5 +95,22 @@ public class RankService {
             System.err.println("Exception occurred while saving rank: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    @Transactional
+    public List<Rank> findAllRank() {
+
+        return rankRepository.findAll();
+    }
+
+    public List<Rank> findByRank() {
+        List<Rank> ranks = new ArrayList<>();
+
+        for (Long i = 1L; i <= 10L; i+= 1L) {
+
+            ranks.add(rankRepository.findByRank(i));
+            System.out.println(rankRepository.findByRank(i));
+        }
+        return ranks;
     }
 }

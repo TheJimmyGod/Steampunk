@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface RankRepository extends JpaRepository<Rank, Long> {
     Rank findByAppId (Long appId);
 
+    Rank findByRank (Long game_rank);
+
 }

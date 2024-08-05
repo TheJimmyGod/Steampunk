@@ -81,7 +81,8 @@ public class GameService {
 
                 Long id = game.getAppId();
                 System.out.println("appid : " + id + "appid 찾기완료");
-                if(id == null || id == 0L || id < 221100) continue;
+
+                if(id == null || id == 0L) continue;
                 // if(id == null || id == 0L || id < 45300L) continue;
                 // 중단했다가 이어가고 싶으면 id 값을 위처럼 처리 (appid = 45300 부터 저장하고 싶을때)
 
