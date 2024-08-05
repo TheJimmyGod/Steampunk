@@ -6,13 +6,21 @@ import com.lec.spring.domain.Game;
 import com.lec.spring.domain.News;
 import com.lec.spring.repository.GameRepository;
 import com.lec.spring.repository.NewsRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class NewsService {
@@ -24,6 +32,82 @@ public class NewsService {
         this.newsRepository = newsRepository;
         this.gameRepository = gameRepository;
         this.jacksonObjectMapper = jacksonObjectMapper;
+    }
+
+    public void saveNews() {
+        try {
+            List<Game> games = gameRepository.findAll();
+            for (Game game : games) {
+                Long appId = game.getAppId();
+
+                URL url = new URL("https://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid=" + appId + "&count=1&maxlength=5000&format=json");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+                conn.setRequestMethod("GET");
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setDoOutput(true);
+
+                int responseCode = conn.getResponseCode(); // 서버의 응답 코드를 가져옵니다.
+                if (responseCode == HttpURLConnection.HTTP_OK) { // 응답 코드가 200(OK)일 경우
+                    BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    StringBuilder sb = new StringBuilder();
+                    String line = null;
+
+                    while ((line = br.readLine()) != null) {
+                        sb.append(line);
+                    }
+                    br.close();
+
+                    JsonNode rootNode = jacksonObjectMapper.readTree(sb.toString());
+                    JsonNode appNodes = rootNode.path("appnews").path("newsitems");
+                    if(appNodes.isEmpty()) continue;
+
+                    if (appNodes.isArray()) {
+                        News news = new News();
+
+                        for (JsonNode appNode : appNodes) {
+                            String title = appNode.path("title").asText();
+                            String author = appNode.path("author").asText();
+                            String content = appNode.path("contents").asText();
+                            String date = appNode.path("date").asText();
+
+                            System.out.printf("""
+                                appid: %d
+                                title: %s
+                                author: %s
+                                content: %s
+                                date: %s
+                                """, appId, title, author, content, date);
+
+                            news.setTitle(title);
+                            if (author.trim().isEmpty()) {
+                                news.setAuthor("unknown");
+                            } else {
+                                news.setAuthor(author);
+                            }
+                            news.setGameName(gameRepository.findByAppId(appId).getGameName());
+                            news.setCapsuleImage(gameRepository.findByAppId(appId).getCapsuleImage());
+                            news.setContent(content);
+                            news.setDate(date);
+                            news.setAppId(appId);
+
+                            System.out.println("news : " + news);
+                        }
+                        newsRepository.save(news);
+                        System.out.println(appId + " : 저장 성공!!!!!!!!!");
+                    } else {
+                        System.out.println("실패!!!!!!!!!!!!!!!!!!!");
+                    }
+                } else if (responseCode == HttpURLConnection.HTTP_FORBIDDEN) { // 응답 코드가 403(Forbidden)일 경우
+                    System.out.println("403 Forbidden: Access to the resource is forbidden for appId " + appId);
+                } else {
+                    System.out.println("HTTP Error Code: " + responseCode + " for appId " + appId);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public News findNews(Long appId) {
@@ -98,5 +182,9 @@ public class NewsService {
     }
     public List<News> findAllNews() {
         return newsRepository.findAll();
+    }
+    public Page<News> findFiveNews(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return newsRepository.findAll(pageable);
     }
 }

@@ -7,6 +7,7 @@ delete FROM S_Game where appId = 0;
 delete FROM S_Game where id > 10000;
 
 SELECT * FROM S_News;
+SELECT count(*) from S_News;
 DELETE FROM S_News where appId = 10;
 ALTER TABLE S_News AUTO_INCREMENT = 1;
 Drop table if exists S_News;

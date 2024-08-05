@@ -89,8 +89,29 @@ public class UserController {
             return new ResponseEntity<>("존재하지 않는 유저입니다.", HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(userService.ResetPassword(id, password),HttpStatus.OK);
     }
-    // 탈퇴
 
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<?> edit(@PathVariable Long id, @RequestBody UserDTO userDTO)
+    {
+        if(!userDTO.getPassword().isEmpty() && userDTO.getPassword().length() < 4 || userDTO.getPassword().length() > 8)
+            return new ResponseEntity<>("잘못된 양식의 비밀번호 입니다", HttpStatus.BAD_REQUEST);
+        if(!userDTO.getPassword().isEmpty() && !userDTO.getPassword().equals(userDTO.getRe_password()))
+            return new ResponseEntity<>("일치하지 않는 비밀번호 입니다", HttpStatus.BAD_REQUEST);
+        if(userDTO.getAddress_main().isEmpty())
+            return new ResponseEntity<>("도로명주소를 입력해주십시오", HttpStatus.BAD_REQUEST);
+        if(userDTO.getAddress_sub().isEmpty())
+            return new ResponseEntity<>("상세주소를 입력해주십시오", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(userService.Update(id, userDTO), HttpStatus.OK);
+    }
+
+    // 탈퇴
+    @DeleteMapping("/remove/{id}")
+    public ResponseEntity<?> removeUser(@PathVariable Long id) {
+        if(id < 0L || id >= Long.MAX_VALUE)
+            return new ResponseEntity<>("올바르지 않는 ID", HttpStatus.BAD_REQUEST);
+        if(userService.findById(id) == null)
+            return new ResponseEntity<>("존재하지 않는 ID", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(userService.Remove(id), HttpStatus.OK);}
     @GetMapping("/list")
     public ResponseEntity<?> findAll(){
         return new ResponseEntity<>(userService.FindAll(), HttpStatus.OK);

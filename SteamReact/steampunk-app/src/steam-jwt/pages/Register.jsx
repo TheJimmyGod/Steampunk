@@ -27,9 +27,7 @@ const Register = () => {
     }
     return (
         <>
-          <div className='container'>
-                <RegisterForm register={register}/>
-            </div>  
+            <RegisterForm register={register}/> 
         </>
     );
 };

@@ -25,7 +25,6 @@ const ChartTest = () => {
     const [chartData, setChartData] = useState([]);
     const [cocurrunt, setCocurrunt] = useState([]);
     const [hoveredIndex, setHoveredIndex] = useState(null); // 마우스가 올라간 막대의 인덱스를 추적
-    
     useEffect(() => {
         axios({
             method: "get",
