@@ -35,6 +35,18 @@ public class UserController {
     // 회원가입
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserDTO userDTO) {
+        if(userDTO.getUsername().isEmpty())
+            return new ResponseEntity<>("아이디를 입력해주세요", HttpStatus.BAD_REQUEST);
+        if(userDTO.getPassword().isEmpty())
+            return new ResponseEntity<>("비밀번호를 입력해주세요", HttpStatus.BAD_REQUEST);
+        if(userDTO.getPassword().length() < 4 || userDTO.getPassword().length() > 8)
+            return new ResponseEntity<>("잘못된 양식의 비밀번호 입니다", HttpStatus.BAD_REQUEST);
+        if(!userDTO.getPassword().equals(userDTO.getRe_password()))
+            return new ResponseEntity<>("일치하지 않는 비밀번호 입니다", HttpStatus.BAD_REQUEST);
+        if(userDTO.getAddress_main().isEmpty())
+            return new ResponseEntity<>("도로명주소를 입력해주십시오", HttpStatus.BAD_REQUEST);
+        if(userDTO.getAddress_sub().isEmpty())
+            return new ResponseEntity<>("상세주소를 입력해주십시오", HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(userService.register(userDTO), HttpStatus.OK);
     }
 
@@ -43,7 +55,10 @@ public class UserController {
 
     @GetMapping("/findId/{name}")
     public ResponseEntity<?> findID(@PathVariable String name) {
-        return new ResponseEntity<>(userService.Find(name) != null, HttpStatus.OK);}
+        var user = userService.Find(name);
+        if(user == null)
+            return new ResponseEntity<>("존재하지 않는 유저입니다", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(user, HttpStatus.OK);}
 
     @RequestMapping("/findPw")
     public ResponseEntity<?> findPWPage() { return new ResponseEntity<>("OK", HttpStatus.OK);}
