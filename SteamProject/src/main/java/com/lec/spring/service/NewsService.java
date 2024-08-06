@@ -9,6 +9,7 @@ import com.lec.spring.repository.NewsRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -183,8 +184,10 @@ public class NewsService {
     public List<News> findAllNews() {
         return newsRepository.findAll();
     }
+
     public Page<News> findFiveNews(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("date")));
         return newsRepository.findAll(pageable);
     }
 }

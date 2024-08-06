@@ -11,6 +11,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { Card, Col, Row } from 'react-bootstrap';
 
 const NewsList = () => {
+    const defaultImage = "https://store.akamai.steamstatic.com/public/shared/images/header/logo_steam.svg?t=962016";
 
     const navigate = useNavigate();
     console.log(LoginContext);
@@ -34,7 +35,7 @@ const NewsList = () => {
             const response = await axios.get('http://localhost:8080/news/findFiveNews', {
                 params: {
                     page: page,
-                    size: 5
+                    size: 5,
                 }
             });
 
@@ -122,9 +123,13 @@ const NewsList = () => {
                     {news.map((item) => (
                         <div>
                             <div className="news-item">
-                                <img src={item.capsuleImage} alt="뉴스 이미지" className="news-image" />
+                            <img
+                                    src={item.capsuleImage || defaultImage}
+                                    alt="뉴스 이미지"
+                                    className="news-image"
+                                />
                                 <div className="news-content">
-                                    <h2 className="news-title"><Link>{item.title}</Link></h2>
+                                    <h2 className="news-title" onClick={() =>{navigate(`/steam/newsDetail/${item.appId}`)}}><Link>{item.title}</Link></h2>
                                     <p className="game-name">{item.gameName}</p>
                                     <p className="author">{item.author}</p>
                                     <p className="date">{formatDateToKorean(item.date)}</p>

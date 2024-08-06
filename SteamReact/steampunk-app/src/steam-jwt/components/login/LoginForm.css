@@ -135,7 +135,7 @@
 
 .toggle-btn input:checked + .slider:before {
   transform: translateX(20px); /* 체크된 상태에서 원의 위치 조정 */
-  background-color: #2196F3;
+  background-color: #ccc;
   
 }
 /* 로그인 찾기 */
