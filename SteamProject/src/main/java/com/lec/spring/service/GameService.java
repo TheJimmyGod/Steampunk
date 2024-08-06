@@ -230,4 +230,9 @@ public class GameService {
     public Game findGame(Long appId){
         return gameRepository.findByAppId(appId);
     }
+
+    public List<Game> findGameName(String gameName) {
+        return gameRepository.findByGameNameContaining(gameName);
+    }
+
 }

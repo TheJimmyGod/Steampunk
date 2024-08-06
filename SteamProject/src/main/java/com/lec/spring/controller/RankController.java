@@ -26,6 +26,7 @@ public class RankController {
     public List<Rank> findByRank(){
         return rankService.findByRank();
     }
+
     @GetMapping("/saveRank")
     public void getJsonRank() {
         rankService.saveRank();
