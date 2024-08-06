@@ -1,29 +1,26 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHubspot, faSteam, faYoutube, faInstagram, faFacebook } from '@fortawesome/free-brands-svg-icons';
-import { faHome, faNewspaper, faUser, faRightToBracket, faRightFromBracket, faBars, faMagnifyingGlass, faBookmark, faDownLong } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark as farBookmark } from '@fortawesome/free-regular-svg-icons';
-import { Link, useNavigate } from 'react-router-dom';
+import { faBookmark } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
 import { LoginContext } from '../contexts/LoginContextProvider';
 import SideBar from '../components/sidebar/SideBar';
 import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { Card, Col, Row } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 
 const NewsList = () => {
+    const defaultImage = "https://store.akamai.steamstatic.com/public/shared/images/header/logo_steam.svg?t=962016";
+    const { isLogin, logout } = useContext(LoginContext);
 
     const navigate = useNavigate();
-    console.log(LoginContext);
-    const { isLogin } = useContext(LoginContext);
-    const { logout } = useContext(LoginContext);
-
-    console.log(isLogin);
-    console.log(logout);
 
     const [news, setNews] = useState([]);
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(false);
+    const [selectValue, setSelectValue] = useState("all");
 
     // 뉴스 데이터 요청 함수
     const fetchNews = async () => {
@@ -31,16 +28,17 @@ const NewsList = () => {
 
         setLoading(true);
         try {
-            const response = await axios.get('http://localhost:8080/news/findFiveNews', {
+            const response = await axios.get('http://localhost:8080/news/findNews/'+selectValue, {
                 params: {
                     page: page,
-                    size: 5
+                    size: 5,
                 }
             });
-
+            console.log("정렬확인용 : ",response.data.content); // 서버 응답 데이터 확인
+            console.log('News:', news);
+            console.log('Page:', page);
+            console.log('Has more:', hasMore);
             const fetchedNews = response.data.content;
-            console.log("fetchedNews  ::  ", fetchedNews);
-
             if (Array.isArray(fetchedNews)) {
                 // 중복된 ID를 제거하여 고유한 뉴스 아이템만 유지
                 const uniqueNews = Array.from(new Map(fetchedNews.map(item => [item.id, item])).values());
@@ -58,7 +56,7 @@ const NewsList = () => {
                 }
             }
 
-            setPage(prevPage => prevPage + 1); // 페이지 번호 증가
+            setPage(page + 1); // 페이지 번호 증가
         } catch (error) {
             console.error('Error fetching news:', error);
         } finally {
@@ -67,8 +65,16 @@ const NewsList = () => {
     };
 
     useEffect(() => {
-        fetchNews(); // 컴포넌트가 처음 렌더링될 때 데이터 요청
-    }, []);
+        const loadNews = async () => {
+            setPage(0); // 페이지 번호를 초기화
+            setNews([]); // 기존 뉴스 데이터를 제거
+            setHasMore(true); // 더 많은 뉴스가 있는 상태로 초기화
+            setLoading(false);
+            await fetchNews(); // 뉴스 데이터 요청
+        };
+
+        loadNews(); // 뉴스 데이터 로드 함수 호출
+    }, [selectValue]); // selectValue 변경 시마다 fetchNews 호출
 
     // Unix 타임스탬프를 한국 시간으로 변환하는 함수
     const formatDateToKorean = (timestamp) => {
@@ -83,30 +89,42 @@ const NewsList = () => {
         }).format(date);
     };
 
+    const handleFilterChange = (e) => {
+        setSelectValue(e.target.value); // 선택된 필터 값으로 상태 업데이트
+        setPage(0);
+    };
+
+    const onSubmitString = (e) => {
+        e.preventDefault();
+
+        console.log(e.target.value);
+
+    }
+
     return (
         <>
-            <SideBar/>
+            <SideBar />
             <main>
                 <header className="main-header"></header>
                 <section className="banner">
                     <h1>STEAM NEWS</h1>
                     <p>최신 스팀 뉴스를 알려드립니다</p>
-                    <div className="search-bar">
+                    <Form onClick={onSubmitString} className="search-bar">
                         <FontAwesomeIcon icon={faBars} className="filter-toggle" />
-                        <input className="search-news" placeholder="Search..." />
-                        <FontAwesomeIcon icon={faMagnifyingGlass} />
-                    </div>
+                        <input className="search-news" placeholder="Search..."/>
+                        <button type='submit'><FontAwesomeIcon icon={faMagnifyingGlass} /></button> 
+                    </Form>
                     <div className="filter-menu">
                         <label>
-                            <input type="radio" name="filter" value="all" defaultChecked />
+                            <input type="radio" name="filter" value="all" checked={selectValue === "all"} onChange={handleFilterChange} />
                             전체
                         </label>
                         <label>
-                            <input type="radio" name="filter" value="free" />
+                            <input type="radio" name="filter" value="free" checked={selectValue === "free"} onChange={handleFilterChange} />
                             무료게임
                         </label>
                         <label>
-                            <input type="radio" name="filter" value="paid" />
+                            <input type="radio" name="filter" value="paid" checked={selectValue === "paid"} onChange={handleFilterChange} />
                             유료게임
                         </label>
                     </div>
@@ -122,9 +140,13 @@ const NewsList = () => {
                     {news.map((item) => (
                         <div>
                             <div className="news-item">
-                                <img src={item.capsuleImage} alt="뉴스 이미지" className="news-image" />
+                            <img
+                                    src={item.capsuleImage || defaultImage}
+                                    alt="뉴스 이미지"
+                                    className="news-image"
+                                />
                                 <div className="news-content">
-                                    <h2 className="news-title"><Link>{item.title}</Link></h2>
+                                    <h2 className="news-title" onClick={() =>{navigate(`/steam/newsDetail/${item.appId}`)}}><Link>{item.title}</Link></h2>
                                     <p className="game-name">{item.gameName}</p>
                                     <p className="author">{item.author}</p>
                                     <p className="date">{formatDateToKorean(item.date)}</p>
@@ -134,9 +156,7 @@ const NewsList = () => {
                                     <FontAwesomeIcon icon={faBookmark} />
                                 </div>
                             </div>
-                        </div>
-                        
-                    ))}
+                        ))}
                     </InfiniteScroll>
                 </section>
             </main>

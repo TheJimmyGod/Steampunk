@@ -1,5 +1,4 @@
-import '../pages/SteamNewsCss.css';
-
+import '../../HTML/SteamNewsCss.css';
 import ChartTest from './ChartTest';
 import FeaturedGames from './FeaturedGames';
 import SideBar from '../components/sidebar/SideBar';
