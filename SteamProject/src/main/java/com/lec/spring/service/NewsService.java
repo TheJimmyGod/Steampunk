@@ -9,6 +9,7 @@ import com.lec.spring.repository.NewsRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -85,8 +86,9 @@ public class NewsService {
                             } else {
                                 news.setAuthor(author);
                             }
-                            news.setGameName(gameRepository.findByAppId(appId).getGameName());
-                            news.setCapsuleImage(gameRepository.findByAppId(appId).getCapsuleImage());
+                            news.setGameName(game.getGameName());
+                            news.setCapsuleImage(game.getCapsuleImage());
+                            news.setIsFree(game.getIsFree());
                             news.setContent(content);
                             news.setDate(date);
                             news.setAppId(appId);
@@ -183,8 +185,17 @@ public class NewsService {
     public List<News> findAllNews() {
         return newsRepository.findAll();
     }
-    public Page<News> findFiveNews(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<News> findAllNews(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "date"));
         return newsRepository.findAll(pageable);
+    }
+    public Page<News> findFreeNews(int page, int size){
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "date"));
+        return newsRepository.findAllByIsFree(true, pageable);
+    }
+
+    public Page<News> findPaidNews(int page, int size){
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "date"));
+        return newsRepository.findAllByIsFree(false, pageable);
     }
 }

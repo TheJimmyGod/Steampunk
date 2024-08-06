@@ -22,18 +22,33 @@ public class NewsController {
         return newsService.findNews(appId);
     }
 
+    // 뉴스 저장용
     @GetMapping("/saveNews")
     public void saveNews() {
         newsService.saveNews();
     }
 
-    @GetMapping("/findAllNews")
+    // 처음 뉴스들 뽑을 때 쓰던거 이제 안씀 혹시 몰라서 남김
+    @GetMapping("/findNews")
     public List<News> findAllNews() {
         return newsService.findAllNews();
     }
 
-    @GetMapping("/findFiveNews")
-    public Page<News> findFiveNews(@RequestParam int page, @RequestParam int size) {
-        return newsService.findFiveNews(page, size);
+    // 무한 스크롤 '전체' 선택일 경우
+    @GetMapping("/findNews/all")
+    public Page<News> findAllNews(@RequestParam int page, @RequestParam int size) {
+        return newsService.findAllNews(page, size);
+    }
+
+    // 무한 스크롤 '무료' 선택일 경우
+    @GetMapping("/findNews/free")
+    public Page<News> findFreeNews(@RequestParam int page, @RequestParam int size) {
+        return newsService.findFreeNews(page, size);
+    }
+
+    // 무한 스크롤 '유료' 선택일 경우
+    @GetMapping("/findNews/paid")
+    public Page<News> findPaidNews(@RequestParam int page, @RequestParam int size) {
+        return newsService.findPaidNews(page, size);
     }
 }
