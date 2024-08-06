@@ -2,25 +2,27 @@ import axios from 'axios';
 import React from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import "./TestMoon.css"
+// import "./TestMoon.css"  
 import { Button, Card, Carousel, Col, Container, Nav, Navbar, Row } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 const TestMoon = () => {
 
     const [youtube, setYoutube] = useState({ items: []});
     const [games, setGames] = useState([]);
-    const [news, setNews] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const navigate = useNavigate();
-
+    
+    const [news, setNews] = useState([]);
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(false);
 
-    // 데이터 요청 함수
+    // 뉴스 데이터 요청 함수
     const fetchNews = async () => {
+        if (loading) return; // 이미 로딩 중이면 무시
+
         setLoading(true);
         try {
             const response = await axios.get('http://localhost:8080/news/findFiveNews', {
@@ -30,17 +32,25 @@ const TestMoon = () => {
                 }
             });
 
-            const fetchedNews = response.data.data;
-            console.log("fetchNews  ::  ",fetchNews);
-            if(Array.isArray(fetchedNews)){
-                setNews(prevNews => [...prevNews, ...fetchedNews]);
-                console.log("fetched News : ", news)
+            const fetchedNews = response.data.content;
+            console.log("fetchedNews  ::  ", fetchedNews);
+
+            if (Array.isArray(fetchedNews)) {
+                // 중복된 ID를 제거하여 고유한 뉴스 아이템만 유지
+                const uniqueNews = Array.from(new Map(fetchedNews.map(item => [item.id, item])).values());
+
+                setNews(prevNews => {
+                    // 현재 뉴스와 새로운 뉴스를 병합하고 중복 제거
+                    const allNews = [...prevNews, ...uniqueNews];
+                    const uniqueAllNews = Array.from(new Map(allNews.map(item => [item.id, item])).values());
+                    return uniqueAllNews;
+                });
+
                 // 페이지가 더 있는지 확인
                 if (fetchedNews.length === 0 || fetchedNews.length < 5) {
                     setHasMore(false);
                 }
             }
-            
 
             setPage(prevPage => prevPage + 1); // 페이지 번호 증가
         } catch (error) {
@@ -61,9 +71,7 @@ const TestMoon = () => {
             url: "http://localhost:8080/game/testGames"
         })
         .then((response) => {
-            console.log(response);
             setGames(response.data);
-            console.log("games ======== ",games);
         })
 
     },[]);
@@ -91,6 +99,19 @@ const TestMoon = () => {
     }, [games.length]); // games.length가 변경될 때만 실행됨
 
     const hasData = youtube.items.length > 0;
+
+    // Unix 타임스탬프를 한국 시간으로 변환하는 함수
+    const formatDateToKorean = (timestamp) => {
+        const date = new Date(timestamp * 1000); // 타임스탬프는 초 단위이므로 밀리초로 변환
+        return new Intl.DateTimeFormat('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+        }).format(date);
+    };
 
     return (
         <div className='app'>
@@ -163,21 +184,45 @@ const TestMoon = () => {
                     </div>
                 )} */}
                 <InfiniteScroll
-                    dataLength={news.length} // 현재 로드된 데이터 길이
-                    next={fetchNews} // 스크롤이 끝에 도달했을 때 호출되는 함수
-                    hasMore={hasMore} // 더 로드할 데이터가 있는지 여부
-                    loader={<h4>Loading...</h4>} // 로딩 중 표시할 컴포넌트
-                    endMessage={<p>No more news!</p>} // 데이터가 더 이상 없을 때 표시할 메시지
-                >
-                    <ul>
-                        {news.map((item, index) => (
-                            <li key={index}>
-                                <h3>{item.title}</h3>
-                                <p>{item.content}</p>
-                            </li>
+                        dataLength={news.length}
+                        next={fetchNews}
+                        hasMore={hasMore}
+                        loader={<h4 className="text-center">Loading...</h4>}
+                        endMessage={<p className="text-center">No more news!</p>}
+                    >
+                        <Row>
+                            {news.map((item) => (
+                            <Card className="news-card mb-4" key={item.id}>
+                                <Row>
+                                    <Col xs={12} md={5} className="news-card-image-col">
+                                        <Card.Img
+                                            src={item.capsuleImage}
+                                            alt={item.title}
+                                            className="news-card-image"
+                                        />
+                                    </Col>
+                                    <Col xs={12} md={7} className="news-textbox" style={{display: "flex", alignItems: "center"}}>
+                                        <div>
+                                        <Card.Body>
+                                            <Card.Title className="news-title"><Link>{item.title}</Link></Card.Title>
+                                            <Card.Subtitle className="mb-2 text-muted news-gameName">
+                                                {item.gameName}
+                                            </Card.Subtitle>
+                                            <Card.Subtitle className="mb-2 text-muted news-author">
+                                                {item.author}
+                                            </Card.Subtitle>
+                                            <Card.Subtitle className="mb-2 text-muted news-date">
+                                                {formatDateToKorean(item.date)}
+                                                
+                                            </Card.Subtitle>
+                                        </Card.Body>
+                                        </div>
+                                    </Col>
+                                </Row>
+                            </Card>
                         ))}
-                    </ul>
-                </InfiniteScroll>
+                        </Row>
+                    </InfiniteScroll>
                 </div>
             </Container>
 

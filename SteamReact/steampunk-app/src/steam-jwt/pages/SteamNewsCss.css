@@ -225,12 +225,13 @@ main {
     background-color: #2a2c2e; 
     border-radius: 8px; 
     padding: 10px;
+    margin-bottom: 20px;
     gap: 15px; 
 }
 
 .news-image {
-    width: 100px; 
-    height: 60px; 
+    width: 231px; 
+    height: 87px; 
     object-fit: cover; 
     border-radius: 5px;
 }
