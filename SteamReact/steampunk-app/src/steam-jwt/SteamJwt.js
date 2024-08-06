@@ -14,6 +14,8 @@ import ChartTest from './pages/ChartTest';
 import MyPage from './pages/MyPage';
 import EditPersonalForm from './pages/EditPersonalInfo'
 import AddressContextProvider from './contexts/AddressContextProvider';
+import AdminPage from './pages/AdminPage';
+import AdminAccountManager from './pages/AdminAccountManager';
 
 const SteamJwt = () => {
     return (
@@ -31,6 +33,8 @@ const SteamJwt = () => {
                     <Route path="/steam/newsList" element={<NewsList />}/>
                     <Route path="/steam/chart" element={<ChartTest />}/>
                     <Route path='/steam/mypage' element={<MyPage/>}/>
+                    <Route path='/steam/adminpage' element={<AdminPage/>}/>
+                    <Route path='/steam/accounts' element={<AdminAccountManager/>}/>
                     <Route path='/steam/edit/:id' element={<EditPersonalForm/>}/>
                 </Routes>
                 </AddressContextProvider>

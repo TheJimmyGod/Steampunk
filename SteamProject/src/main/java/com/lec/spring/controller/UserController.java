@@ -132,5 +132,11 @@ public class UserController {
     // 뉴스 관리
 
     // 회원 관리
-
+    @GetMapping("/accounts")
+    public ResponseEntity<?> getUsers(){
+        var list = userService.FindAll();
+        if(list == null || list.isEmpty())
+            return new ResponseEntity<>("회원이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(list,HttpStatus.OK);
+    }
 }

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHubspot, faSteam, faYoutube, faInstagram, faFacebook } from '@fortawesome/free-brands-svg-icons';
 import { faHome, faNewspaper, faUser, faRightToBracket, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
@@ -7,7 +7,24 @@ import { LoginContext } from '../../contexts/LoginContextProvider';
 
 const SideBar = () => {
     const navigate = useNavigate();
-    const {isLogin, logout} = useContext(LoginContext);
+    const {userInfo, isLogin, logout} = useContext(LoginContext);
+    const admin = useRef(false);
+    useEffect(()=>{
+        if(userInfo !== null)
+        {
+            for(let a in userInfo.authorities)
+            {
+                if(userInfo.authorities[a].name.includes("ADMIN"))
+                {
+                    admin.current = true;
+                    break;
+                }
+                else
+                    admin.current = false;
+            }
+            console.log("ADMIN: ", admin.current);
+        }
+    },[]);
 
     return (
         <aside className="sidebar">
@@ -18,7 +35,7 @@ const SideBar = () => {
             <ul>
                 <li onClick={() => {navigate("/steam")}}><FontAwesomeIcon icon={faHome} /> 홈</li>
                 <li onClick={() => {navigate("/steam/newsList")}}><FontAwesomeIcon icon={faNewspaper} /> 뉴스페이지</li>
-                <li onClick={() => {navigate("/steam/mypage")}}><FontAwesomeIcon icon={faUser} /> 마이페이지</li>
+                <li onClick={() => {navigate(admin.current === true ? "/steam/adminpage" : "/steam/mypage")}}><FontAwesomeIcon icon={faUser} /> 마이페이지</li>
                 {!isLogin ? <li onClick={() => {navigate("/steam/login")}} ><FontAwesomeIcon icon={faRightToBracket} />로그인</li> : <></>}
                 {isLogin ? <li onClick={()=>{logout(false)}}><FontAwesomeIcon icon={faRightFromBracket} /> 로그아웃</li> : <></>}
             </ul>
