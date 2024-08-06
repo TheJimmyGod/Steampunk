@@ -16,30 +16,25 @@ const EditPersonalInfoForm = () => {
     const [errors, setErrors] = useState({});
     const [changePW, setChangePW] = useState(false);
     const [user, setUser] = useState({ username:"", password:"", re_password:"", address_main:"", address_sub:"", birth:"", admin:false });
-    const {userInfo} = useContext(LoginContext);
+    const {userInfo, loginCheck} = useContext(LoginContext);
     const navigate = useNavigate();
     
     useEffect(()=>{
-        if(userInfo.id === undefined)
-        {
-          navigate("/steam/mypage");
-          return;
-        }
         setErrors({ username: false, password: false, re_password: false, address_main: false, address_sub: false });
-        axios({
-            url: `${SERVER_HOST}/${userInfo.id}`,
-            method: "get"
-        }).then(response => {
-            const {data, status} = response;
-            if(status === 200)
-            {
-                setUser({ ...user, username: data.username, password: "", re_password: "", address_main: data.address_main, address_sub: data.address_sub, birth: data.birth, admin: false });
-                document.getElementById('birth').value = user.birth;
-            }
-        }).catch(err=>{
-            console.log(err);
-        });
-    },[]);
+        getUser();
+    },[loginCheck]);
+
+    async function getUser()
+    {
+      const response = await axios.get(`${SERVER_HOST}/${userInfo.id}`);
+      const {data, status} = response;
+      if(status === 200)
+      {
+          setUser({ ...user, username: data.username, password: "", re_password: "", address_main: data.address_main, address_sub: data.address_sub, birth: data.birth, admin: false });
+          document.getElementById('birth').value = user.birth;
+      }
+
+    }
 
     const onEdit = (e) => {
         e.preventDefault();

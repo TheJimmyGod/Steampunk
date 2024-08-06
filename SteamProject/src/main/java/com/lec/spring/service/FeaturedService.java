@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -19,4 +20,12 @@ public class FeaturedService {
 
     @Transactional
     public List<Featured> findAll () {return featuredRepository.findAll();}
+
+    @Transactional
+    public boolean updateFeatured(Featured[] featureds){
+        featuredRepository.deleteAll();
+        featuredRepository.saveAll(Arrays.asList(featureds));
+        // TODO: 테이블 정리하자
+        return true;
+    }
 }

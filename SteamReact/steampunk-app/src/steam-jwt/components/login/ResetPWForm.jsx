@@ -1,35 +1,28 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import { useLocation, useNavigate } from 'react-router-dom';
+import {useNavigate } from 'react-router-dom';
 import * as Swal from '../../apis/alert'
 import { SERVER_HOST } from '../../apis/api'
+import { LoginContext } from '../../contexts/LoginContextProvider';
 const ResetPWForm = () => {
-
-    const location = useLocation();
-    const value = location.state?.value;
-    const [userId,setUserId] = useState(0);
+    const {loginCheck, userInfo} = useContext(LoginContext);
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
 
     useEffect(()=>{
-        console.log(value);
-        if(value > 0)
-        {
-            setUserId(value);
-        }
         setErrors({
             password: false,
             re_password: false
         });
-        if(value <= 0 && userId <= 0)
+        if(userInfo === null)
         {
             navigate("/steam/login");
             return;
         }
-    },[]);
+    },[loginCheck]);
 
-    const onRegister = (e) =>
+    const onRegister = async (e) =>
     {
         e.preventDefault();
         const password = e.target.password.value;
@@ -41,21 +34,12 @@ const ResetPWForm = () => {
                 navigate("/steam/resetPw");
                 return;
             }
-        const url = `${SERVER_HOST}/resetPw/${(userId !== 0) ? userId : value}/${password}`;
-        console.log(url);
-        axios({
-            method:"post",
-            url: url
-        }).then(response=>{
-            const {status} = response;
-            if(status === 200)
-            {
-                Swal.alert("비밀번호 재발급 성공!", "로그인 페이지로 이동합니다.", "success", () => {navigate("/steam/login");}); 
-            }
-        }).catch(err=>{
-            Swal.alert("비밀번호 재발급 실패!", "비밀번호가 기존과 같거나 유효성 검사에서 실패를 했습니다.", "error", () => {navigate("/steam/login");}); 
-        });
-    };
+        const response = await axios.post(`${SERVER_HOST}/resetPw/${userInfo.id}/${password}`);
+        const {status} = response;
+        Swal.alert((status === 200) ? "비밀번호 재발급 성공!" : "비밀번호 재발급 실패!", 
+        (status === 200) ? "로그인 페이지로 이동합니다." : "비밀번호가 기존과 같거나 유효성 검사에서 실패를 했습니다.",
+        (status === 200) ? "success" :"error", (status === 200) ? () => {navigate("/steam/login");} : ()=>{});
+    }
 
     return (
         <div className="form">

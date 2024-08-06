@@ -66,4 +66,9 @@ public class GameController {
         List<Game> games = gameService.findGameName(gameName);
         return new ResponseEntity<>(games, HttpStatus.OK); // response code: 200
     }
+
+    @GetMapping("/find/{keyword}")
+    public <T> ResponseEntity<?> findGamesById(@PathVariable T keyword){
+        return new ResponseEntity<>(gameService.getGameList(keyword), HttpStatus.OK);
+    }
 }

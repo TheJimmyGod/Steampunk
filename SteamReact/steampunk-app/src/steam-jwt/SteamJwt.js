@@ -16,6 +16,7 @@ import EditPersonalForm from './pages/EditPersonalInfo'
 import AddressContextProvider from './contexts/AddressContextProvider';
 import AdminPage from './pages/AdminPage';
 import AdminAccountManager from './pages/AdminAccountManager';
+import AdminFeaturedGames from './pages/AdminFeaturedGames';
 import NewsDetail from './pages/NewsDetail';
 
 const SteamJwt = () => {
@@ -36,6 +37,7 @@ const SteamJwt = () => {
                     <Route path='/steam/mypage' element={<MyPage/>}/>
                     <Route path='/steam/adminpage' element={<AdminPage/>}/>
                     <Route path='/steam/accounts' element={<AdminAccountManager/>}/>
+                    <Route path='/steam/features' element={<AdminFeaturedGames/>}/>
                     <Route path='/steam/edit/:id' element={<EditPersonalForm/>}/>
                     <Route path='/steam/newsDetail/:id' element={<NewsDetail/>}/>
                 </Routes>

@@ -12,15 +12,9 @@ const LoginForm = () => {
   const navigate = useNavigate();
   const onLogin = (e) => {
     e.preventDefault();
-    console.log("Hello world");
     const username = e.target.username.value;
     const password = e.target.password.value;
     const rememberId = e.target.rememberId.checked;
-
-    console.log(e.target.username.value)
-    console.log(e.target.password.value)
-    console.log(e.target.rememberId.checked)
-
     login(username, password, rememberId);  // 로그인 진행!
   };
 

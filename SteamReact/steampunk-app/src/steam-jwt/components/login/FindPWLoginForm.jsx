@@ -9,74 +9,41 @@ const FindPWLoginForm = () => {
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
 
-    useEffect(()=>{
-        console.log("Hello World");
-
-        setErrors({
-            username: false,
-            birth: false
-        });
-    },[])
+    useEffect(()=>{setErrors({username: false,birth: false});},[])
 
     const submitForm = (e) => {
         e.preventDefault();
         const birth = e.target.birth.value;
         const username = e.target.username.value;
-        if(username.trim() === "")
-        {
-            errors.username = true;
-        }
-        if(birth.trim() === "")
-        {
-            errors.birth = true;
-        }
+        errors.username = (username.trim() === "");
+        errors.birth = (birth.trim() === "");
 
         if(!errors.ID && !errors.birth)
         {
-            const url = `${SERVER_HOST}/findPw/${username}/${birth}`;
             axios({
                 method: "get",
-                url: url,
-                headers:{
-                    "Content-Type":"application/json;charset=utf-8"
-                }
+                url: `${SERVER_HOST}/findPw/${username}/${birth}`,
+                headers:{"Content-Type":"application/json;charset=utf-8"}
             }).then(response=>{
                 const {data, status} = response;
     
                 if(status === 200)
                 {
                     if(data < 0)
-                    {
-                        console.log("존재하지 않는 아이디");
-                        errors.username = true;
-                        errors.birth = true;
-                    }
+                        errors.username = errors.birth = true;
                     else
                     {
-                        Swal.confirm("성공적으로 계정을 찾아냈습니다. 비밀번호 재발급을 진행하시겠습니까?", "", "question",
-                            (result)=>{ 
-                                if(result.isConfirmed){
-                                    navigate("/steam/resetPw", {state: {value: data}});
-                                }
-                            }
-                        );
-                        errors.username = false;
-                        errors.birth = false;
+                        Swal.confirm("성공적으로 계정을 찾아냈습니다. 비밀번호 재발급을 진행하시겠습니까?", "", "question", (result)=>{ if(result.isConfirmed) navigate("/steam/resetPw");});
+                        errors.username = errors.birth = false;
                     }
                 }
             }).catch(err=>{
                 console.log(err);
-                errors.username = true;
-                errors.birth = true;
+                errors.username = errors.birth = true;
             });
         }
 
-
-        if(errors.ID || errors.birth)
-        {
-            navigate("/steam/findPw");
-            return;
-        }
+        if(errors.ID || errors.birth) navigate("/steam/findPw");
     }
 
     return (
