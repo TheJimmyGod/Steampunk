@@ -35,15 +35,15 @@ public class RankService {
         this.jacksonObjectMapper = jacksonObjectMapper;
     }
 
-    @Scheduled(cron = "*/30 * * * * ?")  // 30초마다 실행
-    @Transactional
-    public void scheduledTask() {
-        // 1단계: 테이블 비우기 및 재생성
-        clearAndRecreateTable();
-
-        // 2단계: 데이터 저장
-        saveRank();
-    }
+//    @Scheduled(cron = "*/30 * * * * ?")  // 30초마다 실행
+//    @Transactional
+//    public void scheduledTask() {
+//        // 1단계: 테이블 비우기 및 재생성
+//        clearAndRecreateTable();
+//
+//        // 2단계: 데이터 저장
+//        saveRank();
+//    }
 
     @Transactional
     public void clearAndRecreateTable() {
