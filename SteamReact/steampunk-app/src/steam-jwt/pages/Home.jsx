@@ -11,7 +11,15 @@ import YoutubeVideos from './YoutubeVideos';
 const Home = () => {
 
     const [games, setGames] = useState([]);
-
+    const [news, setNews] = useState([]);
+    const [chart, setChart] = useState([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [message, setMessage] = useState('');
+    const navigate = useNavigate();
+    const { isLogin } = useContext(LoginContext);
+    const { logout } = useContext(LoginContext);
+    // const key = "AIzaSyCOaXfLbU-uxGuK4UXWVGO80QuhzOXQ7Ds";
+    const key = "YOUR_KEY";
 
 
     useEffect(() => {
