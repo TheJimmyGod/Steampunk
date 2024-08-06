@@ -2,17 +2,14 @@ import axios from 'axios';
 import React from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { Button, Card, Carousel, Col, Container, Nav, Navbar, Row } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { Carousel, Container } from 'react-bootstrap';
 import './SteamNewsCss.css';
 
 const TestMoon = () => {
 
-    const [youtube, setYoutube] = useState({ items: [] });
+
     const [games, setGames] = useState([]);
-    const [news, setNews] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const navigate = useNavigate();
 
     // 게임 정보 가져오기 (뉴스로 바뀔 예정)
     useEffect(() => {
@@ -36,7 +33,7 @@ const TestMoon = () => {
         return () => clearInterval(interval);
     }, [games.length]); // games.length가 변경될 때만 실행됨
 
-    const hasData = youtube.items.length > 0;
+
 
     return (
         <>
