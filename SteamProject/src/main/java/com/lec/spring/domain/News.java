@@ -23,6 +23,9 @@ public class News {
 
     private Long appId;
 
+    @Column(name = "is_free")
+    private Boolean isFree;
+
     @Column
     private String gameName;
 
