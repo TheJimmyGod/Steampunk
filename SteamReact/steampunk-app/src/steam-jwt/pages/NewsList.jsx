@@ -11,7 +11,10 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { Button, Form } from 'react-bootstrap';
 
 const NewsList = () => {
+    const defaultImage = "https://store.akamai.steamstatic.com/public/shared/images/header/logo_steam.svg?t=962016";
     const { isLogin, logout } = useContext(LoginContext);
+
+    const navigate = useNavigate();
 
     const [news, setNews] = useState([]);
     const [page, setPage] = useState(0);
@@ -28,7 +31,7 @@ const NewsList = () => {
             const response = await axios.get('http://localhost:8080/news/findNews/'+selectValue, {
                 params: {
                     page: page,
-                    size: 5
+                    size: 5,
                 }
             });
             console.log("정렬확인용 : ",response.data.content); // 서버 응답 데이터 확인
@@ -134,11 +137,16 @@ const NewsList = () => {
                         loader={<h4 className="text-center">Loading...</h4>}
                         endMessage={<p className="text-center">No more news!</p>}
                     >
-                        {news.map((item) => (
-                            <div className="news-item" key={item.id}>
-                                <img src={item.capsuleImage} alt="뉴스 이미지" className="news-image" />
+                    {news.map((item) => (
+                        <div>
+                            <div className="news-item">
+                            <img
+                                    src={item.capsuleImage || defaultImage}
+                                    alt="뉴스 이미지"
+                                    className="news-image"
+                                />
                                 <div className="news-content">
-                                    <h2 className="news-title"><Link to={"/steam/newsDetail/"+ item.appId}>{item.title}</Link></h2>
+                                    <h2 className="news-title" onClick={() =>{navigate(`/steam/newsDetail/${item.appId}`)}}><Link>{item.title}</Link></h2>
                                     <p className="game-name">{item.gameName}</p>
                                     <p className="author">{item.author}</p>
                                     <p className="date">{formatDateToKorean(item.date)}</p>

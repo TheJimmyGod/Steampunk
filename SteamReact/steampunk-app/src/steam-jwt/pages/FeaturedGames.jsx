@@ -3,7 +3,7 @@ import React from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { Carousel, Container } from 'react-bootstrap';
-import './SteamNewsCss.css';
+import '../../HTML/SteamNewsCss.css';
 
 const TestMoon = () => {
 
