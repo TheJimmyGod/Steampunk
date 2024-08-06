@@ -76,7 +76,7 @@ html, body {
 }
 
 .sidebar .social-media li:nth-child(1) {
-    padding-left: 0px;
+    padding-left: 20px;
 }
 
 .sidebar .social-media li:nth-child(2) {
@@ -148,6 +148,7 @@ main {
 /* 게임순위 차트 */
 .grid-item.chart {
     flex: 3; /* 60%에 해당하는 비율 */
+    height: 600px;
     margin: 0 10px;
 }
 
