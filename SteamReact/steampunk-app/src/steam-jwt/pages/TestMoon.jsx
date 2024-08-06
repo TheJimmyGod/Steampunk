@@ -32,12 +32,15 @@ const TestMoon = () => {
 
             const fetchedNews = response.data.data;
             console.log("fetchNews  ::  ",fetchNews);
-            setNews(prevNews => [...prevNews, ...fetchedNews]);
-
-            // 페이지가 더 있는지 확인
-            if (fetchedNews.length === 0 || fetchedNews.length < 5) {
-                setHasMore(false);
+            if(Array.isArray(fetchedNews)){
+                setNews(prevNews => [...prevNews, ...fetchedNews]);
+                console.log("fetched News : ", news)
+                // 페이지가 더 있는지 확인
+                if (fetchedNews.length === 0 || fetchedNews.length < 5) {
+                    setHasMore(false);
+                }
             }
+            
 
             setPage(prevPage => prevPage + 1); // 페이지 번호 증가
         } catch (error) {
@@ -126,56 +129,56 @@ const TestMoon = () => {
                     </Col>
                 </Row>
                 <div className="news-container">
-            <h1 className="text-center my-4">최신 뉴스</h1>
-            {/* {news.length === 0 ? (
-                <p className="text-center">로딩 중...</p>
-            ) : (
-                <div className="news-list">
-                    {news.map((item) => (
-                        <Card className="news-card mb-4" key={item.id}>
-                            <Row>
-                                <Col xs={12} md={5} className="news-card-image-col">
-                                    <Card.Img
-                                        src={item.capsuleImage}
-                                        alt={item.title}
-                                        className="news-card-image"
-                                    />
-                                </Col>
-                                <Col xs={12} md={7} className="news-textbox">
-                                    <div>
-                                    <Card.Body>
-                                        <Card.Title className="news-title">{item.title}</Card.Title>
-                                        <Card.Subtitle className="mb-2 text-muted news-date">
-                                            {item.gameName}
-                                        </Card.Subtitle>
-                                        <Card.Subtitle className="mb-2 text-muted news-author">
-                                            {item.author}
-                                        </Card.Subtitle>
-                                    </Card.Body>
-                                    </div>
-                                </Col>
-                            </Row>
-                        </Card>
-                    ))}
+                <h1 className="text-center my-4">최신 뉴스</h1>
+                {/* {news.length === 0 ? (
+                    <p className="text-center">로딩 중...</p>
+                ) : (
+                    <div className="news-list">
+                        {news.map((item) => (
+                            <Card className="news-card mb-4" key={item.id}>
+                                <Row>
+                                    <Col xs={12} md={5} className="news-card-image-col">
+                                        <Card.Img
+                                            src={item.capsuleImage}
+                                            alt={item.title}
+                                            className="news-card-image"
+                                        />
+                                    </Col>
+                                    <Col xs={12} md={7} className="news-textbox">
+                                        <div>
+                                        <Card.Body>
+                                            <Card.Title className="news-title">{item.title}</Card.Title>
+                                            <Card.Subtitle className="mb-2 text-muted news-date">
+                                                {item.gameName}
+                                            </Card.Subtitle>
+                                            <Card.Subtitle className="mb-2 text-muted news-author">
+                                                {item.author}
+                                            </Card.Subtitle>
+                                        </Card.Body>
+                                        </div>
+                                    </Col>
+                                </Row>
+                            </Card>
+                        ))}
+                    </div>
+                )} */}
+                <InfiniteScroll
+                    dataLength={news.length} // 현재 로드된 데이터 길이
+                    next={fetchNews} // 스크롤이 끝에 도달했을 때 호출되는 함수
+                    hasMore={hasMore} // 더 로드할 데이터가 있는지 여부
+                    loader={<h4>Loading...</h4>} // 로딩 중 표시할 컴포넌트
+                    endMessage={<p>No more news!</p>} // 데이터가 더 이상 없을 때 표시할 메시지
+                >
+                    <ul>
+                        {news.map((item, index) => (
+                            <li key={index}>
+                                <h3>{item.title}</h3>
+                                <p>{item.content}</p>
+                            </li>
+                        ))}
+                    </ul>
+                </InfiniteScroll>
                 </div>
-            )} */}
-            <InfiniteScroll
-                dataLength={news.length} // 현재 로드된 데이터 길이
-                next={fetchNews} // 스크롤이 끝에 도달했을 때 호출되는 함수
-                hasMore={hasMore} // 더 로드할 데이터가 있는지 여부
-                loader={<h4>Loading...</h4>} // 로딩 중 표시할 컴포넌트
-                endMessage={<p>No more news!</p>} // 데이터가 더 이상 없을 때 표시할 메시지
-            >
-                <ul>
-                    {news.map((item, index) => (
-                        <li key={index}>
-                            <h3>{item.title}</h3>
-                            <p>{item.content}</p>
-                        </li>
-                    ))}
-                </ul>
-            </InfiniteScroll>
-        </div>
             </Container>
 
             {/* 푸터 */}

@@ -20,8 +20,8 @@ const Home = () => {
     const navigate = useNavigate();
     const { isLogin } = useContext(LoginContext);
     const { logout } = useContext(LoginContext);
-    const key = "AIzaSyCOaXfLbU-uxGuK4UXWVGO80QuhzOXQ7Ds";
-    // const key = "YOUR_KEY";
+    // const key = "AIzaSyCOaXfLbU-uxGuK4UXWVGO80QuhzOXQ7Ds";
+    const key = "YOUR_KEY";
 
 
     useEffect(() => {
