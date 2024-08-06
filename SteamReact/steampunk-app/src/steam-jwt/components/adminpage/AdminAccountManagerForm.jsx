@@ -20,13 +20,9 @@ const AdminAccountManagerForm = () => {
             const {data, status, statusText} = response;
             setAccounts([]);
             if(status === 200)
-            {
                 setAccounts(data);
-            }
             else
-            {
                 console.log(status, statusText);
-            }
 
         }).catch(err=>{
             console.log(err);
@@ -34,26 +30,33 @@ const AdminAccountManagerForm = () => {
         console.log("실행 완료 ", accounts);
     }, []);
 
-    const onGetOut = (e, name) => {
+    const onGetOut = async (id, name) => {
+        const response = await axios.get(`${SERVER_HOST}/findId/${name}`);
+        const {data, status} = response;
+        if(data === null || data === undefined || status !== 200)
+        {
+            Swal.alert("존재하지 않는 회원입니다!","", "error", ()=>navigate("/steam/accounts")); 
+            return;
+        }
+
         Swal.confirm(`${name}를 추방하겠습니까?`, "", "question",
             (result)=>{ 
                 if(result.isConfirmed){
                     axios({
-                        url: `${SERVER_HOST}/remove/${e}`,
+                        url: `${SERVER_HOST}/remove/${id}`,
                         method: "delete"
                     }).then(response=> {
                         const {data, status} = response;
                         if(status === 200)
+                        {
                             Swal.alert("삭제 성공했습니다!", `${data}`, "success"); 
+                            setAccounts(accounts.filter(a => a.id !== id));
+                        }
                         else
                             Swal.alert("삭제 실패했습니다!","", "error"); 
                     }).catch(err=>{
-                        Swal.alert("삭제 실패했습니다!","", "error"); 
-                    }).finally(
-                        ()=>{
-                            navigate("/steam/accounts");
-                        }
-                    );
+                        Swal.alert("삭제 실패했습니다!",`${err}`, "error"); 
+                    });
                 }
             }
         );

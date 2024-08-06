@@ -27,4 +27,8 @@ public class FeaturedController {
         return new ResponseEntity<>(featuredService.findAll(), HttpStatus.OK);
     }
 
+    @PutMapping("/updateFeatured")
+    public ResponseEntity<?> update(@RequestBody Featured[] featureds){
+        return new ResponseEntity<>(featuredService.updateFeatured(featureds), HttpStatus.OK);
+    }
 }

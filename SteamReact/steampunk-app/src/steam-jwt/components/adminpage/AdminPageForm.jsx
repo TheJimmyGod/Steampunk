@@ -18,7 +18,7 @@ const AdminPageForm = ({removal}) => {
             </div>
             <div className='bg'>
             <div>
-                <Button className='btn-form' onClick={null}>추천 게임 관리 페이지</Button>
+                <Button className='btn-form' onClick={()=>navigate(`/steam/features`)}>추천 게임 관리 페이지</Button>
             </div>             
             <div>
                 <Button className='btn-form' onClick={()=>navigate(`/steam/accounts`)}>회원 관리 페이지</Button>

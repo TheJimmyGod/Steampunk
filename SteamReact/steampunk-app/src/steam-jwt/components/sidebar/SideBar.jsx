@@ -7,12 +7,22 @@ import { LoginContext } from '../../contexts/LoginContextProvider';
 
 const SideBar = () => {
     const navigate = useNavigate();
-    const {userInfo, isLogin, logout} = useContext(LoginContext);
+    const {userInfo, isLogin, logout, loginCheck} = useContext(LoginContext);
     const admin = useRef(false);
+
     useEffect(()=>{
         if(userInfo !== null)
         {
-            for(let a in userInfo.authorities)
+            load();
+        }
+        else
+        {
+            navigate("/steam/login");
+        }
+    },[loginCheck]);
+
+    const load = () =>{
+        for(let a in userInfo.authorities)
             {
                 if(userInfo.authorities[a].name.includes("ADMIN"))
                 {
@@ -23,8 +33,7 @@ const SideBar = () => {
                     admin.current = false;
             }
             console.log("ADMIN: ", admin.current);
-        }
-    },[]);
+    }
 
     return (
         <aside className="sidebar">

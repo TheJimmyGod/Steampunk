@@ -235,4 +235,21 @@ public class GameService {
         return gameRepository.findByGameNameContaining(gameName);
     }
 
+    public <T> List<Game> getGameList(T keyword)
+    {
+        Long appid = null;
+        try
+        {
+            appid = Long.parseLong((String)keyword);
+        }
+        catch (NumberFormatException ex)
+        {
+            appid = 0L;
+        }
+
+        if(appid > 0L)
+            return gameRepository.findGamesByAppId(appid);
+        else
+            return gameRepository.findByGameNameContaining((String)keyword);
+    }
 }
