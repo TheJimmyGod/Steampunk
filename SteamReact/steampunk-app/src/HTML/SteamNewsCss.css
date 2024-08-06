@@ -193,12 +193,10 @@ main {
     gap: 15px; 
 }
 
-.news-image {
-    width: 100px; 
-    height: 60px; 
-    object-fit: cover; 
-    border-radius: 5px;
+.news-item p {
+    margin-bottom: 0;
 }
+
 
 .news-content {
     flex: 1; 
@@ -222,6 +220,7 @@ main {
     display: flex;
     align-items: center;
     gap: 5px; 
+    margin-bottom: 10%;
 }
 
 .bookmark i {
