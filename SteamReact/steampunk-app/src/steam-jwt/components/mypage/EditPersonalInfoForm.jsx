@@ -17,6 +17,7 @@ const EditPersonalInfoForm = () => {
     const [changePW, setChangePW] = useState(false);
     const [user, setUser] = useState({ username:"", password:"", re_password:"", address_main:"", address_sub:"", birth:"", admin:false });
     const {userInfo, loginCheck} = useContext(LoginContext);
+    const admin = useRef(false);
     const navigate = useNavigate();
     
     useEffect(()=>{
@@ -30,8 +31,18 @@ const EditPersonalInfoForm = () => {
       const {data, status} = response;
       if(status === 200)
       {
-          setUser({ ...user, username: data.username, password: "", re_password: "", address_main: data.address_main, address_sub: data.address_sub, birth: data.birth, admin: false });
-          document.getElementById('birth').value = user.birth;
+        for(let a in userInfo.authorities)
+          {
+              if(userInfo.authorities[a].name.includes("ADMIN"))
+              {
+                  admin.current = true;
+                  break;
+              }
+              else
+                  admin.current = false;
+          }
+          setUser({ ...user, username: data.username, password: "", re_password: "", address_main: data.address_main, address_sub: data.address_sub, birth: data.birth, admin: admin.current });
+          document.getElementById('birth').value = data.birth;
       }
 
     }
@@ -74,7 +85,7 @@ const EditPersonalInfoForm = () => {
                 }).then(response=>{
                     const {status} = response;
                     if(status === 200)
-                      Swal.alert("변경 성공", "메인 화면으로 이동합니다.", "success", () => { navigate("/steam") });
+                      Swal.alert("변경 성공", "My Page 화면으로 이동합니다.", "success", () => { navigate(admin.current ? "/steam/adminpage" : "/steam/mypage") });
                 }).catch(err=>{
                   Swal.alert("변경 실패", err, "error");
                 });
@@ -89,7 +100,7 @@ const EditPersonalInfoForm = () => {
             Swal.confirm("변경을 취소하시겠습니까?", "", "question",
                 (result)=>{ 
                     if(result.isConfirmed)
-                        navigate('/steam/mypage');
+                        navigate(admin.current ? "/steam/adminpage" : "/steam/mypage");
                 }
             );
         }
@@ -112,8 +123,7 @@ const EditPersonalInfoForm = () => {
                       password:"",
                       re_password:""
                     })
-                    document.getElementById("re_password").value = "";
-                    document.getElementById("password").value = "";
+                    document.getElementById("re_password").value = document.getElementById("password").value = "";
                 }
             }
         );

@@ -72,6 +72,20 @@ public class UserService {
         return user;
     }
 
+    public User register(User user)
+    {
+        Authority auth = authorityRepository.findByName("ROLE_MEMBER").orElse(null);
+        if(auth == null)
+        {
+            auth = new Authority();
+            auth.setName("ROLE_MEMBER");
+            authorityRepository.save(auth);
+        }
+        user.addAuthorities(auth);
+        userRepository.save(user);
+        return user;
+    }
+
     public User ResetPassword(Long id, String newPassword)
     {
         User user = userRepository.findById(id).orElse(null);

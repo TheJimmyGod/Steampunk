@@ -12,7 +12,7 @@ import * as Swal from '../../apis/alert'
 const MAXIMUM_COUNT = 5;
 const AdminFeatruedGamesForm = () => {
     const navigate = useNavigate();
-    const [selected, setSelected] = useState('');
+    const [selected, setSelected] = useState('appIdASC');
     const [games, setGames] = useState([]); // 기존에 있던 것들
     const [newGames, setNewGames] = useState([]); // 새로운 게임 넣었다면 쓰는 용도
     const [sGames, setSGames] = useState([]); // 검색 용도
@@ -28,7 +28,7 @@ const AdminFeatruedGamesForm = () => {
         if(status === 200)
         {
             data !== undefined && setGames(data);
-            sortGames();
+            sortGames(selected);
         }
     }
 
@@ -102,6 +102,36 @@ const AdminFeatruedGamesForm = () => {
         });
     }
 
+    const onReset = () =>
+    {
+        Swal.confirm(`모두 제거하시겠습니까?`, "", "question",
+            async (result)=>{ 
+                if(result.isConfirmed){
+                    let err = false;
+                    for(let c of games)
+                        {
+                            const response = await axios.delete(`${NORMAL_SERVER_HOST}/removeFeatured/${c.appId}`);
+                            const {status} = response;
+                            if(status !== 200)
+                            {
+                                err = true;
+                                break;
+                            }
+                        }
+                        if(!err)
+                        {
+                            Swal.alert("전체 삭제 성공했습니다!", ``, "success"); 
+                            setGames([]);
+                        }
+                        else
+                            Swal.alert("전체 삭제 실패했습니다!", ``, "error"); 
+                }
+            }
+        );
+
+
+    }
+
     const handleChangeSelect = (e) => {
         setSelected(e.target.value);
         sortGames(e.target.value);
@@ -155,7 +185,7 @@ const AdminFeatruedGamesForm = () => {
                     <option value={"gameNameASC"} key={`gameNameASC`}> 게임이름 오름차순 </option>
                     <option value={"gameNameDESC"} key={`gameNameDESC`}> 게임이름 내림차순 </option>
                     <option value={"lastInsertASC"} key={`lastInsertASC`}> 마지막으로 추가한 오름차순 </option>
-                    <option value={"lastInsertDESC"} key={`lastInsertDESC`}> 마지막으로 추가한 오름차순 </option>
+                    <option value={"lastInsertDESC"} key={`lastInsertDESC`}> 마지막으로 추가한 내림차순 </option>
                 </Form.Select>
                 <br/><hr/><br/>
                 </div>
@@ -180,7 +210,7 @@ const AdminFeatruedGamesForm = () => {
                     </tbody>
                 </Table>
                 <div style={{float:"right"}}>
-                <Popup trigger={<Button className='btn-form' style={{marginRight: "5px"}}>추가</Button>} modal nested>
+                <Popup trigger={<Button className='btn-form' style={{width: "120px", marginRight: "5px"}}>추가</Button>} modal nested closeOnDocumentClick={false}>
                 {
                     close => (
                         <>
@@ -289,6 +319,7 @@ const AdminFeatruedGamesForm = () => {
                     )
                 }
             </Popup>
+                <Button className='btn-form' style={{width:"120px"}} onClick={()=>{onReset()}}>초기화</Button>
                 </div>
             </div>
             <br/><br/><hr/><br/>

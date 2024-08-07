@@ -52,11 +52,18 @@ const LoginContextProvider = ({children}) => {
                 console.log(`JWT (accessToken) 토큰으로 사용자 인증 정보 요청 성공`);
         
                 data = response.data;
-                console.log(`data: ${data}`);
+                console.log(`data: ${data}, status: ${response.status}`);
         
                 // 인증 실패시
                 if(data === 'UNAUTHORIZED' || response.status === 401){
                     console.log('JWT(accessToken)이 만료되었거나 인증에 실패했습니다.');
+                    return;
+                }
+
+                if(data === "")
+                {
+                    logout(true);
+                    console.log('JWT(accessToken)이 만료되었으므로 로그아웃합니다.');
                     return;
                 }
         

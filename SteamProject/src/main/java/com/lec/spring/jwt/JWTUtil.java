@@ -1,5 +1,7 @@
 package com.lec.spring.jwt;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtParserBuilder;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -68,13 +70,22 @@ public class JWTUtil {
 
 
     public Boolean isExpired(String token) {  // 만료일 확인
-        return Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .getExpiration()
-                .before(new Date());
+
+        boolean isSuccess = false;
+        try
+        {
+            isSuccess = Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .getExpiration()
+                    .before(new Date());
+        }catch (ExpiredJwtException ex)
+        {
+            return true;
+        }
+        return isSuccess;
     }
 
 }

@@ -12,4 +12,5 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     News findByAppId(Long appId);
     Boolean existsByAppId(Long appId);
     Page<News> findAllByIsFree(Boolean isFree, Pageable pageable);
+    List<News> findNewsByGameNameContainingIgnoreCase(String gameName);
 }

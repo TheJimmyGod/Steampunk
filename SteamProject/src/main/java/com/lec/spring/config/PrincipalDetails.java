@@ -1,15 +1,24 @@
 package com.lec.spring.config;
 
 import com.lec.spring.domain.User;
+import com.lec.spring.service.UserService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Map;
 
 public class PrincipalDetails implements UserDetails {
     private final User user;
+//    private UserService userService;
+//
+//    public void setUserService(UserService userService) {
+//        this.userService = userService;
+//    }
+//    private Map<String, Object> attributes;
 
     public User getUser(){
         return this.user;
@@ -20,7 +29,19 @@ public class PrincipalDetails implements UserDetails {
         System.out.println("UserDetails(user) 생성: " + user);
         this.user = user;
     }
-
+//    public PrincipalDetails(User user, Map<String, Object> attributes){
+//        System.out.println("""
+//           UserDetails(user, oauth attributes) 생성:
+//               user: %s
+//               attributes: %s
+//           """.formatted(user, attributes));
+//        this.user = user;
+//        this.attributes = attributes;
+//    }
+//    @Override
+//    public Map<String, Object> getAttributes() {
+//        return attributes;
+//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -29,6 +50,7 @@ public class PrincipalDetails implements UserDetails {
         Collection<GrantedAuthority> collect = new ArrayList<>();
         System.out.println(user.getId() + " " + user.getUsername() + " " + (user.getAuthorities() == null ? "권한 없음" : user.getAuthorities().size()));
         // user.getRole() 은 현재 "ROLE_MEMBER,ROLE_ADMIN" 과 같은 형태이기에
+
         if(user.getAuthorities() == null ||
         user.getAuthorities().isEmpty()) return collect;
 
@@ -78,4 +100,9 @@ public class PrincipalDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+//    @Override
+//    public String getName() {
+//        return null;
+//    }
 }
