@@ -20,7 +20,8 @@ const NewsList = () => {
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(false);
-    const [selectValue, setSelectValue] = useState("all");
+    const [checkBoxValue, setCheckBoxValue] = useState("all");
+    const [selectedValue, setSelectedValue] = useState([]);
 
     // 뉴스 데이터 요청 함수
     const fetchNews = async () => {
@@ -28,16 +29,12 @@ const NewsList = () => {
 
         setLoading(true);
         try {
-            const response = await axios.get('http://localhost:8080/news/findNews/'+selectValue, {
+            const response = await axios.get('http://localhost:8080/news/findNews/'+checkBoxValue, {
                 params: {
                     page: page,
                     size: 5,
                 }
             });
-            console.log("정렬확인용 : ",response.data.content); // 서버 응답 데이터 확인
-            console.log('News:', news);
-            console.log('Page:', page);
-            console.log('Has more:', hasMore);
             const fetchedNews = response.data.content;
             if (Array.isArray(fetchedNews)) {
 
@@ -75,7 +72,7 @@ const NewsList = () => {
         };
 
         loadNews(); // 뉴스 데이터 로드 함수 호출
-    }, [selectValue]); // selectValue 변경 시마다 fetchNews 호출
+    }, [checkBoxValue]); // selectValue 변경 시마다 fetchNews 호출
 
     // Unix 타임스탬프를 한국 시간으로 변환하는 함수
     const formatDateToKorean = (timestamp) => {
@@ -91,15 +88,28 @@ const NewsList = () => {
     };
 
     const handleFilterChange = (e) => {
-        setSelectValue(e.target.value); // 선택된 필터 값으로 상태 업데이트
+        setCheckBoxValue(e.target.value); // 선택된 필터 값으로 상태 업데이트
         setPage(0);
     };
 
     const onSubmitString = (e) => {
         e.preventDefault();
 
-        console.log(e.target.value);
+        axios({
+            method: "get",
+            url: "http://localhost:8080/news/findNews/"+selectedValue
+        })
+        .then((response) => {
+            const {data,status} = response;
+            console.log(data);
+            console.log(news);
 
+        })
+
+    }
+    const onChangeValue = (e) => {
+        console.log(e.target.value);
+        setSelectedValue(e.target.value);
     }
 
     return (
@@ -110,22 +120,22 @@ const NewsList = () => {
                 <section className="banner">
                     <h1>STEAM NEWS</h1>
                     <p>최신 스팀 뉴스를 알려드립니다</p>
-                    <Form onClick={onSubmitString} className="search-bar">
+                    <Form onSubmit={onSubmitString} className="search-bar">
                         <FontAwesomeIcon icon={faBars} className="filter-toggle" />
-                        <input className="search-news" placeholder="Search..."/>
+                        <input className="search-news" placeholder="Search..." onChange={onChangeValue}/>
                         <button type='submit'><FontAwesomeIcon icon={faMagnifyingGlass} /></button> 
                     </Form>
                     <div className="filter-menu">
                         <label>
-                            <input type="radio" name="filter" value="all" checked={selectValue === "all"} onChange={handleFilterChange} />
+                            <input type="radio" name="filter" value="all" checked={checkBoxValue === "all"} onChange={handleFilterChange} />
                             전체
                         </label>
                         <label>
-                            <input type="radio" name="filter" value="free" checked={selectValue === "free"} onChange={handleFilterChange} />
+                            <input type="radio" name="filter" value="free" checked={checkBoxValue === "free"} onChange={handleFilterChange} />
                             무료게임
                         </label>
                         <label>
-                            <input type="radio" name="filter" value="paid" checked={selectValue === "paid"} onChange={handleFilterChange} />
+                            <input type="radio" name="filter" value="paid" checked={checkBoxValue === "paid"} onChange={handleFilterChange} />
                             유료게임
                         </label>
                     </div>
@@ -140,7 +150,7 @@ const NewsList = () => {
                     >
                     {news.map((item) => (
                         
-                            <div className="news-item">
+                            <div className="news-item" key={item.id}>
                             <img
                                     src={item.capsuleImage || defaultImage}
                                     alt="뉴스 이미지"

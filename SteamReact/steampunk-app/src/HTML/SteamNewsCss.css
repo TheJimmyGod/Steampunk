@@ -387,3 +387,69 @@ main {
         width: 100%;
     }
 }
+
+
+/* Main content styles */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    /* border: 1px solid #ccc; */
+    margin-left: 200px;
+    background: linear-gradient(to right, #192F41, #1F2F51);
+}
+
+.main-content .bookmark{
+    margin-bottom: 20px;
+}
+
+/* Capsule Image */
+.capsule-image {
+    margin-bottom: 10px;
+}
+
+.capsule-image img {
+    width: 100%;
+    height: auto;
+}
+
+/* Title and Author */
+.title-author {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* Bookmark Icon */
+.bookmark-icon {
+    align-self: flex-end;
+    margin-bottom: 10px;
+}
+
+.bookmark-icon button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Game News Content */
+.game-news-content {
+    margin-bottom: 10px;
+    white-space: pre-line;
+}
+
+/* Game Info */
+.game-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.game-info h2 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.game-info p {
+    margin-bottom: 20px;
+}
