@@ -6,7 +6,7 @@ select * from s_game;
 select *
 from s_rank;
 
-select * from s_news;
+select * from s_news where appId = 10;
 
 DELETE FROM s_rank;
 ALTER TABLE s_rank DROP COLUMN id;

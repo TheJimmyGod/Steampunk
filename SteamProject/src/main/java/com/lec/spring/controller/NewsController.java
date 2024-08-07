@@ -24,7 +24,6 @@ public class NewsController {
     public News getJsonGame(@PathVariable Long appId) {
         return newsService.findNews(appId);
     }
-
     // 뉴스 저장용
     @GetMapping("/saveNews")
     public void saveNews() {

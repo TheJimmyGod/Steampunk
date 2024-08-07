@@ -41,7 +41,7 @@ const SteamJwt = () => {
                     <Route path='/steam/features' element={<AdminFeaturedGames/>}/>
                     <Route path='/steam/edit/:id' element={<EditPersonalForm/>}/>
                     <Route path='/steam/bookmarkmanager' element={<BookmarkManager/>}/>
-                    <Route path='/steam/newsDetail/:id' element={<NewsDetail/>}/>
+                    <Route path='/steam/newsDetail/:appId' element={<NewsDetail/>}/>
                 </Routes>
                 </AddressContextProvider>
             </LoginContextProvider>
