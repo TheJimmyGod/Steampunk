@@ -18,6 +18,7 @@ import AdminPage from './pages/AdminPage';
 import AdminAccountManager from './pages/AdminAccountManager';
 import AdminFeaturedGames from './pages/AdminFeaturedGames';
 import NewsDetail from './pages/NewsDetail';
+import BookmarkManager from './pages/BookmarkManager';
 
 const SteamJwt = () => {
     return (
@@ -39,6 +40,7 @@ const SteamJwt = () => {
                     <Route path='/steam/accounts' element={<AdminAccountManager/>}/>
                     <Route path='/steam/features' element={<AdminFeaturedGames/>}/>
                     <Route path='/steam/edit/:id' element={<EditPersonalForm/>}/>
+                    <Route path='/steam/bookmarkmanager' element={<BookmarkManager/>}/>
                     <Route path='/steam/newsDetail/:appId' element={<NewsDetail/>}/>
                 </Routes>
                 </AddressContextProvider>

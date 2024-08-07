@@ -15,6 +15,7 @@ const LoginForm = () => {
     const username = e.target.username.value;
     const password = e.target.password.value;
     const rememberId = e.target.rememberId.checked;
+
     login(username, password, rememberId);  // 로그인 진행!
   };
 

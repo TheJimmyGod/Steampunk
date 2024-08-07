@@ -4,6 +4,7 @@ import com.lec.spring.config.PrincipalDetails;
 import com.lec.spring.domain.Authority;
 import com.lec.spring.domain.User;
 import com.lec.spring.repository.AuthorityRepository;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -61,6 +62,7 @@ public class JWTFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+
         // 토큰에서 id, username, role 획득
         Long id = jwtUtil.getId(token);
         String username = jwtUtil.getUsername(token);

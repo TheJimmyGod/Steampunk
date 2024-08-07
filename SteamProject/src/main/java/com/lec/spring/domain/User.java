@@ -58,9 +58,23 @@ public class User extends BaseEntity {
     @ToString.Exclude
     private List<Game> games = new ArrayList<>();
 
+    @OneToMany
+    @Builder.Default
+    @JsonIgnore
+    @JoinTable(
+            name = "s_user_bookmarks",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "bookmark_id")
+    )
+    @ToString.Exclude
+    private List<Bookmark> bookmarks = new ArrayList<>();
+
     public void addAuthorities(Authority... authorities) {
         Collections.addAll(this.authorities,authorities);
     }
+
+    public void addBookmark(Bookmark bookmark) {this.bookmarks.add(bookmark);}
+    public void removeBookmark(Bookmark bookmark) {this.bookmarks.remove(bookmark);}
 
     // OAuth2 Client
     private String provider;

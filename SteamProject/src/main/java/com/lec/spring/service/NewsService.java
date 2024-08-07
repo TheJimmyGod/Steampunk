@@ -185,17 +185,24 @@ public class NewsService {
     public List<News> findAllNews() {
         return newsRepository.findAll();
     }
-    public Page<News> findAllNews(int page, int size) {
+
+    public Page<News> findAllNews(int page, int size, String gameName) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "date"));
-        return newsRepository.findAll(pageable);
+        Page<News> news = newsRepository.findAllByGameNameContaining(gameName, pageable);
+        System.out.println("news : " + news.getContent());
+        return news;
     }
-    public Page<News> findFreeNews(int page, int size){
+    public Page<News> findFreeNews(int page, int size, String gameName){
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "date"));
-        return newsRepository.findAllByIsFree(true, pageable);
+        return newsRepository.findAllByIsFreeAndGameNameContaining(true, pageable, gameName);
     }
 
-    public Page<News> findPaidNews(int page, int size){
+    public Page<News> findPaidNews(int page, int size, String gameName){
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "date"));
-        return newsRepository.findAllByIsFree(false, pageable);
+        return newsRepository.findAllByIsFreeAndGameNameContaining(false, pageable, gameName);
     }
+
+//    public List<News> findNewsByGameName(String gameName) {
+//        return newsRepository.findByGameNameContaining(gameName);
+//    }
 }
