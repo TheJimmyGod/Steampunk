@@ -1,8 +1,11 @@
 package com.lec.spring.controller;
 
+import com.lec.spring.domain.Game;
 import com.lec.spring.domain.News;
 import com.lec.spring.service.NewsService;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,19 +39,25 @@ public class NewsController {
 
     // 무한 스크롤 '전체' 선택일 경우
     @GetMapping("/findNews/all")
-    public Page<News> findAllNews(@RequestParam int page, @RequestParam int size) {
-        return newsService.findAllNews(page, size);
+    public Page<News> findAllNews(@RequestParam int page, @RequestParam int size, @RequestParam String gameName) {
+        return newsService.findAllNews(page, size, gameName);
     }
 
     // 무한 스크롤 '무료' 선택일 경우
     @GetMapping("/findNews/free")
-    public Page<News> findFreeNews(@RequestParam int page, @RequestParam int size) {
-        return newsService.findFreeNews(page, size);
+    public Page<News> findFreeNews(@RequestParam int page, @RequestParam int size, @RequestParam String gameName) {
+        return newsService.findFreeNews(page, size, gameName);
     }
 
     // 무한 스크롤 '유료' 선택일 경우
     @GetMapping("/findNews/paid")
-    public Page<News> findPaidNews(@RequestParam int page, @RequestParam int size) {
-        return newsService.findPaidNews(page, size);
+    public Page<News> findPaidNews(@RequestParam int page, @RequestParam int size, @RequestParam String gameName) {
+        return newsService.findPaidNews(page, size, gameName);
     }
+
+//    @CrossOrigin
+//    @GetMapping("/findNewsByName/{gameName}")
+//    public List<News> findNewsByGameName(@PathVariable String gameName) {
+//        return newsService.findNewsByGameName(gameName);
+//    }
 }

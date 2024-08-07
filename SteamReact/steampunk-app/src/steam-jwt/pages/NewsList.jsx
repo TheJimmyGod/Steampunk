@@ -8,19 +8,19 @@ import { LoginContext } from '../contexts/LoginContextProvider';
 import SideBar from '../components/sidebar/SideBar';
 import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { Button, Form } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 
 const NewsList = () => {
     const defaultImage = "https://store.akamai.steamstatic.com/public/shared/images/header/logo_steam.svg?t=962016";
     const { isLogin, logout } = useContext(LoginContext);
-
     const navigate = useNavigate();
 
     const [news, setNews] = useState([]);
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(false);
-    const [selectValue, setSelectValue] = useState("all");
+    const [checkBoxValue, setCheckBoxValue] = useState("all");
+    const [selectedValue, setSelectedValue] = useState("");
 
     // 뉴스 데이터 요청 함수
     const fetchNews = async () => {
@@ -28,19 +28,15 @@ const NewsList = () => {
 
         setLoading(true);
         try {
-            const response = await axios.get('http://localhost:8080/news/findNews/'+selectValue, {
+            const response = await axios.get('http://localhost:8080/news/findNews/' + checkBoxValue, {
                 params: {
                     page: page,
                     size: 5,
+                    gameName: selectedValue,
                 }
             });
-            console.log("정렬확인용 : ",response.data.content); // 서버 응답 데이터 확인
-            console.log('News:', news);
-            console.log('Page:', page);
-            console.log('Has more:', hasMore);
             const fetchedNews = response.data.content;
             if (Array.isArray(fetchedNews)) {
-
                 // 중복된 ID를 제거하여 고유한 뉴스 아이템만 유지
                 const uniqueNews = Array.from(new Map(fetchedNews.map(item => [item.id, item])).values());
 
@@ -54,10 +50,12 @@ const NewsList = () => {
                 // 페이지가 더 있는지 확인
                 if (fetchedNews.length === 0 || fetchedNews.length < 5) {
                     setHasMore(false);
+                } else {
+                    setHasMore(true);
                 }
             }
-
-            setPage(page + 1); // 페이지 번호 증가
+            console.log("fetchNews : ", page);
+            setPage(prev => prev + 1); // 페이지 번호 증가
         } catch (error) {
             console.error('Error fetching news:', error);
         } finally {
@@ -65,17 +63,16 @@ const NewsList = () => {
         }
     };
 
-    useEffect(() => {
-        const loadNews = async () => {
-            setPage(0); // 페이지 번호를 초기화
-            setNews([]); // 기존 뉴스 데이터를 제거
-            setHasMore(true); // 더 많은 뉴스가 있는 상태로 초기화
-            setLoading(false);
-            await fetchNews(); // 뉴스 데이터 요청
-        };
+    const loadNews = async () => {
+        setPage(0); // 페이지 번호를 초기화
+        setNews([]); // 기존 뉴스 데이터를 제거
+        setHasMore(true); // 더 많은 뉴스가 있는 상태로 초기화
+        await fetchNews(); // 뉴스 데이터 요청
+    };
 
+    useEffect(() => {
         loadNews(); // 뉴스 데이터 로드 함수 호출
-    }, [selectValue]); // selectValue 변경 시마다 fetchNews 호출
+    }, [checkBoxValue]); // checkBoxValue와 selectedValue 변경 시마다 fetchNews 호출
 
     // Unix 타임스탬프를 한국 시간으로 변환하는 함수
     const formatDateToKorean = (timestamp) => {
@@ -91,41 +88,62 @@ const NewsList = () => {
     };
 
     const handleFilterChange = (e) => {
-        setSelectValue(e.target.value); // 선택된 필터 값으로 상태 업데이트
-        setPage(0);
+        setCheckBoxValue(e.target.value); // 선택된 필터 값으로 상태 업데이트
+        setPage(0); // 페이지 번호 초기화
     };
 
     const onSubmitString = (e) => {
         e.preventDefault();
+        setPage(0);
+        if(page === 0){
+            console.log("page 드디어 0 ==",page)
+            loadNews();
+        } 
+    };
 
-        console.log(e.target.value);
+    // 페이지 번호 초기화 함수
+    // const setPageAsync = (pageNumber) => {
+    //     return new Promise((resolve) => {
+    //         setPage(pageNumber);
+    //         resolve();
+    //     });
+    // };
 
-    }
+    // const onSubmitString = async (e) => {
+    //     e.preventDefault();
+    //     await setPageAsync(0); // 페이지 번호 초기화 후
+    //     await loadNews(); // 뉴스 로드
+    // };
+
+    const onChangeValue = (e) => {
+        setSelectedValue(e.target.value); // 선택된 값 업데이트
+        setPage(0); // 페이지 번호 초기화
+    };
 
     return (
         <>
-            <SideBar />
+            <SideBar/>
             <main>
                 <header className="main-header"></header>
                 <section className="banner">
                     <h1>STEAM NEWS</h1>
                     <p>최신 스팀 뉴스를 알려드립니다</p>
-                    <Form onClick={onSubmitString} className="search-bar">
+                    <Form className="search-bar" onSubmit={onSubmitString}>
                         <FontAwesomeIcon icon={faBars} className="filter-toggle" />
-                        <input className="search-news" placeholder="Search..."/>
-                        <button type='submit'><FontAwesomeIcon icon={faMagnifyingGlass} /></button> 
+                        <input className="search-news" placeholder="Search..." onChange={onChangeValue} />
+                        <button type='submit'><FontAwesomeIcon icon={faMagnifyingGlass} /></button>
                     </Form>
                     <div className="filter-menu">
                         <label>
-                            <input type="radio" name="filter" value="all" checked={selectValue === "all"} onChange={handleFilterChange} />
+                            <input type="radio" name="filter" value="all" checked={checkBoxValue === "all"} onChange={handleFilterChange} />
                             전체
                         </label>
                         <label>
-                            <input type="radio" name="filter" value="free" checked={selectValue === "free"} onChange={handleFilterChange} />
+                            <input type="radio" name="filter" value="free" checked={checkBoxValue === "free"} onChange={handleFilterChange} />
                             무료게임
                         </label>
                         <label>
-                            <input type="radio" name="filter" value="paid" checked={selectValue === "paid"} onChange={handleFilterChange} />
+                            <input type="radio" name="filter" value="paid" checked={checkBoxValue === "paid"} onChange={handleFilterChange} />
                             유료게임
                         </label>
                     </div>
@@ -138,16 +156,17 @@ const NewsList = () => {
                         loader={<h4 className="text-center">Loading...</h4>}
                         endMessage={<p className="text-center">No more news!</p>}
                     >
-                    {news.map((item) => (
-                        
-                            <div className="news-item">
-                            <img
+                        {news.map((item) => (
+                            <div className="news-item" key={item.id}>
+                                <img
                                     src={item.capsuleImage || defaultImage}
                                     alt="뉴스 이미지"
                                     className="news-image"
                                 />
                                 <div className="news-content">
-                                    <h2 className="news-title" onClick={() =>{navigate(`/steam/newsDetail/${item.appId}`)}}><Link>{item.title}</Link></h2>
+                                    <h2 className="news-title" onClick={() => { navigate(`/steam/newsDetail/${item.appId}`) }}>
+                                        <Link>{item.title}</Link>
+                                    </h2>
                                     <p className="game-name">{item.gameName}</p>
                                     <p className="author">{item.author}</p>
                                     <p className="date">{formatDateToKorean(item.date)}</p>
@@ -158,7 +177,6 @@ const NewsList = () => {
                                 </div>
                             </div>
                         ))}
-                        
                     </InfiniteScroll>
                 </section>
             </main>
