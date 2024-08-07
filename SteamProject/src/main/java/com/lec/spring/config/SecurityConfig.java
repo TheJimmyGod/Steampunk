@@ -1,10 +1,12 @@
 package com.lec.spring.config;
 
+//import com.lec.spring.config.oauth.PrincipalOauth2UserService;
 import com.lec.spring.jwt.JWTFilter;
 import com.lec.spring.jwt.JWTUtil;
 import com.lec.spring.jwt.LoginFilter;
 import com.lec.spring.repository.AuthorityRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +30,8 @@ import java.util.List;
 @EnableWebSecurity(debug = true) // 요청시 Security Filter Chain의 동작 확인 출력
 //@EnableWebSecurity
 public class SecurityConfig {
+//    @Autowired
+//    private PrincipalOauth2UserService principalOauth2UserService;
     @Value("${cors.allowed-origins}")
     private List<String> corsAllowedOrigins;
     private final AuthenticationConfiguration authenticationConfiguration;
@@ -109,12 +113,16 @@ public class SecurityConfig {
                         configuration.setAllowedMethods(List.of("*"));
                         configuration.setAllowCredentials(true);
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
-                        configuration.setMaxAge(3600L);
+                        configuration.setMaxAge(360L);
                         configuration.setExposedHeaders( List.of("Authorization"));
                         return configuration;
                     }
                 }));
-
+//        http.
+//                oauth2Login(httpSecurityOAuth2LoginConfigurer ->
+//                        httpSecurityOAuth2LoginConfigurer.loginPage("/steam/login")
+//                                .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
+//                                        .userService(principalOauth2UserService)));
         return http.build();
     }
 
