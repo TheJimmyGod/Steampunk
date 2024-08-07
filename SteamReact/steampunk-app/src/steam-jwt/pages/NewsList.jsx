@@ -138,7 +138,8 @@ const NewsList = () => {
                         loader={<h4 className="text-center">Loading...</h4>}
                         endMessage={<p className="text-center">No more news!</p>}
                     >
-                    {news.map((item) => (                       
+                    {news.map((item) => (
+                        
                             <div className="news-item">
                             <img
                                     src={item.capsuleImage || defaultImage}
@@ -157,6 +158,7 @@ const NewsList = () => {
                                 </div>
                             </div>
                         ))}
+                        
                     </InfiniteScroll>
                 </section>
             </main>

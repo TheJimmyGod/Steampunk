@@ -7,7 +7,7 @@ import parse from 'html-react-parser';
 const NewsDetail = () => {
 
     const navigate = useNavigate();
-    const { appId } = useParams();
+    // const { appId } = useParams();
 
     const [news, setNews] = useState({
         appId: "",
