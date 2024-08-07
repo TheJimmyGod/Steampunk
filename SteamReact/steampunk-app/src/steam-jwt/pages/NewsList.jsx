@@ -40,6 +40,7 @@ const NewsList = () => {
             console.log('Has more:', hasMore);
             const fetchedNews = response.data.content;
             if (Array.isArray(fetchedNews)) {
+                
                 // 중복된 ID를 제거하여 고유한 뉴스 아이템만 유지
                 const uniqueNews = Array.from(new Map(fetchedNews.map(item => [item.id, item])).values());
 
