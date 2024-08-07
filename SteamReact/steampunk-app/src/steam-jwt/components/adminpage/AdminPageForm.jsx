@@ -24,6 +24,12 @@ const AdminPageForm = ({removal}) => {
                 <Button className='btn-form' onClick={()=>navigate(`/steam/accounts`)}>회원 관리 페이지</Button>
             </div>
             <div>
+                <Button className='btn-form' onClick={()=>navigate(`/steam/bookmarkmanager`)}>뉴스 즐겨찾기 관리</Button>
+            </div>
+            <div>
+                <Button className='btn-form' onClick={()=>{navigate(userInfo == null ? `/steam/login` : `/steam/edit/${userInfo.id}`)}}>개인 정보 수정</Button>
+            </div>
+            <div>
                 <Button className='btn-form' onClick={removal}>계정 탈퇴</Button>
             </div>
             </div>

@@ -123,6 +123,8 @@ public class UserController {
     }
     @RequestMapping("/user")
     public User user(@AuthenticationPrincipal PrincipalDetails userDetails){
+        System.out.println(userDetails);
+
         return (userDetails != null) ? userDetails.getUser() : null;
     }
     // --------------------------------------------------------

@@ -11,6 +11,8 @@ import java.util.List;
 public interface NewsRepository extends JpaRepository<News, Long> {
     News findByAppId(Long appId);
     Boolean existsByAppId(Long appId);
+
     Page<News> findAllByIsFreeAndGameNameContaining(Boolean isFree, Pageable pageable, String gameName);
     Page<News> findAllByGameNameContaining(String gameName, Pageable pageable);
+    List<News> findNewsByGameNameContainingIgnoreCase(String gameName);
 }
