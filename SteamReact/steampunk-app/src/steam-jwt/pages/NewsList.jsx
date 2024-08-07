@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark as farBookmark } from '@fortawesome/free-regular-svg-icons';
 import { faBookmark } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { LoginContext } from '../contexts/LoginContextProvider';
 import SideBar from '../components/sidebar/SideBar';
 import axios from 'axios';
@@ -138,7 +138,7 @@ const NewsList = () => {
                         endMessage={<p className="text-center">No more news!</p>}
                     >
                     {news.map((item) => (
-                        <div>
+                        
                             <div className="news-item">
                             <img
                                     src={item.capsuleImage || defaultImage}
@@ -157,6 +157,7 @@ const NewsList = () => {
                                 </div>
                             </div>
                         ))}
+                        
                     </InfiniteScroll>
                 </section>
             </main>
