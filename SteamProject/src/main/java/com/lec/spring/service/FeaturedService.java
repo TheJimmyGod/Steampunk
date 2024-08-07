@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @Service
@@ -23,9 +24,23 @@ public class FeaturedService {
 
     @Transactional
     public boolean updateFeatured(Featured[] featureds){
-        featuredRepository.deleteAll();
-        featuredRepository.saveAll(Arrays.asList(featureds));
-        // TODO: 테이블 정리하자
+        List<Featured> curr = featuredRepository.findAll();
+        for (var f : featureds)
+        {
+            if(curr.stream().noneMatch(z -> Objects.equals(z.getAppId(), f.getAppId())))
+                featuredRepository.save(f);
+        }
         return true;
+    }
+
+    @Transactional
+    public String removeFeatured(Featured app){
+        String name = app.getGameName();
+        featuredRepository.delete(app);
+        return name + " 가 삭제되었습니다.";
+    }
+
+    public Featured findByAppId(Long appId) {
+        return featuredRepository.findByAppId(appId).orElse(null);
     }
 }

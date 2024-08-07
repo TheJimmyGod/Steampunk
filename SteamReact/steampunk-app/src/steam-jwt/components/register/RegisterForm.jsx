@@ -101,7 +101,7 @@ const RegisterForm = ({ register }) => {
           />
         </div>
         <div>
-          <Form.Select onChange={handleChangeSelect} className="select-adress">
+          <Form.Select onChange={handleChangeSelect}>
             <option value={""} key={""} readOnly>&lt;도로명주소를 검색해주십시오&gt;</option>
             {
               addrData.length > 0 ?

@@ -47,7 +47,7 @@ public class UserController {
             return new ResponseEntity<>("도로명주소를 입력해주십시오", HttpStatus.BAD_REQUEST);
         if(userDTO.getAddress_sub().isEmpty())
             return new ResponseEntity<>("상세주소를 입력해주십시오", HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(userService.register(userDTO), HttpStatus.OK);
+        return new ResponseEntity<>(userService.register(userDTO), HttpStatus.CREATED);
     }
 
     @RequestMapping("/findId")
