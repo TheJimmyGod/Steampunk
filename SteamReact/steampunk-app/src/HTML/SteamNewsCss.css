@@ -351,6 +351,10 @@ main {
     gap: 15px; 
 }
 
+.mypage {
+    margin-right: 0.1%;
+}
+
 .mypage h1 {
     font-size: 2.5em;
     color: #00bfff;
@@ -366,4 +370,20 @@ main {
 
 .mypage Button {
     margin-bottom: 5%;
+}
+
+.popup-content{
+    width: 90%; 
+    height: 100%;  
+    overflow-y: auto;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+}
+
+@media (max-width: 700px){
+    .popup-content {
+        width: 100%;
+    }
 }
