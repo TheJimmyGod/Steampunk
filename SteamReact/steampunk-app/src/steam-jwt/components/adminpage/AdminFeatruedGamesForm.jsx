@@ -12,9 +12,10 @@ import * as Swal from '../../apis/alert'
 const MAXIMUM_COUNT = 5;
 const AdminFeatruedGamesForm = () => {
     const navigate = useNavigate();
-    const [games, setGames] = useState([]);
-    const [newGames, setNewGames] = useState([]);
-    const [sGames, setSGames] = useState([]);
+    const [selected, setSelected] = useState('');
+    const [games, setGames] = useState([]); // 기존에 있던 것들
+    const [newGames, setNewGames] = useState([]); // 새로운 게임 넣었다면 쓰는 용도
+    const [sGames, setSGames] = useState([]); // 검색 용도
     const {loginCheck} = useContext(LoginContext);
     
     useEffect(()=>{loadFeatureGames();}, [loginCheck]);
@@ -25,18 +26,47 @@ const AdminFeatruedGamesForm = () => {
         const response = await axios.get(`${NORMAL_SERVER_HOST}/getFeatured`);
         const {data, status} = response;
         if(status === 200)
+        {
             data !== undefined && setGames(data);
+            sortGames();
+        }
     }
 
-    const onRemove = (id) =>{
-        setGames(games.filter(x => x.appId !== id));
+    const onRemove = (app) =>{
+        Swal.confirm(`${app.gameName}을 제거하시겠습니까?`, "", "question",
+            (result)=>{ 
+                if(result.isConfirmed){
+                    setGames(games.filter(x => x.appId !== app.appId));
+                    axios({
+                        url: `${NORMAL_SERVER_HOST}/removeFeatured/${app.appId}`,
+                        method:"delete"
+                    }).then(response=>{
+                        const {data, status, statusText} = response;
+                        if(status === 200)
+                        {
+                            Swal.alert("삭제 성공했습니다!", `${data}`, "success"); 
+                        }
+                        else
+                            Swal.alert("삭제 실패했습니다!", `${status}: ${statusText}`, "error"); 
+                    }).catch(err=>{
+                        console.log(err);
+                        Swal.alert("삭제 실패했습니다!", "", "error"); 
+                    });
+                }
+            }
+        );
+
     }
 
     const onSearch = async () => {
         setSGames([]);
-        let input = document.getElementById("search");
-        console.log(`${NORMAL_SERVER_HOST}/game/find/${input.value}`);
-        const response = await axios.get(`${NORMAL_SERVER_HOST}/game/find/${input.value}`);
+        let input = document.getElementById("search").value.trim();
+        if(input === "")
+        {
+            Swal.alert("검색 창이 비어있습니다!", ``, "error"); 
+            return;
+        }
+        const response = await axios.get(`${NORMAL_SERVER_HOST}/game/find/${input}`);
         const {data, status} = response;
         if(status === 200)
         {
@@ -49,6 +79,8 @@ const AdminFeatruedGamesForm = () => {
         newGames.forEach(x =>{
             games.push(x);
         });
+        setSGames([]);
+        setNewGames([]);
         axios({
             url: `${NORMAL_SERVER_HOST}/updateFeatured`,
             method:"put",
@@ -57,14 +89,53 @@ const AdminFeatruedGamesForm = () => {
             },
             data: JSON.stringify(games)
         }).then(response=>{
-            const {data, status} = response;
+            const {data, status, statusText} = response;
             if(status === 200)
             {
-                alert(data);
+                Swal.alert("저장 성공했습니다!", `${data}`, "success"); 
             }
+            else
+                Swal.alert("저장 실패했습니다!", `${status}: ${statusText}`, "error"); 
         }).catch(err=>{
             console.log(err);
+            Swal.alert("저장 실패했습니다!", "", "error"); 
         });
+    }
+
+    const handleChangeSelect = (e) => {
+        setSelected(e.target.value);
+        sortGames(e.target.value);
+      };
+
+
+    const sortGames = (e = "appIdASC") =>{
+        if(games !== undefined && Array.isArray(games) && games.length !== 0)
+            {
+                switch(e)
+                {
+                    case "appIdASC":
+                        games.sort((a,b) => a.appId - b.appId);
+                        break;
+                    case "appIdDESC":
+                        games.sort((a,b) => b.appId - a.appId);
+                        break;
+                    case "gameNameASC":
+                        games.sort((a,b) => String(a.gameName).localeCompare(b.gameName));
+                        break;
+                    case "gameNameDESC":
+                        games.sort((a,b) => String(b.gameName).localeCompare(a.gameName));
+                        break;
+                    case "lastInsertASC":
+                        games.sort((a,b) => new Date(a.regDate) - new Date(b.regDate));
+                        break;
+                    case "lastInsertDESC":
+                        games.sort((a,b) => new Date(b.regDate) - new Date(a.regDate));
+                        break;
+                    default:
+                        games.sort((a,b) => a.appId - b.appId);
+                        break;    
+                }
+            }
     }
 
     return (
@@ -77,11 +148,23 @@ const AdminFeatruedGamesForm = () => {
                 <p>추천 게임 관리하는 페이지입니다</p>
             </div>
             <div className='bg'>
+                <div>
+                <Form.Select onChange={handleChangeSelect} style={{width:"300px", maxWidth:"300px", marginLeft:"2.5em"}}>
+                    <option value={"appIdASC"} key={`appIdASC`}> APPID 오름차순 </option>
+                    <option value={"appIdDESC"} key={`appIdDESC`}> APPID 내림차순 </option>
+                    <option value={"gameNameASC"} key={`gameNameASC`}> 게임이름 오름차순 </option>
+                    <option value={"gameNameDESC"} key={`gameNameDESC`}> 게임이름 내림차순 </option>
+                    <option value={"lastInsertASC"} key={`lastInsertASC`}> 마지막으로 추가한 오름차순 </option>
+                    <option value={"lastInsertDESC"} key={`lastInsertDESC`}> 마지막으로 추가한 오름차순 </option>
+                </Form.Select>
+                <br/><hr/><br/>
+                </div>
                 <Table  responsive striped="columns" variant="dark">
                     <thead>
                         <tr style={{textAlign: "center", justifyItems:"center", verticalAlign: "middle"}}>
                             <th style={{width: "100px"}}>APP ID</th>
                             <th>게임이름</th>
+                            <th>마지막으로 추가한 날짜</th>
                             <th style={{width: "100px"}}>삭제</th>
                         </tr>
                     </thead>
@@ -90,7 +173,8 @@ const AdminFeatruedGamesForm = () => {
                             games.map(x =><tr style={{textAlign: "center", justifyItems:"center", verticalAlign: "middle"}} key={x.appId}>
                                 <td>{x.appId}</td>
                                 <td>{x.gameName}</td>
-                                <td><Button variant='danger' style={{marginTop: "15px"}} onClick={()=>onRemove(x.id)}>NAGA</Button></td>
+                                <td>{x.regDate ? x.regDate : "갱신중..."}</td>
+                                <td><Button variant='danger' style={{marginTop: "15px"}} onClick={()=>onRemove(x)}>NAGA</Button></td>
                             </tr>)
                         }
                     </tbody>
@@ -100,18 +184,19 @@ const AdminFeatruedGamesForm = () => {
                 {
                     close => (
                         <>
-                        <main className='mypage' style={{width: "1500px", height: "800px", border: "white 10px solid", maxHeight: "80vh", overflowY: "auto"}}>
+                        <main className='mypage popup-content'>
                             <header className="main-header"></header>
                                 <div className="banner">
                                 <h1>Add Featured Games</h1>
+                                <p>추천 게임을 추가할 수 있습니다</p>
                                </div>
                             <div>
                                 <div>
                                     <Table responsive striped="columns" variant='dark'>
                                         <thead>
                                             <tr>
-                                                <th>AppID</th>
-                                                <th>게임이름</th>
+                                                <th style={{width: "10%"}}>AppID</th>
+                                                <th style={{width: "50%"}}>게임이름</th>
                                                 <th>추가</th>
                                             </tr>
                                         </thead>
@@ -189,13 +274,14 @@ const AdminFeatruedGamesForm = () => {
                               placeholder= {"게임 이름을 입력해주세요"}
                               name={"gameName"}
                               autoComplete={"gameName"}
+                              style={{width: "600px", maxWidth:"600px"}}
                                />
                             }
                                <Button className='btn-form' style={{marginRight: "5px", width:"100px"}} onClick={()=>{onSearch();}}>검색</Button>
                             </div>
                             <div>
-                                <Button className='btn-form' style={{marginRight: "5px"}} onClick={()=>{onSave();}}>저장</Button>
-                                <Button className='btn-form' onClick={() => { setSGames([]); close();}}>닫기</Button>
+                                <Button className='btn-form' style={{marginRight: "5px"}} onClick={()=>{onSave();  close();}}>저장</Button>
+                                <Button className='btn-form' onClick={() => { setNewGames([]); setSGames([]); close();}}>닫기</Button>
                             </div>
                         </main>
                         </>
@@ -203,8 +289,6 @@ const AdminFeatruedGamesForm = () => {
                     )
                 }
             </Popup>
-             
-                    <Button className='btn-form' onClick={null}>저장</Button>
                 </div>
             </div>
             <br/><br/><hr/><br/>
