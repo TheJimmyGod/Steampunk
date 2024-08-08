@@ -9,10 +9,11 @@ import SideBar from '../components/sidebar/SideBar';
 import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { Form } from 'react-bootstrap';
+import { SERVER_HOST } from '../apis/api';
 
 const NewsList = () => {
     const defaultImage = "https://store.akamai.steamstatic.com/public/shared/images/header/logo_steam.svg?t=962016";
-    const { isLogin, logout } = useContext(LoginContext);
+    const { userInfo, isLogin, logout, loginCheck } = useContext(LoginContext);
     const navigate = useNavigate();
 
     const [news, setNews] = useState([]);
@@ -21,6 +22,67 @@ const NewsList = () => {
     const [loading, setLoading] = useState(false);
     const [checkBoxValue, setCheckBoxValue] = useState("all");
     const [selectedValue, setSelectedValue] = useState("");
+
+    const [bookmarks, setBookmarks] = useState([]);
+
+    useEffect(()=>{
+        if(userInfo === undefined || userInfo.id === undefined)
+            return;
+        loadBookmarks(); 
+    }, [loginCheck]) // 로그인이 제대로 확인시 발동
+
+    const loadBookmarks = () =>{
+        axios({
+            url: `${SERVER_HOST}/bookmark/list/${userInfo.id}`,
+            method: 'get'
+        }).then(response =>{
+            const {data, status, statusText} = response;
+            if(status === 200)
+            {
+                console.log("북마크 데이터 전송 완료!", data.length);
+                setBookmarks(data);
+            }
+        }).catch(err=>{
+            console.log("북마크 전송중 에러 발생");
+        })
+    }
+
+    const handleBookmarks = async (insert = true, id) =>{
+        if(id === undefined || userInfo.id === undefined)
+            return;
+        if(insert)
+        {
+            const response = await axios.post(`${SERVER_HOST}/bookmark/insert/${userInfo.id}/${id}`);
+            const {status} = response;
+            if(status === 201)
+            {
+                console.log(`${id}가 북마크되었습니다.`);
+                loadBookmarks();
+            }
+        }
+        else
+        {
+            let bookmark;
+            for(let item of bookmarks)
+            {
+                if(item.news.appId === id)
+                {
+                    bookmark = item;
+                    break;
+                }
+            }
+            if(bookmark !== undefined && bookmark !== null)
+            {
+                const response = await axios.delete(`${SERVER_HOST}/bookmark/remove/${bookmark.id}`);
+                const {status} = response;
+                if(status === 200)
+                {
+                    console.log(`${id}가 북마크 해제했습니다.`);
+                    loadBookmarks();
+                }
+            }
+        }
+    }
 
     // 뉴스 데이터 요청 함수
     const fetchNews = async () => {
@@ -172,8 +234,11 @@ const NewsList = () => {
                                     <p className="date">{formatDateToKorean(item.date)}</p>
                                 </div>
                                 <div className="bookmark">
-                                    <FontAwesomeIcon icon={farBookmark} />
-                                    <FontAwesomeIcon icon={faBookmark} />
+                                    {
+                                        bookmarks.some(x => x.news.appId === item.appId) ?
+                                        <FontAwesomeIcon icon={faBookmark} onClick={()=>{handleBookmarks(false,item.appId)}} /> :
+                                        <FontAwesomeIcon icon={farBookmark} onClick={()=>{handleBookmarks(true,item.appId)}} />
+                                    }
                                 </div>
                             </div>
                         ))}

@@ -49,7 +49,7 @@ public class BookmarkService {
         news.removeBookmark(bookmark);
 
         bookmarkRepository.delete(bookmark);
-        return "북마크 제거 완료";
+        return news.getGameName() + " 북마크 제거 완료";
     }
 
     @Transactional
