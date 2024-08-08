@@ -1,13 +1,15 @@
 import axios from 'axios';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { Carousel, Container } from 'react-bootstrap';
 import '../../HTML/SteamNewsCss.css';
+import { NORMAL_SERVER_HOST } from '../apis/api';
+import { LoginContext } from '../contexts/LoginContextProvider';
+import { Link } from 'react-router-dom';
 
 const TestMoon = () => {
-
-
+    const {userInfo, loginCheck} = useContext(LoginContext);
     const [games, setGames] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -15,14 +17,20 @@ const TestMoon = () => {
     useEffect(() => {
         axios({
             method: "get",
-            url: "http://localhost:8080/game/testGames"
+            url: `${NORMAL_SERVER_HOST}/getFeatured`
         })
             .then((response) => {
-                setGames(response.data);
-                console.log("games ======== ", games);
+                const {data, status, statusText} = response;
+                if(status === 200)
+                {
+                    setGames(response.data);
+                    console.log("games ======== ", games);
+                }
+            }).catch(err=>{
+                console.log(err);
             })
 
-    }, []);
+    }, [loginCheck]);
 
     // 슬라이드 변경 타이머
     useEffect(() => {
@@ -39,13 +47,15 @@ const TestMoon = () => {
         <>
             <Container fluid="md">  
                 <Carousel activeIndex={currentIndex} onSelect={(selectedIndex) => setCurrentIndex(selectedIndex)}>
-                    {games.map((game) => (
-                        <Carousel.Item key={game.id}>
+                    {games.map((g) => (
+                        <Carousel.Item key={g.id}>
+                            <Link to={`newsDetail/${g.game.appId}`}>
                             <img
                                 className="d-block w-100"
-                                src={game.headerImage}
-                                alt={game.gameName}
+                                src={g.game.headerImage === null ? "" : g.game.headerImage}
+                                alt={g.game.gameName}
                             />
+                            </Link>
                         </Carousel.Item>
                     ))}
                 </Carousel>

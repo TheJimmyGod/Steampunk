@@ -15,4 +15,5 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     Page<News> findAllByIsFreeAndGameNameContaining(Boolean isFree, Pageable pageable, String gameName);
     Page<News> findAllByGameNameContaining(String gameName, Pageable pageable);
     List<News> findNewsByGameNameContainingIgnoreCase(String gameName);
+    List<News> findNewsByTitleContainingIgnoreCase(String title);
 }

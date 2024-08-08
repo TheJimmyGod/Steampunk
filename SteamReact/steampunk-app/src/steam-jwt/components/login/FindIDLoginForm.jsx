@@ -7,7 +7,6 @@ import axios from 'axios';
 import { SERVER_HOST } from '../../apis/api'
 
 const FindIDLoginForm = () => {
-
     const [id, setID] = useState("");
     const [error, setError] = useState(false);
     const [success, setSuccess] = useState(false);
