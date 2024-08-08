@@ -191,9 +191,8 @@ const NewsList = () => {
                     <h1>STEAM NEWS</h1>
                     <p>최신 스팀 뉴스를 알려드립니다</p>
                     <Form className="search-bar" onSubmit={onSubmitString}>
-                        <FontAwesomeIcon icon={faBars} className="filter-toggle" />
                         <input className="search-news" placeholder="Search..." onChange={onChangeValue} />
-                        <button type='submit'><FontAwesomeIcon icon={faMagnifyingGlass} /></button>
+                        <button type='submit' style={{width: "50px", height: "50px", backgroundColor: "#00BFFF", marginLeft: "5px"}}><FontAwesomeIcon icon={faMagnifyingGlass} /></button>
                     </Form>
                     <div className="filter-menu">
                         <label>
