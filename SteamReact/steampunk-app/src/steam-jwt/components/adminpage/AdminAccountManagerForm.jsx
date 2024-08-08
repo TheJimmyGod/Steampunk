@@ -35,7 +35,7 @@ const AdminAccountManagerForm = () => {
         const {data, status} = response;
         if(data === null || data === undefined || status !== 200)
         {
-            Swal.alert("존재하지 않는 회원입니다!","", "error", ()=>navigate("/steam/accounts")); 
+            Swal.alert("존재하지 않는 회원입니다!","", "error", ()=>navigate((userInfo === undefined || userInfo.id === undefined ) ? `/steam/login` : "/steam/accounts")); 
             return;
         }
 
@@ -95,7 +95,7 @@ const AdminAccountManagerForm = () => {
                 </Table>
             </div>
             <div style={{marginTop: "20px"}}>
-                <Button className='btn-form' onClick={()=>{navigate(-1)}}>이전</Button>
+                <Button className='btn-form' onClick={()=>{navigate((userInfo === undefined || userInfo.id === undefined ) ? `/steam/login` :-1)}}>이전</Button>
             </div>
             </main>
         </>

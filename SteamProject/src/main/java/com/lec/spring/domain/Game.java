@@ -1,12 +1,15 @@
 package com.lec.spring.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -60,4 +63,12 @@ public class Game {
 
     @Column(name = "release_date")
     private String releaseDate;
+
+    @OneToMany
+    @JsonIgnore
+    @ToString.Exclude
+    @JoinColumn(name = "game_id")
+    private List<Featured> featured = new ArrayList<>();
+    public void addFeature(Featured featured) {this.featured.add(featured);}
+    public void removeFeature(Featured featured) {this.featured.remove(featured);}
 }

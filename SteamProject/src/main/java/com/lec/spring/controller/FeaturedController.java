@@ -10,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 public class FeaturedController {
@@ -19,30 +22,31 @@ public class FeaturedController {
     @CrossOrigin
     @PostMapping("/featured")
     public ResponseEntity<?> save(@RequestBody Featured featured){
-        Game game = gameService.findGame(featured.getAppId());
+        Game game = gameService.findGame(featured.getGame().getAppId());
         if(game == null)
-            return new ResponseEntity<>("존재하지 않는 게임: " + featured.getGameName(), HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(featuredService.saveFeaturedGames(featured), HttpStatus.CREATED); // response code: 201
+            return new ResponseEntity<>("존재하지 않는 게임: " + featured.getGame().getGameName(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(featuredService.saveFeaturedGames(game,featured), HttpStatus.CREATED); // response code: 201
+    }
+    @CrossOrigin
+    @PostMapping("/updateFeatured")
+    public ResponseEntity<?> updateFeatures(@RequestBody Game[] games){
+        List<Game> gameList = new ArrayList<>();
+        for(var game : games)
+        {
+            Game _game = gameService.findGame(game.getAppId());
+            if(_game == null)
+                return new ResponseEntity<>("존재하지 않는 게임", HttpStatus.BAD_REQUEST);
+            if(_game.getFeatured().isEmpty())
+                gameList.add(_game);
+        }
+
+        return new ResponseEntity<>(featuredService.updateFeatured(gameList), HttpStatus.CREATED);
     }
 
     @CrossOrigin
     @GetMapping("/getFeatured")
     public ResponseEntity<?> findAll(){
-
         return new ResponseEntity<>(featuredService.findAll(), HttpStatus.OK);
-    }
-
-    @CrossOrigin
-    @PutMapping("/updateFeatured")
-    public ResponseEntity<?> update(@RequestBody Featured[] features){
-        for(var f : features)
-        {
-            Game game = gameService.findGame(f.getAppId());
-            if(game == null)
-                return new ResponseEntity<>("존재하지 않는 게임: " + f.getGameName(), HttpStatus.BAD_REQUEST);
-        }
-
-        return new ResponseEntity<>(featuredService.updateFeatured(features), HttpStatus.OK);
     }
 
     @CrossOrigin

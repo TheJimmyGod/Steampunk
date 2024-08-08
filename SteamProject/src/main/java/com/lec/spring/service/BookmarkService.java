@@ -84,6 +84,8 @@ public class BookmarkService {
         else
         {
             List<News> newsList = newsRepository.findNewsByGameNameContainingIgnoreCase((String)keyword);
+            if(newsList == null || newsList.isEmpty())
+                newsList = newsRepository.findNewsByTitleContainingIgnoreCase((String)keyword);
             for (Bookmark item : list)
             {
                 for(News news : newsList)

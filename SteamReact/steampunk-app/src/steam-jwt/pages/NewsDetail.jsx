@@ -70,8 +70,30 @@ const NewsDetail = () => {
             });
     }, []);
 
+    const formatContent1 = (content) => {
+        const steamImagePattern = /\{STEAM_CLAN_IMAGE\}\/[^\s]+\.png/g;
+        return content.split('. ').map((str, index) => {
+            if (steamImagePattern.test(str)) {
+                const imageUrl = str.match(steamImagePattern)[0].replace('{STEAM_CLAN_IMAGE}', 'https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/clans');
+                return (
+                    <React.Fragment key={index}>
+                        <img src={imageUrl} alt="Steam Clan" /><br />
+                    </React.Fragment>
+                );
+            } else {
+                return (
+                    <React.Fragment key={index}>
+                        {parse(str)}
+                        .<br />
+                    </React.Fragment>
+                );
+            }
+        });
+    };
+
+
     // 문자열을 변환하는 함수
-    const formatContent = (content) => {
+    const formatContent2 = (content) => {
         return content
             .split('. ')
             .map((str, index) => (
@@ -81,6 +103,15 @@ const NewsDetail = () => {
                 </React.Fragment>
             ));
     };
+
+    const priceIsFree = (price) => {
+        if (price == null || price.trim() === "") {
+            return "Free";
+        } else {
+            return price;
+        }
+    }
+
 
     return (
         <>
@@ -98,23 +129,27 @@ const NewsDetail = () => {
                     <FontAwesomeIcon icon={faBookmark} />
                 </div>
                 <div className="game-news-content">
-                    {formatContent(news.content)}
+                    {formatContent1(news.content)}
                 </div>
                 <hr></hr>
                 <div className="game-info">
-                    <h2>Game Information</h2>
-                    <p>Game Name: {gameInfo.gameName}</p>
-                    <p>개발자: {gameInfo.developers}</p>
-                    <p>무료 여부: {gameInfo.isFree ? '무료' : '유료'}</p>
-                    <p>설명: {formatContent(gameInfo.shortDescription)}</p>
-                    <p>최소 요구사항: {formatContent(gameInfo.minimum)}</p>
-                    <ul>
-                        <ol>가격: {gameInfo.price} </ol>
-                        <ol>할인: {gameInfo.discount}</ol>
-                        <ol>장르: {gameInfo.genres}</ol>
-                        <ol>웹사이트: <a href={gameInfo.website}>{gameInfo.website}</a></ol>
-                        <ol>출시일: {gameInfo.releaseDate}</ol>
-                    </ul>
+                    <div className="game-info1">
+                        <h2 className='game-information-title'>Game Information</h2>
+                        <p><span className='highlight-text'>Game name:</span> {gameInfo.gameName}</p>
+                        <p><span className='highlight-text'>Developer:</span> {gameInfo.developers}</p>
+                        <p><span className='highlight-text'>Free or not:</span> {gameInfo.isFree ? 'Free' : 'Not Free'}</p>
+                        <p><span className='highlight-text'>Introduction to the game:</span> {formatContent2(gameInfo.shortDescription)}</p>
+                    </div>
+                    <div className="game-info2">
+                        <p className="game-info2-1"><p className='game-requirements'>System Requirements</p>{formatContent2(gameInfo.minimum)}</p>
+                        <ul className="game-info2-2">
+                            <li><span className='highlight-text'>Price:</span> {priceIsFree(gameInfo.price)}</li>
+                            <li><span className='highlight-text'>Discount:</span> {gameInfo.discount}%</li>
+                            <li><span className='highlight-text'>Genres:</span> {gameInfo.genres}</li>
+                            <li><span className='highlight-text'>Website URL:</span> <a href={gameInfo.website}>{gameInfo.website}</a></li>
+                            <li><span className='highlight-text'>ReleaseDate:</span> {gameInfo.releaseDate}</li>
+                        </ul>
+                    </div>
                 </div>
             </main>
         </>

@@ -16,29 +16,42 @@ const AdminFeatruedGamesForm = () => {
     const [games, setGames] = useState([]); // 기존에 있던 것들
     const [newGames, setNewGames] = useState([]); // 새로운 게임 넣었다면 쓰는 용도
     const [sGames, setSGames] = useState([]); // 검색 용도
-    const {loginCheck} = useContext(LoginContext);
+    const {userInfo, loginCheck} = useContext(LoginContext);
     
     useEffect(()=>{loadFeatureGames();}, [loginCheck]);
 
     async function loadFeatureGames(){
         setGames([]);
         setNewGames([]);
-        const response = await axios.get(`${NORMAL_SERVER_HOST}/getFeatured`);
-        const {data, status} = response;
-        if(status === 200)
+        try
         {
-            data !== undefined && setGames(data);
-            sortGames(selected);
+            const response = await axios.get(`${NORMAL_SERVER_HOST}/getFeatured`);
+            const {data, status} = response;
+            if(status === 200)
+            {
+                data !== undefined && setGames(data);
+                sortGames(selected);
+            }
         }
+        catch(err)
+        {
+            console.log(err);
+        }
+
     }
 
     const onRemove = (app) =>{
-        Swal.confirm(`${app.gameName}을 제거하시겠습니까?`, "", "question",
+        if((userInfo === undefined || userInfo.id === undefined ))
+            {
+                navigate("/steam/login");
+                return;
+            }
+        Swal.confirm(`${app.game.gameName}을 제거하시겠습니까?`, "", "question",
             (result)=>{ 
                 if(result.isConfirmed){
-                    setGames(games.filter(x => x.appId !== app.appId));
+                    setGames(games.filter(x => x.game.appId !== app.game.appId));
                     axios({
-                        url: `${NORMAL_SERVER_HOST}/removeFeatured/${app.appId}`,
+                        url: `${NORMAL_SERVER_HOST}/removeFeatured/${app.game.appId}`,
                         method:"delete"
                     }).then(response=>{
                         const {data, status, statusText} = response;
@@ -59,6 +72,12 @@ const AdminFeatruedGamesForm = () => {
     }
 
     const onSearch = async () => {
+        if((userInfo === undefined || userInfo.id === undefined ))
+            {
+                navigate("/steam/login");
+                return;
+            }
+
         setSGames([]);
         let input = document.getElementById("search").value.trim();
         if(input === "")
@@ -76,23 +95,26 @@ const AdminFeatruedGamesForm = () => {
     }
 
     const onSave = () =>{
-        newGames.forEach(x =>{
-            games.push(x);
-        });
+        if((userInfo === undefined || userInfo.id === undefined ))
+            {
+                navigate("/steam/login");
+                return;
+            }
         setSGames([]);
         setNewGames([]);
         axios({
             url: `${NORMAL_SERVER_HOST}/updateFeatured`,
-            method:"put",
+            method:"post",
             headers:{
                 "Content-Type":"application/json"
             },
-            data: JSON.stringify(games)
+            data: JSON.stringify(newGames)
         }).then(response=>{
             const {data, status, statusText} = response;
-            if(status === 200)
+            if(status === 201)
             {
                 Swal.alert("저장 성공했습니다!", `${data}`, "success"); 
+                loadFeatureGames();
             }
             else
                 Swal.alert("저장 실패했습니다!", `${status}: ${statusText}`, "error"); 
@@ -104,13 +126,18 @@ const AdminFeatruedGamesForm = () => {
 
     const onReset = () =>
     {
+        if((userInfo === undefined || userInfo.id === undefined ))
+            {
+                navigate("/steam/login");
+                return;
+            }
         Swal.confirm(`모두 제거하시겠습니까?`, "", "question",
             async (result)=>{ 
                 if(result.isConfirmed){
                     let err = false;
                     for(let c of games)
                         {
-                            const response = await axios.delete(`${NORMAL_SERVER_HOST}/removeFeatured/${c.appId}`);
+                            const response = await axios.delete(`${NORMAL_SERVER_HOST}/removeFeatured/${c.game.appId}`);
                             const {status} = response;
                             if(status !== 200)
                             {
@@ -144,16 +171,16 @@ const AdminFeatruedGamesForm = () => {
                 switch(e)
                 {
                     case "appIdASC":
-                        games.sort((a,b) => a.appId - b.appId);
+                        games.sort((a,b) => a.game.appId - b.game.appId);
                         break;
                     case "appIdDESC":
-                        games.sort((a,b) => b.appId - a.appId);
+                        games.sort((a,b) => b.game.appId - a.game.appId);
                         break;
                     case "gameNameASC":
-                        games.sort((a,b) => String(a.gameName).localeCompare(b.gameName));
+                        games.sort((a,b) => String(a.game.gameName).localeCompare(b.game.gameName));
                         break;
                     case "gameNameDESC":
-                        games.sort((a,b) => String(b.gameName).localeCompare(a.gameName));
+                        games.sort((a,b) => String(b.game.gameName).localeCompare(a.game.gameName));
                         break;
                     case "lastInsertASC":
                         games.sort((a,b) => new Date(a.regDate) - new Date(b.regDate));
@@ -162,9 +189,10 @@ const AdminFeatruedGamesForm = () => {
                         games.sort((a,b) => new Date(b.regDate) - new Date(a.regDate));
                         break;
                     default:
-                        games.sort((a,b) => a.appId - b.appId);
+                        games.sort((a,b) => a.game.appId - b.game.appId);
                         break;    
                 }
+                setSelected(e);
             }
     }
 
@@ -200,9 +228,9 @@ const AdminFeatruedGamesForm = () => {
                     </thead>
                     <tbody>
                         {
-                            games.map(x =><tr style={{textAlign: "center", justifyItems:"center", verticalAlign: "middle"}} key={x.appId}>
-                                <td>{x.appId}</td>
-                                <td>{x.gameName}</td>
+                            games.map(x =><tr style={{textAlign: "center", justifyItems:"center", verticalAlign: "middle"}} key={x.game.appId}>
+                                <td>{x.game.appId}</td>
+                                <td>{x.game.gameName}</td>
                                 <td>{x.regDate ? x.regDate : "갱신중..."}</td>
                                 <td><Button variant='danger' style={{marginTop: "15px"}} onClick={()=>onRemove(x)}>NAGA</Button></td>
                             </tr>)
@@ -262,7 +290,7 @@ const AdminFeatruedGamesForm = () => {
                                                         setNewGames(prev =>[...prev,{"appId": x.appId, "gameName": x.gameName, "Id": -1}]);
                                                     }
                                                 }   
-                                                        disabled={(Array.isArray(newGames) && newGames.filter(y=>y.appId === x.appId).length > 0) || games.filter(z => z.appId === x.appId).length > 0}
+                                                        disabled={(Array.isArray(newGames) && newGames.filter(y=>y.appId === x.appId).length > 0) || games.filter(z => z.game.appId === x.appId).length > 0}
                                                         >추가</Button></td>
                                                     </tr>)
                                             }

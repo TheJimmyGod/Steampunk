@@ -19,6 +19,7 @@ DROP TABLE IF EXISTS s_news_bookmarks;
 DROP TABLE IF EXISTS s_gamedto;
 DROP TABLE IF EXISTS s_news;
 DROP TABLE IF EXISTS s_rank;
+DROP TABLE IF EXISTS steam_news.f_games;
 show tables;
 
 Truncate S_User;

@@ -27,6 +27,9 @@ const EditPersonalInfoForm = () => {
 
     async function getUser()
     {
+      if(userInfo === undefined || userInfo.id === undefined)
+        return;
+
       const response = await axios.get(`${SERVER_HOST}/${userInfo.id}`);
       const {data, status} = response;
       if(status === 200)
@@ -49,6 +52,11 @@ const EditPersonalInfoForm = () => {
 
     const onEdit = (e) => {
         e.preventDefault();
+        if((userInfo === undefined || userInfo.id === undefined ))
+          {
+              navigate("/steam/login");
+              return;
+          }
         Swal.confirm("변경하시겠습니까?", "", "question",
           (result)=>{ 
               if(result.isConfirmed === false)
@@ -95,6 +103,11 @@ const EditPersonalInfoForm = () => {
       };
 
       const onActionHandle = (num = 0) => {
+        if((userInfo === undefined || userInfo.id === undefined ))
+          {
+              navigate("/steam/login");
+              return;
+          }
         if(num === 0)
         {
             Swal.confirm("변경을 취소하시겠습니까?", "", "question",
