@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: sans-serif;
 }
 ul {
     padding-left: 0rem;
@@ -435,6 +436,9 @@ main {
 
 /* Game News Content */
 .game-news-content {
+    background-color: #383c3f;
+    border: 2px solid white;
+    padding: 8px;
     margin-bottom: 10px;
     white-space: pre-line;
 }
@@ -442,7 +446,7 @@ main {
 /* Game Info */
 .game-info {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
 }
 
 .game-info h2 {
@@ -452,4 +456,64 @@ main {
 
 .game-info p {
     margin-bottom: 20px;
+}
+.game-minimum ul {
+    display: flex;
+    list-style: none;
+}
+
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.game-info1 {
+    flex: 7; /* 70%의 너비 */
+    text-align: left; /* 왼쪽 정렬 */
+    background-color: #383c3f;
+    margin-right: 10px;
+    border: 2px solid white;
+    padding: 8px;
+}
+
+.game-info2 {
+    flex: 3; /* 30%의 너비 */
+    text-align: left; /* 오른쪽 정렬 */
+    background-color: #383c3f;
+    padding: 8px;
+    border: 2px solid white;
+}
+
+.game-info2 ul {
+    list-style: none;
+}
+
+
+.game-info2-1{
+    padding: 8px;
+    border: 2px solid white;
+    margin-bottom: 10px;
+}
+
+.game-info2-2 {
+    padding: 8px;
+    border: 2px solid white;
+    margin-bottom: 10px;
+    color: #00BFFF;
+}
+
+.highlight-text {
+    color: gainsboro;
+}
+
+.game-requirements {
+    color: #00BFFF;
+
+    font-weight: bold;
+}
+.game-information-title{
+    color: #00BFFF;
+
+    font-weight: bold;
 }
