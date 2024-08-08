@@ -5,7 +5,7 @@ import { LoginContext } from '../../contexts/LoginContextProvider';
 import axios from 'axios';
 import { SERVER_HOST } from '../../apis/api';
 import { Button } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import * as Swal from '../../apis/alert'
 import Popup from 'reactjs-popup';
 import Table from 'react-bootstrap/Table';
@@ -29,7 +29,24 @@ const BookmarkManagerForm = () => {
         console.log(`ID:${userInfo.id}, Bookmark loaded`);
     }
 
-    const onRemoval = ()=>{}
+    const onRemoval = (bookmark)=>{
+        Swal.confirm(`${bookmark.news.gameName} 북마크를 해제하시겠습니까?`, "", "question",
+           async (result)=>{ 
+                if(result.isConfirmed){
+                    if(bookmark.id !== undefined)
+                        {
+                            const response = await axios.delete(`${SERVER_HOST}/bookmark/remove/${bookmark.id}`);
+                            const {status} = response;
+                            if(status === 200)
+                            {
+                                console.log(`${bookmark.id}가 북마크 해제했습니다.`);
+                                loadBookmarks();
+                            }
+                        }
+                }
+            }
+        );
+    }
     const onSearch = () =>{}
 
     return (
@@ -48,6 +65,7 @@ const BookmarkManagerForm = () => {
                             <th style={{width:"100px"}}>ID</th>
                             <th style={{width:"100px"}}>APP ID</th>
                             <th>게임이름</th>
+                            <th>뉴스 기사 제목</th>
                             <th style={{width:"200px"}}>마지막으로 추가한 날짜</th>
                             <th style={{width:"150px"}}>삭제</th>
                         </tr>
@@ -57,12 +75,13 @@ const BookmarkManagerForm = () => {
                             bookmarks === undefined ?
                             <></>
                             :
-                            bookmarks.map(x =><tr style={{textAlign: "center", justifyItems:"center", verticalAlign: "middle"}} key={x.appId}>
+                            bookmarks.map(x =><tr style={{textAlign: "center", justifyItems:"center", verticalAlign: "middle"}} key={x.id}>
                                 <td>{x.id}</td>
                                 <td>{x.news.appId}</td>
                                 <td>{x.news.gameName}</td>
+                                <td><Link to={`/steam/newsDetail/${x.news.appId}`}>{x.news.title}</Link></td>
                                 <td>{x.regDate ? x.regDate : "갱신중..."}</td>
-                                <td><Button variant='danger' style={{marginTop: "15px"}} onClick={()=>{}}>NAGA</Button></td>
+                                <td><Button variant='danger' style={{marginTop: "15px"}} onClick={()=>{onRemoval(x)}}>NAGA</Button></td>
                             </tr>)
                         }
                     </tbody>
