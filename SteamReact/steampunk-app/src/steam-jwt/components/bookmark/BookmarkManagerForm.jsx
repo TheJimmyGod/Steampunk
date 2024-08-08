@@ -61,7 +61,7 @@ const BookmarkManagerForm = () => {
             sortGames(selected);
             return;
         }
-        const response = await axios.get(`${SERVER_HOST}/bookmark/find/${userInfo.id}/${text}`);
+        const response = await axios.get(`${SERVER_HOST}/bookmark/finds/${userInfo.id}/${text}`);
         const {data, status} = response;
         if(status === 200)
         {

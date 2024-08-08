@@ -18,17 +18,17 @@ import java.util.List;
 public class FeaturedController {
     private final FeaturedService featuredService;
     private final GameService gameService;
+    @CrossOrigin
+    @PostMapping("/updateFeature/{appId}")
+    public ResponseEntity<?> updateFeature(@PathVariable Long appId){
+        Game game = gameService.findGame(appId);
+        if(game == null)
+            return new ResponseEntity<>("존재하지 않는 게임입니다.", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(featuredService.saveFeaturedGame(game), HttpStatus.CREATED); // response code: 201
+    }
 
     @CrossOrigin
-    @PostMapping("/featured")
-    public ResponseEntity<?> save(@RequestBody Featured featured){
-        Game game = gameService.findGame(featured.getGame().getAppId());
-        if(game == null)
-            return new ResponseEntity<>("존재하지 않는 게임: " + featured.getGame().getGameName(), HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(featuredService.saveFeaturedGames(game,featured), HttpStatus.CREATED); // response code: 201
-    }
-    @CrossOrigin
-    @PostMapping("/updateFeatured")
+    @PostMapping("/updateFeatures")
     public ResponseEntity<?> updateFeatures(@RequestBody Game[] games){
         List<Game> gameList = new ArrayList<>();
         for(var game : games)

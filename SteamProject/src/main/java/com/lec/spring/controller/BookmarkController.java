@@ -55,8 +55,12 @@ public class BookmarkController {
         return new ResponseEntity<>(bookmarkService.findBookmarksByUserId(user), HttpStatus.OK);
     }
 
+    @GetMapping("/bookmark/finds/{userId}/{keyword}")
+    public <T> ResponseEntity<?> findBookmarks(@PathVariable Long userId, @PathVariable T keyword){
+        return new ResponseEntity<>(bookmarkService.findBookmarks(userId, keyword), HttpStatus.OK);
+    }
     @GetMapping("/bookmark/find/{userId}/{keyword}")
-    public <T> ResponseEntity<?> find(@PathVariable Long userId, @PathVariable T keyword){
-        return new ResponseEntity<>(bookmarkService.find(userId, keyword), HttpStatus.OK);
+    public <T> ResponseEntity<?> findBookmark(@PathVariable Long userId, @PathVariable T keyword){
+        return new ResponseEntity<>(bookmarkService.findBookmark(userId, keyword), HttpStatus.OK);
     }
 }

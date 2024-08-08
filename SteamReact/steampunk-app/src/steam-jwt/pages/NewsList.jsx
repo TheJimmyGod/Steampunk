@@ -1,7 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faFlag, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark as farBookmark } from '@fortawesome/free-regular-svg-icons';
+import { faFlag as farFlag } from '@fortawesome/free-regular-svg-icons';
 import { faBookmark } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { LoginContext } from '../contexts/LoginContextProvider';
@@ -9,8 +10,8 @@ import SideBar from '../components/sidebar/SideBar';
 import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { Form } from 'react-bootstrap';
-import { SERVER_HOST } from '../apis/api';
-
+import { NORMAL_SERVER_HOST, SERVER_HOST } from '../apis/api';
+import * as Swal from '../apis/alert'
 const NewsList = () => {
     const defaultImage = "https://store.akamai.steamstatic.com/public/shared/images/header/logo_steam.svg?t=962016";
     const { userInfo, isLogin, logout, loginCheck } = useContext(LoginContext);
@@ -24,63 +25,133 @@ const NewsList = () => {
     const [selectedValue, setSelectedValue] = useState("");
 
     const [bookmarks, setBookmarks] = useState([]);
+    const [features, setFeatures] = useState([]);
+    const admin = useRef(false);
 
-    useEffect(()=>{
-        if(userInfo === undefined || userInfo.id === undefined)
+    useEffect(() => {
+        if (userInfo === undefined || userInfo.id === undefined)
             return;
-        loadBookmarks(); 
+        loadBookmarks();
+        loadFeatures();
+        loadAdmin();
     }, [loginCheck]) // 로그인이 제대로 확인시 발동
 
-    const loadBookmarks = () =>{
+    const loadBookmarks = () => {
         axios({
             url: `${SERVER_HOST}/bookmark/list/${userInfo.id}`,
             method: 'get'
-        }).then(response =>{
-            const {data, status, statusText} = response;
-            if(status === 200)
-            {
+        }).then(response => {
+            const { data, status, statusText } = response;
+            if (status === 200) {
                 console.log("북마크 데이터 전송 완료!", data.length);
                 setBookmarks(data);
             }
-        }).catch(err=>{
+        }).catch(err => {
             console.log("북마크 전송중 에러 발생");
         })
     }
 
-    const handleBookmarks = async (insert = true, id) =>{
-        if(id === undefined || userInfo.id === undefined)
-            return;
-        if(insert)
-        {
-            const response = await axios.post(`${SERVER_HOST}/bookmark/insert/${userInfo.id}/${id}`);
-            const {status} = response;
-            if(status === 201)
+    const loadFeatures = () => {
+        axios({
+            url: `${NORMAL_SERVER_HOST}/getFeatured`,
+            method: 'get'
+        }).then(response => {
+            const { data, status } = response;
+            if (status === 200) {
+                console.log("추천게임 데이터 전송 완료!", data.length);
+                setFeatures(data);
+            }
+        }).catch(err => {
+            console.log("추천게임 전송중 에러 발생");
+        });
+    }
+
+    const loadAdmin = () =>{
+        for(let a in userInfo.authorities)
             {
+                if(userInfo.authorities[a].name.includes("ADMIN"))
+                {
+                    admin.current = true;
+                    break;
+                }
+                else
+                    admin.current = false;
+            }
+            console.log("ADMIN: ", admin.current);
+    }
+
+    const handleBookmarks = async (insert = true, id) => {
+        if (id === undefined || userInfo.id === undefined)
+            return;
+        if (insert) {
+            const response = await axios.post(`${SERVER_HOST}/bookmark/insert/${userInfo.id}/${id}`);
+            const { status } = response;
+            if (status === 201) {
                 console.log(`${id}가 북마크되었습니다.`);
                 loadBookmarks();
             }
         }
-        else
-        {
+        else {
             let bookmark;
-            for(let item of bookmarks)
-            {
-                if(item.news.appId === id)
-                {
+            for (let item of bookmarks) {
+                if (item.news.appId === id) {
                     bookmark = item;
                     break;
                 }
             }
-            if(bookmark !== undefined && bookmark !== null)
-            {
+            if (bookmark !== undefined && bookmark !== null) {
                 const response = await axios.delete(`${SERVER_HOST}/bookmark/remove/${bookmark.id}`);
-                const {status} = response;
-                if(status === 200)
-                {
+                const { status } = response;
+                if (status === 200) {
                     console.log(`${id}가 북마크 해제했습니다.`);
                     loadBookmarks();
                 }
             }
+        }
+    }
+
+    const handleFeatures = async (insert = true, id) => {
+        if (id === undefined || userInfo.id === undefined)
+            return;
+        if (insert) {
+            if (Array.isArray(features) && features.length >= 5) {
+                Swal.alert("추천게임 한도 초과입니다!", "5개까지", "error");
+                return;
+            }
+
+            axios({
+                url: `${NORMAL_SERVER_HOST}/updateFeature/${id}`,
+                method: "post"
+            }).then(response => {
+                const { data, status, statusText } = response;
+                if (status === 201) {
+                    console.log(data.game.gameName);
+                    Swal.alert("추천게임 저장했습니다.", `${data.game.gameName}`, "success");
+                    loadFeatures();
+                }
+                else
+                    Swal.alert("추천게임 저장 실패했습니다.", `${status}: ${statusText}`, "error");
+            }).catch(err => {
+                console.log(err);
+                Swal.alert("추천게임 저장 실패했습니다.", "", "error");
+            });
+        }
+        else {
+            axios({
+                url: `${NORMAL_SERVER_HOST}/removeFeatured/${id}`,
+                method: "delete"
+            }).then(response => {
+                const { data, status, statusText } = response;
+                if (status === 200) {
+                    Swal.alert("추천게임 삭제했습니다.", `${data}`, "success");
+                    loadFeatures();
+                }
+                else
+                    Swal.alert("추천게임 삭제 실패했습니다.", `${status}: ${statusText}`, "error");
+            }).catch(err => {
+                console.log(err);
+                Swal.alert("추천게임 삭제 실패했습니다.", "", "error");
+            });
         }
     }
 
@@ -157,10 +228,10 @@ const NewsList = () => {
     const onSubmitString = (e) => {
         e.preventDefault();
         setPage(0);
-        if(page === 0){
-            console.log("page 드디어 0 ==",page)
+        if (page === 0) {
+            console.log("page 드디어 0 ==", page)
             loadNews();
-        } 
+        }
     };
 
     // 페이지 번호 초기화 함수
@@ -184,7 +255,7 @@ const NewsList = () => {
 
     return (
         <>
-            <SideBar/>
+            <SideBar />
             <main>
                 <header className="main-header"></header>
                 <section className="banner">
@@ -192,7 +263,7 @@ const NewsList = () => {
                     <p>최신 스팀 뉴스를 알려드립니다</p>
                     <Form className="search-bar" onSubmit={onSubmitString}>
                         <input className="search-news" placeholder="Search..." onChange={onChangeValue} />
-                        <button type='submit' style={{width: "50px", height: "50px", backgroundColor: "#00BFFF", marginLeft: "5px"}}><FontAwesomeIcon icon={faMagnifyingGlass} /></button>
+                        <button type='submit' style={{ width: "50px", height: "50px", backgroundColor: "#00BFFF", marginLeft: "5px" }}><FontAwesomeIcon icon={faMagnifyingGlass} /></button>
                     </Form>
                     <div className="filter-menu">
                         <label>
@@ -232,12 +303,26 @@ const NewsList = () => {
                                     <p className="author">{item.author}</p>
                                     <p className="date">{formatDateToKorean(item.date)}</p>
                                 </div>
-                                <div className="bookmark">
+                                <div className='bookmark-and-features'>
+                                    <div className="bookmark">
+                                        {
+                                            bookmarks.some(x => x.news.appId === item.appId) ?
+                                                <FontAwesomeIcon icon={faBookmark} onClick={() => { handleBookmarks(false, item.appId) }} /> :
+                                                <FontAwesomeIcon icon={farBookmark} onClick={() => { handleBookmarks(true, item.appId) }} />
+                                        }
+                                    </div>
                                     {
-                                        bookmarks.some(x => x.news.appId === item.appId) ?
-                                        <FontAwesomeIcon icon={faBookmark} onClick={()=>{handleBookmarks(false,item.appId)}} /> :
-                                        <FontAwesomeIcon icon={farBookmark} onClick={()=>{handleBookmarks(true,item.appId)}} />
+                                        admin.current ? 
+                                        <div className="features">
+                                        {
+                                            features.some(x => x.game.appId === item.appId) ?
+                                                <FontAwesomeIcon icon={faFlag} onClick={() => { handleFeatures(false, item.appId) }} /> :
+                                                <FontAwesomeIcon icon={farFlag} onClick={() => { handleFeatures(true, item.appId) }} />
+                                        }
+                                    </div>
+                                    :<></>
                                     }
+
                                 </div>
                             </div>
                         ))}

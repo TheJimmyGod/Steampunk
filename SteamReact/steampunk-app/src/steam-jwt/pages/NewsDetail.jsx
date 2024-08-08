@@ -1,16 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import SideBar from '../components/sidebar/SideBar';
 import { useNavigate, useParams } from 'react-router-dom';
-import { faBookmark } from '@fortawesome/free-solid-svg-icons';
+import { faBookmark, faFlag } from '@fortawesome/free-solid-svg-icons';
+import { faFlag as farFlag } from '@fortawesome/free-regular-svg-icons';
 import { faBookmark as farBookmark } from '@fortawesome/free-regular-svg-icons';
 import axios from 'axios';
 import Markdown from 'markdown-to-jsx';
 import '../../HTML/SteamNewsCss.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import parse from 'html-react-parser';
+import { LoginContext } from '../contexts/LoginContextProvider';
+import { NORMAL_SERVER_HOST, SERVER_HOST } from '../apis/api';
+import * as Swal from '../apis/alert'
 
 const NewsDetail = () => {
     const navigate = useNavigate();
+    const [bookmark, setBookmark] = useState({});
+    const { userInfo, isLogin, logout, loginCheck } = useContext(LoginContext);
     const { appId } = useParams();
 
     const [news, setNews] = useState({
@@ -37,6 +43,9 @@ const NewsDetail = () => {
         website: "",
         releaseDate: ""
     });
+
+    const [features, setFeatures] = useState([]);
+    const admin = useRef(false);
 
     useEffect(() => {
         axios({
@@ -69,6 +78,59 @@ const NewsDetail = () => {
                 }
             });
     }, []);
+
+    useEffect(()=>{
+        if(userInfo === undefined || userInfo.id === undefined)
+            return;
+        loadBookmark();
+        loadFeatures();
+        loadAdmin();
+    }, [loginCheck])
+    const loadBookmark = () =>{
+        axios({
+            url: `${SERVER_HOST}/bookmark/find/${userInfo.id}/${appId}`,
+            method: 'get'
+        }).then(response =>{
+            const {data, status} = response;
+            if(status === 200)
+            {
+                console.log("북마크 데이터 전송 완료!");
+                setBookmark(data);
+            }
+        }).catch(err=>{
+            console.log("북마크 전송중 에러 발생: ",err);
+            setBookmark({});
+        })
+    }
+
+    const loadFeatures = () => {
+        axios({
+            url: `${NORMAL_SERVER_HOST}/getFeatured`,
+            method: 'get'
+        }).then(response => {
+            const { data, status } = response;
+            if (status === 200) {
+                console.log("추천게임 데이터 전송 완료!", data.length);
+                setFeatures(data);
+            }
+        }).catch(err => {
+            console.log("추천게임 전송중 에러 발생");
+        });
+    }
+
+    const loadAdmin = () =>{
+        for(let a in userInfo.authorities)
+            {
+                if(userInfo.authorities[a].name.includes("ADMIN"))
+                {
+                    admin.current = true;
+                    break;
+                }
+                else
+                    admin.current = false;
+            }
+            console.log("ADMIN: ", admin.current);
+    }
 
     const formatContent1 = (content) => {
         const steamImagePattern = /\{STEAM_CLAN_IMAGE\}\/[^\s]+\.png/g;
@@ -112,6 +174,78 @@ const NewsDetail = () => {
         }
     }
 
+    const handleBookmarks = async (insert = true, id) =>{
+        if(id === undefined || userInfo.id === undefined)
+            return;
+        if(insert)
+        {
+            const response = await axios.post(`${SERVER_HOST}/bookmark/insert/${userInfo.id}/${id}`);
+            const {status} = response;
+            if(status === 201)
+            {
+                console.log(`${id}가 북마크되었습니다.`);
+                loadBookmark();
+            }
+        }
+        else
+        {
+            if(bookmark !== undefined && bookmark !== null)
+            {
+                const response = await axios.delete(`${SERVER_HOST}/bookmark/remove/${bookmark.id}`);
+                const {status} = response;
+                if(status === 200)
+                {
+                    console.log(`${id}가 북마크 해제했습니다.`);
+                    loadBookmark();
+                }
+            }
+        }
+    }
+
+    const handleFeatures = async (insert = true, id) => {
+        if (id === undefined || userInfo.id === undefined)
+            return;
+        if (insert) {
+            if (Array.isArray(features) && features.length >= 5) {
+                Swal.alert("추천게임 한도 초과입니다!", "5개까지", "error");
+                return;
+            }
+
+            axios({
+                url: `${NORMAL_SERVER_HOST}/updateFeature/${id}`,
+                method: "post"
+            }).then(response => {
+                const { data, status, statusText } = response;
+                if (status === 201) {
+                    console.log(data.game.gameName);
+                    Swal.alert("추천게임 저장했습니다.", `${data.game.gameName}`, "success");
+                    loadFeatures();
+                }
+                else
+                    Swal.alert("추천게임 저장 실패했습니다.", `${status}: ${statusText}`, "error");
+            }).catch(err => {
+                console.log(err);
+                Swal.alert("추천게임 저장 실패했습니다.", "", "error");
+            });
+        }
+        else {
+            axios({
+                url: `${NORMAL_SERVER_HOST}/removeFeatured/${id}`,
+                method: "delete"
+            }).then(response => {
+                const { data, status, statusText } = response;
+                if (status === 200) {
+                    Swal.alert("추천게임 삭제했습니다.", `${data}`, "success");
+                    loadFeatures();
+                }
+                else
+                    Swal.alert("추천게임 삭제 실패했습니다.", `${status}: ${statusText}`, "error");
+            }).catch(err => {
+                console.log(err);
+                Swal.alert("추천게임 삭제 실패했습니다.", "", "error");
+            });
+        }
+    }
 
     return (
         <>
@@ -125,9 +259,23 @@ const NewsDetail = () => {
                     <h2>author: {news.author}</h2>
                 </div>
                 <div className="bookmark">
-                    <FontAwesomeIcon icon={farBookmark} />
-                    <FontAwesomeIcon icon={faBookmark} />
+                    {
+                        bookmark ?
+                            <FontAwesomeIcon icon={faBookmark} size='10x' onClick={() => { handleBookmarks(false, gameInfo.appId) }} /> :
+                            <FontAwesomeIcon icon={farBookmark} size='10x' onClick={() => { handleBookmarks(true, gameInfo.appId) }} />
+                    }
                 </div>
+                {
+                    admin.current ?
+                        <div className="features-detail">
+                            {
+                                features.some(x => x.game.appId === gameInfo.appId) ?
+                                    <FontAwesomeIcon icon={faFlag} onClick={() => { handleFeatures(false, gameInfo.appId) }} /> :
+                                    <FontAwesomeIcon icon={farFlag} onClick={() => { handleFeatures(true, gameInfo.appId) }} />
+                            }
+                        </div>
+                        : <></>
+                }
                 <div className="game-news-content">
                     {formatContent1(news.content)}
                 </div>
