@@ -11,6 +11,11 @@ const MyPage = () => {
     const navigate = useNavigate();
     const {userInfo} = useContext(LoginContext);
     const removal = () =>{
+        if(userInfo === undefined || userInfo.id === undefined)
+            {
+                navigate(`/steam/login`);
+                return;
+            }
         Swal.confirm("계정 탈퇴를 진행하시겠습니까?", "", "question",
             (result)=>{ 
                 if(result.isConfirmed){

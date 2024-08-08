@@ -17,10 +17,6 @@ public class Featured extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private Long appId;
-
-    @Column
-    private String gameName;
-
+    @ManyToOne
+    private Game game;
 }
