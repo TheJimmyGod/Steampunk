@@ -19,11 +19,13 @@ public class FeaturedService {
     private final FeaturedRepository featuredRepository;
     private final GameRepository gameRepository;
     @Transactional
-    public Featured saveFeaturedGames (Game game, Featured featured) {
+    public Featured saveFeaturedGame (Game game) {
+        Featured featured = new Featured();
         game.addFeature(featured);
         featured.setGame(game);
         gameRepository.save(game);
-        return featuredRepository.save(featured);}
+        return featuredRepository.save(featured);
+    }
 
     @Transactional
     public boolean updateFeatured (List<Game> games) {

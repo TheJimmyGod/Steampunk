@@ -311,7 +311,37 @@ main {
 .bookmark svg {
     padding-top: 8px;
     color: #00bfff;
-    font-size: 20px; 
+    font-size: 60px; 
+    cursor: pointer; 
+}
+
+.features {
+    display: flex;
+    justify-content: flex-end;
+    flex: 0.5;
+    align-items: center;
+    gap: 5px; 
+    margin: 10px 10px 10% 0;
+}
+
+.features svg {
+    padding-top: 8px;
+    color: #00FF80;
+    font-size: 30px; 
+    cursor: pointer; 
+}
+
+.features-detail {
+    display: flex;
+    justify-content: flex-end;
+    flex: 0.5;
+    align-items: center; 
+    margin: 10px 10px 1% 0;
+}
+
+.features-detail svg {
+    color: #00FF80;
+    font-size: 30px; 
     cursor: pointer; 
 }
 
@@ -433,6 +463,12 @@ main {
     border: none;
     cursor: pointer;
 }
+
+.bookmark-and-features{
+    display: flex;
+    flex-direction: column;
+}
+
 
 /* Game News Content */
 .game-news-content {

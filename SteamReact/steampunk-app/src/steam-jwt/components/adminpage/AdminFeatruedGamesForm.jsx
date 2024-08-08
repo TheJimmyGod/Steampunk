@@ -103,7 +103,7 @@ const AdminFeatruedGamesForm = () => {
         setSGames([]);
         setNewGames([]);
         axios({
-            url: `${NORMAL_SERVER_HOST}/updateFeatured`,
+            url: `${NORMAL_SERVER_HOST}/updateFeatures`,
             method:"post",
             headers:{
                 "Content-Type":"application/json"

@@ -58,7 +58,7 @@ public class BookmarkService {
     }
 
     @Transactional
-    public <T> List<Bookmark> find(Long userId, T keyword){
+    public <T> List<Bookmark> findBookmarks(Long userId, T keyword){
         Long appid = null;
         try
         {
@@ -97,5 +97,46 @@ public class BookmarkService {
         }
 
         return collect;
+    }
+
+    @Transactional
+    public <T> Bookmark findBookmark(Long userId, T keyword){
+        Long appid = null;
+        try
+        {
+            appid = Long.parseLong((String)keyword);
+        }
+        catch (NumberFormatException ex)
+        {
+            appid = 0L;
+        }
+        List<Bookmark> collect = new ArrayList<>();
+        User user = userRepository.findById(userId).orElse(null);
+        if(user == null)
+            return null;
+        var list = bookmarkRepository.findAll().stream().filter(x-> Objects.equals(x.getUser().getId(), userId)).toList();
+        if(appid > 0L)
+        {
+            for (Bookmark item : list)
+            {
+                if(appid.equals(item.getNews().getAppId()))
+                    return item;
+            }
+        }
+        else
+        {
+            List<News> newsList = newsRepository.findNewsByGameNameContainingIgnoreCase((String)keyword);
+            if(newsList == null || newsList.isEmpty())
+                newsList = newsRepository.findNewsByTitleContainingIgnoreCase((String)keyword);
+            for (Bookmark item : list)
+            {
+                for(News news : newsList)
+                {
+                    if(Objects.equals(item.getNews().getAppId(), news.getAppId()))
+                        return item;
+                }
+            }
+        }
+        return null;
     }
 }

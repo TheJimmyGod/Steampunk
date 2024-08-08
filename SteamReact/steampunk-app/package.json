@@ -17,6 +17,7 @@
     "html-react-parser": "^5.1.12",
     "js-cookie": "^3.0.5",
     "markdown-to-jsx": "^7.4.7",
+    "phaser": "^3.80.1",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.4",
     "react-chartjs-2": "^5.2.0",
