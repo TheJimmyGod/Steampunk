@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RequiredArgsConstructor
 @RestController
@@ -53,6 +55,30 @@ public class BookmarkController {
         if(user.getBookmarks() == null)
             return new ResponseEntity<>("존재하지 않는 북마크!", HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(bookmarkService.findBookmarksByUserId(user), HttpStatus.OK);
+    }
+
+    @GetMapping("/bookmark/list/{userId}/{start}/{end}/{keyword}")
+    public <T> ResponseEntity<?> listByTime(@PathVariable Long userId,
+                                                 @PathVariable String start,
+                                                 @PathVariable String end,
+                                            @PathVariable T keyword)
+    {
+        User user = userService.findById(userId);
+        if(user == null)
+            return new ResponseEntity<>("존재하지 않는 유저", HttpStatus.BAD_REQUEST);
+        if(start == null || start.isEmpty())
+            return new ResponseEntity<>("시작 시간이 존재하지 않음", HttpStatus.BAD_REQUEST);
+        String REGEX = "^[0-9]{4}[-][0-9]{2}[-][0-9]{2}$";
+        Matcher matcher = Pattern.compile(REGEX).matcher(start);
+        if(!matcher.matches())
+            return new ResponseEntity<>("잘못된 시작 시간 양식", HttpStatus.BAD_REQUEST);
+        if(end == null || end.isEmpty())
+            return new ResponseEntity<>("시작 시간이 존재하지 않음", HttpStatus.BAD_REQUEST);
+        matcher = Pattern.compile(REGEX).matcher(end);
+        if(!matcher.matches())
+            return new ResponseEntity<>("잘못된 끝 시간 양식", HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(bookmarkService.findBookmarksBetweenTimelines(user, start, end, keyword), HttpStatus.OK);
     }
 
     @GetMapping("/bookmark/finds/{userId}/{keyword}")

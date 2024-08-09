@@ -17,13 +17,10 @@ const Register = () => {
         }
         const {data, status} = response;
         console.log(`data: ${data} | status: ${status}`);
-        if(status === 201){
-            console.log("회원가입 성공!");
+        if(status === 201)
             Swal.alert("회원가입 성공", "메인 화면으로 이동합니다.", "success", () => { navigate("/steam/login") });
-        }else{
-            console.log(`회원가입 실패!`);
+        else
             Swal.alert("회원가입 실패", "회원가입에 실패하였습니다.", "error" );
-        }
     }
     return (
         <>

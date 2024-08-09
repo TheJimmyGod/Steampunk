@@ -9,7 +9,10 @@ import axios from 'axios';
 import Popup from 'reactjs-popup';
 import { NORMAL_SERVER_HOST } from '../../apis/api';
 import * as Swal from '../../apis/alert'
-const MAXIMUM_COUNT = 5;
+import Pagination from 'react-js-pagination';
+
+const MAXIMUM_COUNT = 10;
+const ITEM_PER_PAGE = 5;
 const AdminFeatruedGamesForm = () => {
     const navigate = useNavigate();
     const [selected, setSelected] = useState('appIdASC');
@@ -17,8 +20,22 @@ const AdminFeatruedGamesForm = () => {
     const [newGames, setNewGames] = useState([]); // 새로운 게임 넣었다면 쓰는 용도
     const [sGames, setSGames] = useState([]); // 검색 용도
     const {userInfo, loginCheck} = useContext(LoginContext);
-    
+    const [page, setPage] = useState(1);
+
+    const [currentItems, setCurrentItems] = useState([]);
+
     useEffect(()=>{loadFeatureGames();}, [loginCheck]);
+
+    useEffect(()=>{
+        window.addEventListener("keydown",enter);
+        return ()=>{
+            window.removeEventListener("keydown", enter);
+        }
+    }, []);
+
+    const enter = (e) =>  {
+        if(e.key === "Enter"){onSearch();}
+    }
 
     async function loadFeatureGames(){
         setGames([]);
@@ -39,6 +56,10 @@ const AdminFeatruedGamesForm = () => {
         }
 
     }
+
+    const handlePageChange = (page) => {
+        setPage(page);
+      };
 
     const onRemove = (app) =>{
         if((userInfo === undefined || userInfo.id === undefined ))
@@ -85,14 +106,27 @@ const AdminFeatruedGamesForm = () => {
             Swal.alert("검색 창이 비어있습니다!", ``, "error"); 
             return;
         }
-        const response = await axios.get(`${NORMAL_SERVER_HOST}/game/find/${input}`);
-        const {data, status} = response;
-        if(status === 200)
+        try
         {
-            data !== undefined && setSGames(data);
+            const response = await axios.get(`${NORMAL_SERVER_HOST}/game/find/${input}`);
+            const {data, status} = response;
+            if(status === 200)
+            {
+                data !== undefined && setSGames(data);
+                setPage(1);
+            }
         }
-
+        catch(err)
+        {
+            console.log(err);
+        }
     }
+
+    useEffect(()=>{
+        const IndexOfLast = page * ITEM_PER_PAGE;
+        const IndexOfFirst = IndexOfLast - ITEM_PER_PAGE;
+        setCurrentItems(sGames.slice(IndexOfFirst, IndexOfLast));
+    },[page, sGames, ITEM_PER_PAGE]);
 
     const onSave = () =>{
         if((userInfo === undefined || userInfo.id === undefined ))
@@ -170,6 +204,12 @@ const AdminFeatruedGamesForm = () => {
             {
                 switch(e)
                 {
+                    case "IdASC":
+                        games.sort((a,b) => a.id - b.id);
+                        break;
+                    case "IdDESC":
+                        games.sort((a,b) => b.id - a.id);
+                        break;
                     case "appIdASC":
                         games.sort((a,b) => a.game.appId - b.game.appId);
                         break;
@@ -208,6 +248,8 @@ const AdminFeatruedGamesForm = () => {
             <div className='bg'>
                 <div>
                 <Form.Select onChange={handleChangeSelect} style={{width:"300px", maxWidth:"300px", marginLeft:"2.5em"}}>
+                    <option value={"IdASC"} key={`IdASC`}> ID 오름차순 </option>
+                    <option value={"IdDESC"} key={`IdDESC`}> ID 내림차순 </option>
                     <option value={"appIdASC"} key={`appIdASC`}> APPID 오름차순 </option>
                     <option value={"appIdDESC"} key={`appIdDESC`}> APPID 내림차순 </option>
                     <option value={"gameNameASC"} key={`gameNameASC`}> 게임이름 오름차순 </option>
@@ -220,6 +262,7 @@ const AdminFeatruedGamesForm = () => {
                 <Table  responsive striped="columns" variant="dark">
                     <thead>
                         <tr style={{textAlign: "center", justifyItems:"center", verticalAlign: "middle"}}>
+                            <th>ID</th>
                             <th style={{width: "100px"}}>APP ID</th>
                             <th>게임이름</th>
                             <th>마지막으로 추가한 날짜</th>
@@ -229,6 +272,7 @@ const AdminFeatruedGamesForm = () => {
                     <tbody>
                         {
                             games.map(x =><tr style={{textAlign: "center", justifyItems:"center", verticalAlign: "middle"}} key={x.game.appId}>
+                                <td>{x.id}</td>
                                 <td>{x.game.appId}</td>
                                 <td>{x.game.gameName}</td>
                                 <td>{x.regDate ? x.regDate : "갱신중..."}</td>
@@ -260,7 +304,7 @@ const AdminFeatruedGamesForm = () => {
                                         </thead>
                                         <tbody>
                                             {
-                                                sGames.map(x =><tr style={{textAlign: "center", justifyItems:"center", verticalAlign: "middle"}} key={x.appId}>
+                                                currentItems.map(x =><tr style={{textAlign: "center", justifyItems:"center", verticalAlign: "middle"}} key={x.appId}>
                                                     <td>{x.appId}</td>
                                                     <td>{x.gameName}</td>
                                                     <td><Button variant='success' style={{marginTop: "15px"}} onClick={()=>{
@@ -296,6 +340,20 @@ const AdminFeatruedGamesForm = () => {
                                             }
                                         </tbody>
                                     </Table>
+                                        <Pagination
+                                            activePage={page}
+                                            itemsCountPerPage={ITEM_PER_PAGE}
+                                            totalItemsCount={sGames.length}
+                                            pageRangeDisplayed={5}
+                                            prevPageText={"◁"}
+                                            nextPageText={"▷"}
+                                            firstPageText={"◀◀"}
+                                            lastPageText={"▶▶"}
+                                            onChange={handlePageChange}
+                                            className="pagination"
+                                            itemClass="page-item"
+                                            linkClass="page-link"
+                                        />
                                     <p>추가한 게임들</p>
                                     {
                                         newGames.length > 0 ?

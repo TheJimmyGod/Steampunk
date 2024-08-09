@@ -12,6 +12,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { Form } from 'react-bootstrap';
 import { NORMAL_SERVER_HOST, SERVER_HOST } from '../apis/api';
 import * as Swal from '../apis/alert'
+const MAXIMUM_COUNT = 10;
 const NewsList = () => {
     const defaultImage = "https://store.akamai.steamstatic.com/public/shared/images/header/logo_steam.svg?t=962016";
     const { userInfo, isLogin, logout, loginCheck } = useContext(LoginContext);
@@ -114,8 +115,8 @@ const NewsList = () => {
         if (id === undefined || userInfo.id === undefined)
             return;
         if (insert) {
-            if (Array.isArray(features) && features.length >= 5) {
-                Swal.alert("추천게임 한도 초과입니다!", "5개까지", "error");
+            if (Array.isArray(features) && features.length >= MAXIMUM_COUNT) {
+                Swal.alert("추천게임 한도 초과입니다!", "10개까지", "error");
                 return;
             }
 

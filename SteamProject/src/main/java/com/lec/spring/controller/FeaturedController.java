@@ -24,6 +24,12 @@ public class FeaturedController {
         Game game = gameService.findGame(appId);
         if(game == null)
             return new ResponseEntity<>("존재하지 않는 게임입니다.", HttpStatus.BAD_REQUEST);
+
+        if(featuredService.count() > 10)
+        {
+            return new ResponseEntity<>("추천 게임 한도 초과입니다.", HttpStatus.BAD_REQUEST);
+        }
+
         return new ResponseEntity<>(featuredService.saveFeaturedGame(game), HttpStatus.CREATED); // response code: 201
     }
 
@@ -31,6 +37,10 @@ public class FeaturedController {
     @PostMapping("/updateFeatures")
     public ResponseEntity<?> updateFeatures(@RequestBody Game[] games){
         List<Game> gameList = new ArrayList<>();
+        if(featuredService.count() + games.length > 10)
+        {
+            return new ResponseEntity<>("추천 게임 한도 초과입니다." + featuredService.count() + games.length, HttpStatus.BAD_REQUEST);
+        }
         for(var game : games)
         {
             Game _game = gameService.findGame(game.getAppId());
@@ -40,13 +50,19 @@ public class FeaturedController {
                 gameList.add(_game);
         }
 
-        return new ResponseEntity<>(featuredService.updateFeatured(gameList), HttpStatus.CREATED);
+        return new ResponseEntity<>(featuredService.saveFeaturedGames(gameList), HttpStatus.CREATED);
     }
 
     @CrossOrigin
     @GetMapping("/getFeatured")
     public ResponseEntity<?> findAll(){
         return new ResponseEntity<>(featuredService.findAll(), HttpStatus.OK);
+    }
+
+    @CrossOrigin
+    @GetMapping("/getRandomFeatured")
+    public ResponseEntity<?> findRandom(){
+        return new ResponseEntity<>(featuredService.findRandom(), HttpStatus.OK);
     }
 
     @CrossOrigin

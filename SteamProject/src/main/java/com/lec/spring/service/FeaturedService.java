@@ -28,7 +28,7 @@ public class FeaturedService {
     }
 
     @Transactional
-    public boolean updateFeatured (List<Game> games) {
+    public boolean saveFeaturedGames (List<Game> games) {
         if(games.isEmpty())
             return false;
         for (var game : games)
@@ -43,7 +43,13 @@ public class FeaturedService {
 
 
     @Transactional
+    public List<Featured> findRandom () {return featuredRepository.findFeaturedOrderedRandomly();}
+
+    @Transactional
     public List<Featured> findAll () {return featuredRepository.findAll();}
+
+    @Transactional
+    public Long count() {return featuredRepository.count();}
 
     @Transactional
     public String removeFeatured(Featured app){

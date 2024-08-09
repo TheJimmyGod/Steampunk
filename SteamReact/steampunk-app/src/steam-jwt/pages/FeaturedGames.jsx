@@ -9,7 +9,7 @@ import { LoginContext } from '../contexts/LoginContextProvider';
 import { Link } from 'react-router-dom';
 
 const TestMoon = () => {
-    const {userInfo, loginCheck} = useContext(LoginContext);
+    const {loginCheck} = useContext(LoginContext);
     const [games, setGames] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -17,13 +17,13 @@ const TestMoon = () => {
     useEffect(() => {
         axios({
             method: "get",
-            url: `${NORMAL_SERVER_HOST}/getFeatured`
+            url: `${NORMAL_SERVER_HOST}/getRandomFeatured`
         })
             .then((response) => {
-                const {data, status, statusText} = response;
+                const {data, status} = response;
                 if(status === 200)
                 {
-                    setGames(response.data);
+                    setGames(data);
                     console.log("games ======== ", games);
                 }
             }).catch(err=>{
@@ -40,7 +40,6 @@ const TestMoon = () => {
 
         return () => clearInterval(interval);
     }, [games.length]); // games.length가 변경될 때만 실행됨
-
 
 
     return (

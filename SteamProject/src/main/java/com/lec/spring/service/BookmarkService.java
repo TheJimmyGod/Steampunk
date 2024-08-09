@@ -9,9 +9,15 @@ import com.lec.spring.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class BookmarkService {
@@ -58,20 +64,40 @@ public class BookmarkService {
     }
 
     @Transactional
-    public <T> List<Bookmark> findBookmarks(Long userId, T keyword){
-        Long appid = null;
-        try
-        {
-            appid = Long.parseLong((String)keyword);
-        }
-        catch (NumberFormatException ex)
-        {
-            appid = 0L;
-        }
+    public <T> List<Bookmark> findBookmarksBetweenTimelines(User user, String start, String end, T keyword){
+        Long key = tryGetValue(keyword);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        LocalDate startDate = LocalDate.parse(start, formatter);
+        LocalDate endDate = LocalDate.parse(end, formatter);
+
+        LocalDateTime startTime = startDate.atStartOfDay();
+        LocalDateTime endTime = endDate.atStartOfDay();
+
+        List<Bookmark> bookmarks = findBookmarks(user.getId(), keyword);
         List<Bookmark> collect = new ArrayList<>();
-        User user = userRepository.findById(userId).orElse(null);
-        if(user == null)
-            return null;
+        for(var bookmark : bookmarks)
+        {
+            long time = 0L;
+            try {
+                time = Long.parseLong(bookmark.getNews().getDate());
+            } catch (NumberFormatException ex) {
+                continue;
+            }
+            Instant instant = Instant.ofEpochSecond(time);
+            LocalDateTime dateUTC = LocalDateTime.ofInstant(instant, ZoneId.of("UTC"));
+            LocalDateTime dateTime = dateUTC.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("Asia/Seoul")).toLocalDateTime();
+            if(dateTime.isAfter(startTime) && dateTime.isBefore(endTime))
+                collect.add(bookmark);
+        }
+        return collect;
+    }
+
+    @Transactional
+    public <T> List<Bookmark> findBookmarks(Long userId, T keyword){
+        Long appid = tryGetValue(keyword);
+        List<Bookmark> collect = new ArrayList<>();
+        if (isUserNull(userId)) return null;
         var list = bookmarkRepository.findAll().stream().filter(x-> Objects.equals(x.getUser().getId(), userId)).toList();
         if(appid > 0L)
         {
@@ -83,6 +109,11 @@ public class BookmarkService {
         }
         else
         {
+            if(((String)keyword).isEmpty() || ((String) keyword).equalsIgnoreCase("null"))
+            {
+                return bookmarkRepository.findAll().stream().filter(x -> Objects.equals(x.getUser().getId(), userId)).collect(Collectors.toList());
+            }
+
             List<News> newsList = newsRepository.findNewsByGameNameContainingIgnoreCase((String)keyword);
             if(newsList == null || newsList.isEmpty())
                 newsList = newsRepository.findNewsByTitleContainingIgnoreCase((String)keyword);
@@ -101,19 +132,8 @@ public class BookmarkService {
 
     @Transactional
     public <T> Bookmark findBookmark(Long userId, T keyword){
-        Long appid = null;
-        try
-        {
-            appid = Long.parseLong((String)keyword);
-        }
-        catch (NumberFormatException ex)
-        {
-            appid = 0L;
-        }
-        List<Bookmark> collect = new ArrayList<>();
-        User user = userRepository.findById(userId).orElse(null);
-        if(user == null)
-            return null;
+        Long appid = tryGetValue(keyword);
+        if (isUserNull(userId)) return null;
         var list = bookmarkRepository.findAll().stream().filter(x-> Objects.equals(x.getUser().getId(), userId)).toList();
         if(appid > 0L)
         {
@@ -125,6 +145,11 @@ public class BookmarkService {
         }
         else
         {
+            if(((String)keyword).isEmpty() || ((String) keyword).equalsIgnoreCase("null"))
+            {
+                return null;
+            }
+
             List<News> newsList = newsRepository.findNewsByGameNameContainingIgnoreCase((String)keyword);
             if(newsList == null || newsList.isEmpty())
                 newsList = newsRepository.findNewsByTitleContainingIgnoreCase((String)keyword);
@@ -138,5 +163,20 @@ public class BookmarkService {
             }
         }
         return null;
+    }
+
+    private boolean isUserNull(Long userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        return user == null;
+    }
+
+    private static <T> Long tryGetValue(T keyword) {
+        long appid = 0L;
+        try {
+            appid = Long.parseLong((String)keyword);
+        } catch (NumberFormatException ex) {
+            return appid;
+        }
+        return appid;
     }
 }
