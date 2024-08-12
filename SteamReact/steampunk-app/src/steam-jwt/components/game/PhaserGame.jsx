@@ -54,7 +54,6 @@ export const PhaserGame = forwardRef(function PhaserGame ({ currentActiveScene }
     return (
         <div id="game-container"></div>
     );
-
 });
 
 // Props definitions
