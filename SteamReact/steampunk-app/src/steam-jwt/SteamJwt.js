@@ -20,6 +20,7 @@ import AdminFeaturedGames from './pages/AdminFeaturedGames';
 import NewsDetail from './pages/NewsDetail';
 import BookmarkManager from './pages/BookmarkManager';
 import GamePage from './pages/GamePage';
+import Game from './components/Tetris/Game';
 
 const SteamJwt = () => {
     return (
@@ -44,6 +45,7 @@ const SteamJwt = () => {
                     <Route path='/steam/bookmarkmanager' element={<BookmarkManager/>}/>
                     <Route path='/steam/newsDetail/:appId' element={<NewsDetail/>}/>
                     <Route path='/steam/game' element={<GamePage/>}/>
+                    <Route path='/steam/tetris' element={<Game/>}/>
                 </Routes>
                 </AddressContextProvider>
             </LoginContextProvider>

@@ -13,6 +13,7 @@ import { LoginContext } from '../contexts/LoginContextProvider';
 import { NORMAL_SERVER_HOST, SERVER_HOST } from '../apis/api';
 import * as Swal from '../apis/alert'
 const MAXIMUM_COUNT = 10;
+const defaultImage = "https://store.akamai.steamstatic.com/public/shared/images/header/logo_steam.svg?t=962016";
 const NewsDetail = () => {
     const navigate = useNavigate();
     const [bookmark, setBookmark] = useState({});
@@ -156,6 +157,12 @@ const NewsDetail = () => {
 
     // 문자열을 변환하는 함수
     const formatContent2 = (content) => {
+
+        if (!content) {
+            console.error('Invalid content:', content);
+            return null; 
+        }
+
         return content
             .split('. ')
             .map((str, index) => (
@@ -252,7 +259,7 @@ const NewsDetail = () => {
             <SideBar />
             <main className="main-content">
                 <div className="capsule-image">
-                    <img src={news.capsuleImage} alt="Capsule" />
+                    <img src={news.capsuleImage || defaultImage} alt="Capsule" />
                 </div>
                 <div className="title-author">
                     <h1>{news.title}</h1>

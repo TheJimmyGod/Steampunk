@@ -1,0 +1,17 @@
+.tetromino {
+  position: absolute;
+}
+
+.row {
+  display: flex;
+}
+
+.cell {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ddd;
+}
+
+.cell.filled {
+  background-color: blue;
+}
