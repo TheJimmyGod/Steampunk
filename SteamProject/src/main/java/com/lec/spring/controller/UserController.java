@@ -141,4 +141,17 @@ public class UserController {
             return new ResponseEntity<>("회원이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(list,HttpStatus.OK);
     }
+
+    @PostMapping("/score/{id}")
+    public ResponseEntity<?> getScore(@PathVariable Long id, @RequestBody Integer score){
+        User user = userService.findById(id);
+        if(user == null)
+            return new ResponseEntity<>("회원이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(userService.setScore(user, score),HttpStatus.OK);
+    }
+
+    @GetMapping("/best_score")
+    public ResponseEntity<?> getBestScoreUser() {
+        return new ResponseEntity<>(userService.findBestScore(), HttpStatus.OK);
+    }
 }

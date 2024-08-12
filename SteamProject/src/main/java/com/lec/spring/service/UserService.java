@@ -132,4 +132,29 @@ public class UserService {
     }
     public User findById(Long id) {return userRepository.findById(id).orElse(null);}
     public List<User> FindAll() {return userRepository.findAll();}
+
+    public User findBestScore() {
+        Integer max = Integer.MIN_VALUE;
+        List<User> users = FindAll();
+        User best = null;
+        for(var user : users)
+        {
+            if(user.getMiniGame_Score() != null && user.getMiniGame_Score() > max)
+            {
+                max = user.getMiniGame_Score();
+                best = user;
+            }
+        }
+        return best;
+    }
+
+    public boolean setScore(User user, Integer num){
+        boolean newScore = (user.getMiniGame_Score() == null || user.getMiniGame_Score() < num);
+        if(newScore)
+        {
+            user.setMiniGame_Score((num == null) ? 0 : num);
+            userRepository.save(user);
+        }
+        return newScore;
+    }
 }

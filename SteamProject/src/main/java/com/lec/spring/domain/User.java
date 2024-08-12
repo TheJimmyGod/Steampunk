@@ -79,4 +79,7 @@ public class User extends BaseEntity {
     // OAuth2 Client
     private String provider;
     private String providerId;
+
+    @Column(nullable = true)
+    private Integer miniGame_Score = 0;
 }
