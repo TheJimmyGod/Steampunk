@@ -578,3 +578,12 @@ main {
     background-color: #0056b3;
     color: white;
 }
+
+.filter-menu label {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.capsule-image img{
+
+}

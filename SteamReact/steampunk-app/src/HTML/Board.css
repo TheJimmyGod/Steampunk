@@ -1,0 +1,33 @@
+.board {
+  display: grid;
+  grid-template-rows: repeat(20, 30px);
+  grid-template-columns: repeat(10, 30px);
+  border: 2px solid #000;
+}
+
+.row {
+  display: flex;
+}
+
+.cell {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ddd;
+}
+
+.cell.filled {
+  background-color: red;
+}
+
+.game-over {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 48px;
+  color: red;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  z-index: 10;
+}
