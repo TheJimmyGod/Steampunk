@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { PhaserGame } from '../components/game/PhaserGame'
 import { useNavigate } from 'react-router-dom';
 import { LoginContext } from '../contexts/LoginContextProvider';
-import { Bar, Line } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import SideBar from '../components/sidebar/SideBar'
 import axios from 'axios';
 import { SERVER_HOST } from '../apis/api';
