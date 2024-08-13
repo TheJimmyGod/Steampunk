@@ -1,7 +1,6 @@
 import "./RegisterForm.css";
 import "../../../HTML/SteamNewsCss.css"
-import axios from 'axios';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { AddressContext } from "../../contexts/AddressContextProvider";

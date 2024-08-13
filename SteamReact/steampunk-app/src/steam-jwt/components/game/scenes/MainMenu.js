@@ -1,7 +1,6 @@
 import { EventBus } from '../EventBus';
 import { Scene } from 'phaser';
 import space from "./assets/background.png"
-import { authInfo } from '../../../apis/auth';
 
 export class MainMenu extends Scene
 {

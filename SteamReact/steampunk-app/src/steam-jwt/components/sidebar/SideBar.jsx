@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHubspot, faSteam, faYoutube, faInstagram, faFacebook } from '@fortawesome/free-brands-svg-icons';
-import { faHome, faNewspaper, faUser, faRightToBracket, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faNewspaper, faUser, faRightToBracket, faRightFromBracket, faGamepad } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import { LoginContext } from '../../contexts/LoginContextProvider';
 
@@ -45,6 +45,7 @@ const SideBar = () => {
                 <li onClick={() => {navigate("/steam")}}><FontAwesomeIcon icon={faHome} /> 홈</li>
                 <li onClick={() => {navigate("/steam/newsList")}}><FontAwesomeIcon icon={faNewspaper} /> 뉴스페이지</li>
                 <li onClick={() => {navigate(admin.current === true ? "/steam/adminpage" : "/steam/mypage")}}><FontAwesomeIcon icon={faUser} /> 마이페이지</li>
+                <li onClick={()=>{navigate("/steam/game")}}><FontAwesomeIcon icon={faGamepad}/> 미니게임 </li>
                 {!isLogin ? <li onClick={() => {navigate("/steam/login")}} ><FontAwesomeIcon icon={faRightToBracket} />로그인</li> : <></>}
                 {isLogin ? <li onClick={()=>{logout(false)}}><FontAwesomeIcon icon={faRightFromBracket} /> 로그아웃</li> : <></>}
             </ul>
