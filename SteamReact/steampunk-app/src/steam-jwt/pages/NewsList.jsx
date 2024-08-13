@@ -15,7 +15,7 @@ import * as Swal from '../apis/alert'
 const MAXIMUM_COUNT = 10;
 const NewsList = () => {
     const defaultImage = "https://store.akamai.steamstatic.com/public/shared/images/header/logo_steam.svg?t=962016";
-    const { userInfo, isLogin, logout, loginCheck } = useContext(LoginContext);
+    const { userInfo, loginCheck } = useContext(LoginContext);
     const navigate = useNavigate();
 
     const [news, setNews] = useState([]);
@@ -42,7 +42,7 @@ const NewsList = () => {
             url: `${SERVER_HOST}/bookmark/list/${userInfo.id}`,
             method: 'get'
         }).then(response => {
-            const { data, status, statusText } = response;
+            const { data, status } = response;
             if (status === 200) {
                 console.log("북마크 데이터 전송 완료!", data.length);
                 setBookmarks(data);
