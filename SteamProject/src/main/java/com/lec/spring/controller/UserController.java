@@ -154,4 +154,9 @@ public class UserController {
     public ResponseEntity<?> getBestScoreUser() {
         return new ResponseEntity<>(userService.findBestScore(), HttpStatus.OK);
     }
+
+    @GetMapping("/minigame_rank")
+    public ResponseEntity<?> getMiniGameRanks(){
+        return new ResponseEntity<>(userService.getMiniGameRank(), HttpStatus.OK);
+    }
 }

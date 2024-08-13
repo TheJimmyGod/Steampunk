@@ -11,8 +11,6 @@ const YoutubeVideos = () => {
 
     // 유튜브 정보 가져오기
     useEffect(() => {
-
-
         if (!key) {
             setMessage('키 없음');
             return;
@@ -51,7 +49,7 @@ const YoutubeVideos = () => {
                 title={`https://www.youtube.com/embed/${youtube.items[1].snippet.title}`}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>) : (<p>로딩중</p>)}
-
+            {message === "" ? <></> : <p>{message}</p>}
         </div>
     );
 };

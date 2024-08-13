@@ -27,6 +27,7 @@ export class GameOver extends Scene
 
         EventBus.emit('current-scene-ready', this);
         this.sendToServer(userInfo);
+        this.add.text(16, 16, `score: ${this.score}`, { fontSize: '32px' }).setName("scoreText");
     }
 
     update()
@@ -70,14 +71,14 @@ export class GameOver extends Scene
                     {
                         if(bestUser.miniGame_Score < this.score)
                         {
-                            this.add.text(512, 384, `베스트 스코어 기록 갱신!\n Score: ${this.score}\n ${userInfo.username}님!\n계속하시려면 Space 눌러주세요`, {
+                            this.add.text(512, 384, `베스트 스코어 기록 갱신!\n ${userInfo.username}님!\n계속하시려면 Space 눌러주세요`, {
                                 fontFamily: 'Arial Black', fontSize: 25, color: '#ffffff',
                                 stroke: '#000000', strokeThickness: 8, align: 'center'
                             }).setOrigin(0.5).setDepth(100);
                         }
                         else
                         {
-                            this.add.text(512, 384, `내 점수 갱신!\nScore: ${this.score}\n최고 점수는 ${bestUser.username}님의 ${bestUser.miniGame_Score}\n${userInfo.username}님!\n계속하시려면 Space 눌러주세요`, {
+                            this.add.text(512, 384, `점수 갱신! 최고 점수는 ${bestUser.username}님의 ${bestUser.miniGame_Score}\n${userInfo.username}님!\n계속하시려면 Space 눌러주세요`, {
                                 fontFamily: 'Arial Black', fontSize: 25, color: '#ffffff',
                                 stroke: '#000000', strokeThickness: 8, align: 'center'
                             }).setOrigin(0.5).setDepth(100);
@@ -87,7 +88,7 @@ export class GameOver extends Scene
                     {
                         let arr = ['어이없는', '처참한', '슬픈', '비참한', '안쓰러운', '경악할만한', '초토화된', '비장한', '당혹스러운', '쳐다보기 힘든'];
     
-                        this.add.text(512, 384, `${arr[Math.floor(Math.random() * 10)]} 패배!\n최고 점수는 ${bestUser.username}님의 ${bestUser.miniGame_Score}\nScore: ${this.score}\n ${userInfo.username}님! 계속하시려면 Space 눌러주세요`, {
+                        this.add.text(512, 384, `${arr[Math.floor(Math.random() * 10)]} 패배!\n최고 점수는 ${bestUser.username}님의 ${bestUser.miniGame_Score}\n ${userInfo.username}님! 계속하시려면 Space 눌러주세요`, {
                             fontFamily: 'Arial Black', fontSize: 25, color: '#ffffff',
                             stroke: '#000000', strokeThickness: 8, align: 'center'
                         }).setOrigin(0.5).setDepth(100);

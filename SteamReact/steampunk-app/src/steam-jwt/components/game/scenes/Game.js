@@ -33,10 +33,6 @@ export class Game extends Scene
     create(){
         this.cameras.main.setBackgroundColor(0x00ff00);
         this.add.image(512, 384, 'space');
-        // this.add.text(512, 384, 'Hello Game', {
-        //     fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
-        //     stroke: '#000000', strokeThickness: 8, align: 'center'
-        // }).setOrigin(0.5).setDepth(100);
         this.data.set("score", 0);
         this.add.text(16, 16, 'score: 0', { fontSize: '32px' }).setName("scoreText");
         this.block = this.physics.add.image(512, 670, "ground").setImmovable(true).setScale(0.5);

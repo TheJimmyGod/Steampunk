@@ -7,9 +7,12 @@ import com.lec.spring.repository.AuthorityRepository;
 import com.lec.spring.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -157,4 +160,29 @@ public class UserService {
         }
         return newScore;
     }
+    @Transactional
+    public List<User> getMiniGameRank(){
+        List<User> list = userRepository.findAll();
+        for(User user : list)
+        {
+            if(user.getMiniGame_Score() == null)
+            {
+                user.setMiniGame_Score(0);
+                userRepository.save(user);
+            }
+        }
+
+        list.sort(new Comparator<User>() {
+            @Override
+            public int compare(User o1, User o2) {
+                return o1.getMiniGame_Score().compareTo(o2.getMiniGame_Score());
+            }
+        });
+        if(list.size() > 10)
+        {
+            list = list.stream().limit(10).toList();
+        }
+        return list;
+    }
+
 }
