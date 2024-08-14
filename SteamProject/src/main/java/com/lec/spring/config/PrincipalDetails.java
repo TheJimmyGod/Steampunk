@@ -11,14 +11,14 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
-public class PrincipalDetails implements UserDetails {
+public class PrincipalDetails implements UserDetails, OAuth2User {
     private final User user;
-//    private UserService userService;
-//
-//    public void setUserService(UserService userService) {
-//        this.userService = userService;
-//    }
-//    private Map<String, Object> attributes;
+    private UserService userService;
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+    private Map<String, Object> attributes;
 
     public User getUser(){
         return this.user;
@@ -29,19 +29,19 @@ public class PrincipalDetails implements UserDetails {
         System.out.println("UserDetails(user) 생성: " + user);
         this.user = user;
     }
-//    public PrincipalDetails(User user, Map<String, Object> attributes){
-//        System.out.println("""
-//           UserDetails(user, oauth attributes) 생성:
-//               user: %s
-//               attributes: %s
-//           """.formatted(user, attributes));
-//        this.user = user;
-//        this.attributes = attributes;
-//    }
-//    @Override
-//    public Map<String, Object> getAttributes() {
-//        return attributes;
-//    }
+    public PrincipalDetails(User user, Map<String, Object> attributes){
+        System.out.println("""
+           UserDetails(user, oauth attributes) 생성:
+               user: %s
+               attributes: %s
+           """.formatted(user, attributes));
+        this.user = user;
+        this.attributes = attributes;
+    }
+    @Override
+    public Map<String, Object> getAttributes() {
+        return this.attributes;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -101,8 +101,8 @@ public class PrincipalDetails implements UserDetails {
         return true;
     }
 
-//    @Override
-//    public String getName() {
-//        return null;
-//    }
+    @Override
+    public String getName() {
+        return null;
+    }
 }

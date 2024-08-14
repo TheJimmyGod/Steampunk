@@ -9,8 +9,8 @@ import MyPageForm from '../components/mypage/MyPageForm'
 
 const MyPage = () => {
     const navigate = useNavigate();
-    const {userInfo} = useContext(LoginContext);
-    const removal = () =>{
+    const {userInfo, logout} = useContext(LoginContext);
+    const removal = async () =>{
         if(userInfo === undefined || userInfo.id === undefined)
             {
                 navigate(`/steam/login`);
@@ -26,7 +26,8 @@ const MyPage = () => {
                         const {status} = response;
                         if(status === 200)
                         {
-                            Swal.alert("회원 탈퇴 성공!", "로그인 페이지로 이동합니다.", "success", () => {navigate("/steam/login");}); 
+                            Swal.alert("회원 탈퇴 성공!", "", "success", () => {
+                                logout(true);}); 
                         }
                     });
                 }

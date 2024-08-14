@@ -73,6 +73,7 @@ const LoginContextProvider = ({children}) => {
 
     useEffect(()=>{loginCheck()},[]);
     const login = async (username, password, rememberId)=>{
+        console.log("Hello world");
         if(rememberId) Cookies.set('rememberId', username);
         else Cookies.remove('rememberId');
         try{

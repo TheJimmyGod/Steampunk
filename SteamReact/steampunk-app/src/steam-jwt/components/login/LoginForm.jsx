@@ -3,7 +3,10 @@ import './LoginForm.css';
 import { LoginContext } from '../../contexts/LoginContextProvider';
 import Cookies from 'js-cookie';
 import { Button, Form } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGoogle } from '@fortawesome/free-brands-svg-icons';
+import { NORMAL_SERVER_HOST } from '../../apis/api';
 const LoginForm = () => {
   const { login } = useContext(LoginContext);
 
@@ -57,8 +60,6 @@ const LoginForm = () => {
           </div>
         </Form.Group>
         <div className="login-options">
-
-          
             <span className='form-check'>
               <label className="toggle-btn">
                 {!rememberUserId
@@ -91,6 +92,7 @@ const LoginForm = () => {
           </Button>
         </div>
       </Form>
+      <Link to={`${NORMAL_SERVER_HOST}/oauth2/authorization/google`}><FontAwesomeIcon icon={faGoogle}/></Link>
     </div>
   );
 

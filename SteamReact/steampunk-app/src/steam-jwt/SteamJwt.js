@@ -21,6 +21,9 @@ import NewsDetail from './pages/NewsDetail';
 import BookmarkManager from './pages/BookmarkManager';
 import GamePage from './pages/GamePage';
 import Game from './components/Tetris/Game';
+import Hello from './pages/Hello';
+import GoogleLogin from './pages/GoogleLogin';
+import LoginSuccess from './pages/LoginSuccess';
 
 const SteamJwt = () => {
     return (
@@ -28,7 +31,8 @@ const SteamJwt = () => {
             <LoginContextProvider>
                 <AddressContextProvider>
                 <Routes>
-                   <Route path="/steam" element={<Home/>}/>
+                    <Route path='/' element={<Hello/>}/>
+                    <Route path="/steam" element={<Home/>}/>
                     <Route path="/steam/login" element={<Login/>}/>
                     <Route path="/steam/register" element={<Register/>}/>
                     <Route path='/steam/findId' element={<FindID/>}/>
@@ -46,6 +50,8 @@ const SteamJwt = () => {
                     <Route path='/steam/newsDetail/:appId' element={<NewsDetail/>}/>
                     <Route path='/steam/game' element={<GamePage/>}/>
                     <Route path='/steam/tetris' element={<Game/>}/>
+                    <Route path='/steam/oauth2' element={<GoogleLogin/>}/>
+                    <Route path='/steam/login/success' element={<LoginSuccess/>}/>
                 </Routes>
                 </AddressContextProvider>
             </LoginContextProvider>

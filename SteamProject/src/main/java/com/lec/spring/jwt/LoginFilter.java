@@ -32,22 +32,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         // request 에서 username, password 추출
         String username = obtainUsername(request);
         String password = obtainPassword(request);
+        System.out.println(username + " " + password);
 
-        if(username == null || password == null)
-            throw new NullPointerException("유저 이름이나 패스워드가 존재하지 않습니다.");
         System.out.printf("\t username:%s, password:%s\n", username, password);  // 검증 확인용.
-        // 위 추출한 내용으로 인증 진행.
-        // AuthenticationManager 에 username 과  password 를 넘겨주어 인증을 받아야 한다.
-        // 이때! UsernamePasswordAuthenticationToken 에 담아서 넘겨주어야 한다!
-        //  new UsernamePasswordAuthenticationToken(username, password, authorities);
-        Authentication token = new UsernamePasswordAuthenticationToken(username.toUpperCase(), password, null);
-        // Authentication(I), CredentialsContainer(I)
-        //  └─ AbstractAuthenticationToken (A)
-        //        └─ UsernamePasswordAuthenticationToken
 
-        // 위 token 을 AuthenticationManager 에 전달하여, 로그인 검증을 받는다
-        //   .authenticate(Authentication)
-        //   리턴값은 '인증된' Authentication
+        Authentication token = new UsernamePasswordAuthenticationToken(username != null ? username.toUpperCase() : null, password, null);
+
         return authenticationManager.authenticate(token);
     }
 
