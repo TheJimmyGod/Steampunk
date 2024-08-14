@@ -4,7 +4,6 @@ import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import reportWebVitals from './reportWebVitals';
 import SteamJwt from './steam-jwt/SteamJwt';
-import ChartTest from './steam-jwt/pages/ChartTest';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

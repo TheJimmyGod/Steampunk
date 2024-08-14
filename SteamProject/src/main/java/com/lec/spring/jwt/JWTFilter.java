@@ -41,7 +41,6 @@ public class JWTFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         System.out.println("doFilterInternal() 호출");
-
         // request 에서 Authorization 헤더를 찾음 (JWT 유무)
         String authorization = request.getHeader("Authorization");
         

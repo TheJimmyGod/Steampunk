@@ -29,6 +29,7 @@ public class UserController {
     // 로그인
     @PostMapping("/login")
     public ResponseEntity<?> login(){
+        System.out.println("Hello world");
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 
@@ -158,5 +159,11 @@ public class UserController {
     @GetMapping("/minigame_rank")
     public ResponseEntity<?> getMiniGameRanks(){
         return new ResponseEntity<>(userService.getMiniGameRank(), HttpStatus.OK);
+    }
+
+    @RequestMapping("/rejectAuth")
+    public ResponseEntity<?> rejectAuth() {
+        System.out.println("잘못된 권한");
+        return new ResponseEntity<>("redirect:/steam/login", HttpStatus.BAD_REQUEST);
     }
 }
