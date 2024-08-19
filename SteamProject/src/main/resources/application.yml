@@ -6,6 +6,18 @@ spring:
     url: jdbc:mysql://localhost:3306/steam_news?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
     username: steam326
     password: 1234
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 구글 아이디
+            client-secret: 구글 시큐리티
+            scope:
+              - email
+              - profile
+  #            authorization-grant-type: authorization_code
+  #            redirect-uri: http://localhost:8080/login/oauth2/code/google
   jpa:
     hibernate:
       ddl-auto: update
@@ -23,3 +35,7 @@ jwt:
   secret: b91255b9c1f0579c57dd21e5d71947b002374b58900a7d0e118bab42fdf09daa
 cors:
   allowed-origins: http://localhost:3000,http://localhost:3001
+
+app:
+  oauth2:
+    password: 1234
