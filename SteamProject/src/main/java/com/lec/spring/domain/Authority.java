@@ -16,7 +16,9 @@ public class Authority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(length = 40, nullable = false, unique = true)
     @ColumnDefault("'ROLE_MEMBER'")
+    @Builder.Default
     private String name = "ROLE_MEMBER";
 }

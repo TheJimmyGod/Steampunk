@@ -81,5 +81,6 @@ public class User extends BaseEntity {
     private String providerId;
 
     @Column(nullable = true)
+    @Builder.Default
     private Integer miniGame_Score = 0;
 }
