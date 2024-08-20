@@ -51,7 +51,7 @@ const NewsDetail = () => {
     useEffect(() => {
         axios({
             method: "GET",
-            url: `http://localhost:8080/news/findNews/${appId}`
+            url: `${NORMAL_SERVER_HOST}/news/findNews/${appId}`
         })
             .then(response => {
                 const { data, status } = response;
@@ -67,7 +67,7 @@ const NewsDetail = () => {
     useEffect(() => {
         axios({
             method: "GET",
-            url: `http://localhost:8080/game/findGame/${appId}`
+            url: `${NORMAL_SERVER_HOST}/game/findGame/${appId}`
         })
             .then(response => {
                 const { data, status } = response;

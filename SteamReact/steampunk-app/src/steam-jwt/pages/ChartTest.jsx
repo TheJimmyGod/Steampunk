@@ -10,6 +10,7 @@ import {
     Legend,
 } from 'chart.js';
 import axios from 'axios';
+import { NORMAL_SERVER_HOST } from '../apis/api';
 
 // Chart.js에 필요한 스케일과 요소를 등록합니다.
 ChartJS.register(
@@ -28,7 +29,7 @@ const ChartTest = () => {
     useEffect(() => {
         axios({
             method: "get",
-            url: "http://localhost:8080/rank/findByRank"
+            url: `${NORMAL_SERVER_HOST}/rank/findByRank`
         })
         .then((response) => {
             const concurrentInGameData = response.data.map(item => item.concurrentInGame);

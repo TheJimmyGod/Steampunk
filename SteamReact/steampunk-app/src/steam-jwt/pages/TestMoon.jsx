@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { Button, Card, Carousel, Col, Container, Nav, Navbar, Row } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { NORMAL_SERVER_HOST } from '../apis/api';
 
 const TestMoon = () => {
 
@@ -25,7 +26,7 @@ const TestMoon = () => {
 
         setLoading(true);
         try {
-            const response = await axios.get('http://localhost:8080/news/findFiveNews', {
+            const response = await axios.get(`${NORMAL_SERVER_HOST}/news/findFiveNews`, {
                 params: {
                     page: page,
                     size: 5
@@ -68,7 +69,7 @@ const TestMoon = () => {
     useEffect(()=>{
         axios({
             method: "get",
-            url: "http://localhost:8080/game/testGames"
+            url: `${NORMAL_SERVER_HOST}/game/testGames`
         })
         .then((response) => {
             setGames(response.data);
