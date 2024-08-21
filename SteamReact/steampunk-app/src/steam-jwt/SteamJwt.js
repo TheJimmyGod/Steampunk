@@ -20,7 +20,6 @@ import AdminFeaturedGames from './pages/AdminFeaturedGames';
 import NewsDetail from './pages/NewsDetail';
 import BookmarkManager from './pages/BookmarkManager';
 import GamePage from './pages/GamePage';
-import Game from './components/Tetris/Game';
 import Hello from './pages/Hello';
 import GoogleLogin from './pages/GoogleLogin';
 import LoginSuccess from './pages/LoginSuccess';
