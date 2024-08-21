@@ -49,7 +49,6 @@ const SteamJwt = () => {
                     <Route path='/steam/bookmarkmanager' element={<BookmarkManager/>}/>
                     <Route path='/steam/newsDetail/:appId' element={<NewsDetail/>}/>
                     <Route path='/steam/game' element={<GamePage/>}/>
-                    <Route path='/steam/tetris' element={<Game/>}/>
                     <Route path='/steam/oauth2' element={<GoogleLogin/>}/>
                     <Route path='/steam/login/success' element={<LoginSuccess/>}/>
                 </Routes>
