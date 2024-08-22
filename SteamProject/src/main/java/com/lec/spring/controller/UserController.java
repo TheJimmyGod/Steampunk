@@ -6,6 +6,7 @@ import com.lec.spring.domain.UserDTO;
 import com.lec.spring.service.UserService;
 
 import jakarta.validation.Valid;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

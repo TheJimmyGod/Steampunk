@@ -25,10 +25,8 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
     @Value("${app.oauth2.password}")
     private String oauth2Password;
-    private final PasswordEncoder passwordEncoder;
-    public PrincipalOauth2UserService(@Lazy UserService userService, @Lazy PasswordEncoder passwordEncoder) {
+    public PrincipalOauth2UserService(UserService userService) {
         this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -64,7 +62,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
             providerId = oAuth2UserInfo.getProviderId();
         }
         String username = provider + "_" + providerId;  // ex) "google_xxxxx"
-        String password = passwordEncoder.encode(oauth2Password);
+        String password = oauth2Password;
         User user = userService.Find(username);
         if(user == null)
         {

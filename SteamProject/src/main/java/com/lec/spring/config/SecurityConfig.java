@@ -37,7 +37,7 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final AuthorityRepository authorityRepository;
     private final JWTUtil jwtUtil;
-    public SecurityConfig(@Lazy PrincipalOauth2UserService principalOauth2UserService, AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, AuthorityRepository authorityRepository) {
+    public SecurityConfig(PrincipalOauth2UserService principalOauth2UserService, AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, AuthorityRepository authorityRepository) {
         this.principalOauth2UserService = principalOauth2UserService;
         this.authenticationConfiguration = authenticationConfiguration;
         this.authorityRepository = authorityRepository;
@@ -49,11 +49,6 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
-
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
