@@ -9,9 +9,9 @@ spring:
   # datasource 설정
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${rds.hostname}:${rds.port}/${rds.database}?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
-    username: ${rds.username}
-    password: ${rds.password}
+    url: jdbc:mysql://${hostname}:${port}/${database}?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    username: ${username}
+    password: ${password}
 
   # security 설정
   security:
@@ -19,8 +19,8 @@ spring:
       client:
         registration:
           google:
-            client-id: ${rds.googleid}
-            client-secret: ${rds.googlepassword}
+            client-id: ${googleid}
+            client-secret: ${googlepassword}
             scope:
               - email
               - profile
@@ -38,10 +38,10 @@ spring:
 
 #cors 관련 설정값들
 jwt:
-  secret: ${rds.jwtsecret}
+  secret: ${jwtsecret}
 cors:
-  allowed-origins: ${rds.cors}
+  allowed-origins: ${cors}
 
 app:
   oauth2:
-    password: ${rds.oauth2password}
+    password: ${oauth2password}
