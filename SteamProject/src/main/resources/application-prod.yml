@@ -1,5 +1,5 @@
 server:
-  port: ${PORT}
+  port: 80
   time-zone: Asia/Seoul
 
 spring:
