@@ -1,0 +1,47 @@
+server:
+  port: 80
+  time-zone: Asia/Seoul
+
+spring:
+  application:
+    name: SteamProject
+
+  # datasource 설정
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${rds.hostname}/steam_news?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    username: ${rds.username}
+    password: ${rds.password}
+
+  # security 설정
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${rds.googleid}
+            client-secret: ${rds.googlepassword}
+            scope:
+              - email
+              - profile
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+#cors 관련 설정값들
+jwt:
+  secret: ${rds.jwtsecret}
+cors:
+  allowed-origins: ${rds.cors}
+
+app:
+  oauth2:
+    password: ${rds.oauth2password}
