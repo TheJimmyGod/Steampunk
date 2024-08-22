@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -36,7 +37,7 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final AuthorityRepository authorityRepository;
     private final JWTUtil jwtUtil;
-    public SecurityConfig(PrincipalOauth2UserService principalOauth2UserService, AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, AuthorityRepository authorityRepository) {
+    public SecurityConfig(@Lazy PrincipalOauth2UserService principalOauth2UserService, AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, AuthorityRepository authorityRepository) {
         this.principalOauth2UserService = principalOauth2UserService;
         this.authenticationConfiguration = authenticationConfiguration;
         this.authorityRepository = authorityRepository;

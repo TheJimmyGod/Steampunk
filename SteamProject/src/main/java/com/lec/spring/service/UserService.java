@@ -5,6 +5,7 @@ import com.lec.spring.domain.User;
 import com.lec.spring.domain.UserDTO;
 import com.lec.spring.repository.AuthorityRepository;
 import com.lec.spring.repository.UserRepository;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
+@Lazy
 @Service
 public class UserService {
     private final UserRepository userRepository;

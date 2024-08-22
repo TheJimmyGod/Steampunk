@@ -13,9 +13,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@RequiredArgsConstructor
+
 @RestController
 public class FeaturedController {
+
+    public FeaturedController(FeaturedService featuredService, GameService gameService) {
+        this.featuredService = featuredService;
+        this.gameService = gameService;
+    }
+
     private final FeaturedService featuredService;
     private final GameService gameService;
     @CrossOrigin
