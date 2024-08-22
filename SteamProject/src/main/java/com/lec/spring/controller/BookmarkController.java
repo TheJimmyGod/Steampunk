@@ -6,6 +6,7 @@ import com.lec.spring.service.BookmarkService;
 import com.lec.spring.service.NewsService;
 import com.lec.spring.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +15,15 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/steam")
 public class BookmarkController {
+    public BookmarkController(@Lazy UserService userService, BookmarkService bookmarkService, NewsService newsService) {
+        this.userService = userService;
+        this.bookmarkService = bookmarkService;
+        this.newsService = newsService;
+    }
+
     private final UserService userService;
     private final BookmarkService bookmarkService;
     private final NewsService newsService;
