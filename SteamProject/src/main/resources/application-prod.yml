@@ -1,23 +1,23 @@
 server:
-  port: 8093
+  port: 80
   time-zone: Asia/Seoul
 
 spring:
   application:
     name: SteamProject
 
-#  # datasource 설정
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://${HOSTNAME}:${PORT}/${DATABASE}?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
-#    username: ${USERNAME}
-#    password: ${PASSWORD}
   # datasource 설정
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://aws-news-rds.c1s0mwa6am7e.ap-northeast-2.rds.amazonaws.com:3306/steam_news?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
-    username: admin
-    password: admin1234
+    url: jdbc:mysql://${hostname}:${port}/${database}?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    username: ${username}
+    password: ${password}
+  # datasource 설정
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://aws-news-rds.c1s0mwa6am7e.ap-northeast-2.rds.amazonaws.com:3306/steam_news?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+#    username: admin
+#    password: admin1234
 
   # security 설정
   security:
@@ -25,8 +25,8 @@ spring:
       client:
         registration:
           google:
-            client-id: ${GOOGLEID}
-            client-secret: ${GOOGLEPASSWORD}
+            client-id: ${googleid}
+            client-secret: ${googlepassword}
             scope:
               - email
               - profile
@@ -44,10 +44,10 @@ spring:
 
 #cors 관련 설정값들
 jwt:
-  secret: ${JWTSECRET}
+  secret: ${jwtsecret}
 cors:
-  allowed-origins: ${CORS}
+  allowed-origins: ${cors}
 
 app:
   oauth2:
-    password: ${OAUTH2PASSWORD}
+    password: ${oauth2password}
