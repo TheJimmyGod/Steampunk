@@ -7,16 +7,12 @@ spring:
     name: SteamProject
 
   # datasource 설정
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://${HOSTNAME}:${PORT}/${DATABASE}?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
-#    username: ${USERNAME}
-#    password: ${PASSWORD}
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://aws-news-rds.c1s0mwa6am7e.ap-northeast-2.rds.amazonaws.com:3306/steam_news?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
-    username: admin
-    password: admin1234
+    url: jdbc:mysql://${HOSTNAME}:${PORT}/${DATABASE}?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    username: ${USERNAME}
+    password: ${PASSWORD}
+
 
   # security 설정
   security:
