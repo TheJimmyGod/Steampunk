@@ -43,7 +43,6 @@ public class SecurityConfig {
         this.authorityRepository = authorityRepository;
         this.jwtUtil = jwtUtil;
     }
-
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
