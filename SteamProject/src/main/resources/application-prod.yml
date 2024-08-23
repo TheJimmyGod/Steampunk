@@ -9,9 +9,9 @@ spring:
   # datasource 설정
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${HOSTNAME}:${PORT}/${DATABASE}?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
-    username: ${USERNAME}
-    password: ${PASSWORD}
+    url: jdbc:mysql://${hostname}:${port}/${database}?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    username: ${username}
+    password: ${password}
 
 
   # security 설정
@@ -20,8 +20,8 @@ spring:
       client:
         registration:
           google:
-            client-id: ${GOOGLEID}
-            client-secret: ${GOOGLEPASSWORD}
+            client-id: ${googleid}
+            client-secret: ${googlepassword}
             scope:
               - email
               - profile
@@ -36,14 +36,13 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.MySQL8Dialect
 
 #cors 관련 설정값들
 jwt:
-  secret: ${JWTSECRET}
+  secret: ${jwtsecret}
 cors:
-  allowed-origins: ${CORS}
+  allowed-origins: ${cors}
 
 app:
   oauth2:
-    password: ${OAUTH2PASSWORD}
+    password: ${oauth2password}
