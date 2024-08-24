@@ -7,7 +7,7 @@ const YoutubeVideos = () => {
     const [message, setMessage] = useState('');
 
     // const key = "AIzaSyCOaXfLbU-uxGuK4UXWVGO80QuhzOXQ7Ds";
-    const key = "YOUR_KEY";
+    const key = "AIzaSyCOaXfLbU-uxGuK4UXWVGO80QuhzOXQ7Ds";
 
     // 유튜브 정보 가져오기
     useEffect(() => {

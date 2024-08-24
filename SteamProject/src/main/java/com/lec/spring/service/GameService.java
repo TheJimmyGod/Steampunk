@@ -29,7 +29,7 @@ public class GameService {
 
     public void saveGame() {
         try {
-            URL url = new URL("https://api.steampowered.com/IStoreService/GetAppList/v1/?key=2E0DEAF02393FA04974AFB40ADFAABD1&max_results=10000");
+            URL url = new URL("https://api.steampowered.com/IStoreService/GetAppList/v1/?key=2E0DEAF02393FA04974AFB40ADFAABD1&max_results=110000");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             conn.setRequestMethod("GET"); // http 메서드
@@ -164,6 +164,7 @@ public class GameService {
             e.printStackTrace();
         }
     }
+
     private String arrayNodeToString(JsonNode arrayNode) {
         if (arrayNode.isArray()) {
             // 배열을 스트림으로 변환하고 각 요소를 문자열로 변환 후, 구분자로 연결

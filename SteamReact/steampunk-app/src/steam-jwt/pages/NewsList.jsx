@@ -162,7 +162,7 @@ const NewsList = () => {
 
         setLoading(true);
         try {
-            const response = await axios.get('http://localhost:8080/news/findNews/' + checkBoxValue, {
+            const response = await axios.get(`${NORMAL_SERVER_HOST}/news/findNews/` + checkBoxValue, {
                 params: {
                     page: page,
                     size: 5,

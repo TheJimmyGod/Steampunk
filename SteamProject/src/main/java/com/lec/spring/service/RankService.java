@@ -105,6 +105,7 @@ public class RankService {
                         newRank.setLastUpdate(lastUpdate);
                         if (game != null) {
                             newRank.setGameName(game.getGameName());
+
                         } else {
                             newRank.setGameName("Unknown");
                         }
