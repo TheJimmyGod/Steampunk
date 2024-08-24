@@ -406,8 +406,8 @@ main {
 .popup-content{
     width: 90%; 
     height: 100%;  
-    /* overflow-y: auto; */
-    position: fixed;
+    overflow-y: auto;
+    /* position: fixed; */
     z-index: 1;
     left: 0;
     top: 0;
