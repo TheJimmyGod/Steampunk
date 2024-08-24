@@ -135,9 +135,13 @@ public class RankService {
         JsonNode appsNode3 = rootNode2.path(Long.toString(appId)).path("data");
 
         Long appid = appsNode3.path("steam_appid").asLong();
-        if (appid == 0L) return null;
-
         String gameName = appsNode3.path("name").asText();
+        System.out.println(appid + " 여기: " + gameName);
+        if (appid == 0L)
+        {
+            return null;
+        }
+
         Game g = new Game();
         g.setAppId(appid);
         g.setGameName(gameName);
