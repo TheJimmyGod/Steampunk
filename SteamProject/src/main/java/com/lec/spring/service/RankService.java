@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -59,14 +60,7 @@ public class RankService {
     @Transactional
     public void saveRank() {
         try {
-            URL url = new URL("https://api.steampowered.com/ISteamChartsService/GetGamesByConcurrentPlayers/v1/?key=2E0DEAF02393FA04974AFB40ADFAABD1");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-            conn.setRequestMethod("GET");
-            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setDoOutput(true);
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            BufferedReader br = getBr("https://api.steampowered.com/ISteamChartsService/GetGamesByConcurrentPlayers/v1/?key=2E0DEAF02393FA04974AFB40ADFAABD1");
             StringBuilder sb = new StringBuilder();
             String line = null;
 
@@ -95,6 +89,11 @@ public class RankService {
                         existingRank.setLastUpdate(lastUpdate);
                         if (game != null) {
                             existingRank.setGameName(game.getGameName());
+                        }else
+                        {
+                            game = UnknownFileCheck(appId);
+                            if(game != null)
+                                existingRank.setGameName(game.getGameName());
                         }
                         rankRepository.save(existingRank);
                     } else {
@@ -107,7 +106,9 @@ public class RankService {
                             newRank.setGameName(game.getGameName());
 
                         } else {
-                            newRank.setGameName("Unknown");
+                            game = UnknownFileCheck(appId);
+                            if(game != null)
+                                newRank.setGameName(game.getGameName());
                         }
                         rankRepository.save(newRank);
                     }
@@ -118,6 +119,42 @@ public class RankService {
             System.err.println("Exception occurred while saving rank: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    private Game UnknownFileCheck(long appId) throws IOException {
+        BufferedReader br = getBr("https://store.steampowered.com/api/appdetails/?appids=" + appId);
+        StringBuilder sb = new StringBuilder();
+        String line2 = null;
+
+        while((line2 = br.readLine()) != null) { // 읽을 수 있을 때 까지 반복
+            sb.append(line2);
+        }
+        br.close();
+        // JSON 응답 파싱
+        JsonNode rootNode2 = jacksonObjectMapper.readTree(sb.toString());
+        JsonNode appsNode3 = rootNode2.path(Long.toString(appId)).path("data");
+
+        Long appid = appsNode3.path("steam_appid").asLong();
+        if (appid == 0L) return null;
+
+        String gameName = appsNode3.path("name").asText();
+        Game g = new Game();
+        g.setAppId(appid);
+        g.setGameName(gameName);
+        return gameRepository.save(g);
+    }
+
+    private static BufferedReader getBr(String appId) throws IOException {
+        URL url_another = new URL(appId);
+        HttpURLConnection conn_another = (HttpURLConnection) url_another.openConnection();
+
+        conn_another.setRequestMethod("GET"); // http 메서드
+        conn_another.setRequestProperty("Content-Type", "application/json"); // header Content-Type 정보
+        conn_another.setDoOutput(true); // 서버로부터 받는 값이 있다면 true
+
+        // 서버로부터 데이터 읽어오기
+        BufferedReader br = new BufferedReader(new InputStreamReader(conn_another.getInputStream()));
+        return br;
     }
 
     @Transactional
