@@ -26,7 +26,7 @@ spring:
           google:
             client-id: ${googleid}
             client-secret: ${googlepassword}
-            redirect-uri: http://3.37.236.212:8093/login/oauth2/code/google
+            redirect-uri: http://ec2-3-37-236-212.ap-northeast-2.compute.amazonaws.com:8093/login/oauth2/code/google
             scope:
               - email
               - profile
