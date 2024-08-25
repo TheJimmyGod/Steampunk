@@ -92,7 +92,7 @@ public class SecurityConfig {
         http.
                 oauth2Login(httpSecurityOAuth2LoginConfigurer ->
                         httpSecurityOAuth2LoginConfigurer
-                                .successHandler(new CustomLoginSuccessHandler("http://localhost:3000/steam/login/success", jwtUtil))
+                                .successHandler(new CustomLoginSuccessHandler("http://3.37.236.212:8093:3000/steam/login/success", jwtUtil))
                                 .failureHandler(new CustomLoginFailureHandler())
                                 .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
                                         .userService(principalOauth2UserService)));
