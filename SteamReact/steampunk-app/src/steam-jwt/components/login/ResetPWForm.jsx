@@ -1,12 +1,12 @@
 import axios from 'axios';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import {useNavigate } from 'react-router-dom';
+import {useLocation, useNavigate } from 'react-router-dom';
 import * as Swal from '../../apis/alert'
 import { SERVER_HOST } from '../../apis/api'
-import { LoginContext } from '../../contexts/LoginContextProvider';
 const ResetPWForm = () => {
-    const {loginCheck, userInfo} = useContext(LoginContext);
+    const location = useLocation();
+    const {id} = location.state || {};
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
 
@@ -15,12 +15,7 @@ const ResetPWForm = () => {
             password: false,
             re_password: false
         });
-        if(userInfo === null)
-        {
-            navigate("/steam/login");
-            return;
-        }
-    },[loginCheck]);
+    });
 
     const onRegister = async (e) =>
     {
@@ -34,7 +29,7 @@ const ResetPWForm = () => {
                 navigate("/steam/resetPw");
                 return;
             }
-        const response = await axios.post(`${SERVER_HOST}/resetPw/${userInfo.id}/${password}`);
+        const response = await axios.post(`${SERVER_HOST}/resetPw/${id}/${password}`);
         const {status} = response;
         Swal.alert((status === 200) ? "비밀번호 재발급 성공!" : "비밀번호 재발급 실패!", 
         (status === 200) ? "로그인 페이지로 이동합니다." : "비밀번호가 기존과 같거나 유효성 검사에서 실패를 했습니다.",

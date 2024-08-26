@@ -33,7 +33,11 @@ const FindPWLoginForm = () => {
                         errors.username = errors.birth = true;
                     else
                     {
-                        Swal.confirm("성공적으로 계정을 찾아냈습니다. 비밀번호 재발급을 진행하시겠습니까?", "", "question", (result)=>{ if(result.isConfirmed) navigate("/steam/resetPw");});
+                        Swal.confirm("성공적으로 계정을 찾아냈습니다. 비밀번호 재발급을 진행하시겠습니까?", "", "question", (result)=>{ if(result.isConfirmed) 
+
+                            navigate("/steam/resetPw", 
+                                { state: { id: data }});
+                        });
                         errors.username = errors.birth = false;
                     }
                 }
