@@ -6,8 +6,7 @@
 2. [팀원](#)
 3. [활용한 기술](#)
 4. [구현](#)
-5. [발표영상](#)
-6. [교육기관](#)
+5. [교육기관](#)
 
 ### 개요
 
@@ -22,6 +21,18 @@
 
 ### 구현
 
-### 발표영상
-
 ### 교육기관
+[코리아IT아카데미] http://gangnam.koreaisacademy.com/
+- 과정명: (디지털컨버전스) 공공데이터를 융합한 자바기반 Spring 웹개발자 양성과정
+- 교육기간: 2024.03.26 ~ 2024.08.29 (총 832시간)
+- 교육내용
+  - JAVA 프로그래밍(128시간)
+    - 기본문법, 객체지향 프로그래밍, 다형성, Collection, Exception, Inner class, IOStream, Stream, Lambda
+  - RDBMS(40시간)
+    - DML, DDL, DCL, 단일행/그룹함수, Join, SubQuery, View, 트랜잭션, ER-diagram, 정규화
+  - 웹 표준(112시간)
+    -  HTML 5 / CSS3 / JavaScript / jQuery / 반응형웹 / BootStrap / AJAX. fetch API / JSON / XML
+  - GitHub(8시간)
+  - Linux, AWS (24시간)
+    - 배포, 자동재배포
+  - 스프링 기반 웹 애플리케이션 프로젝트(160시간)
