@@ -41,8 +41,23 @@ Steam News는 게임에 관심도 높은 유저들을 위해서 접근성이 높
 - Version control
   - Git, Github
 ### 구현
-- 메인화면
-    - [Main](Image/chart.gif) 
+- AWS ubuntu와 PM2를 활용한 배포
+    - ![Package](Image/package.gif) 
+- React.js와 함께 활용한 자동주소기입
+    - ![Address](Image/address.gif)
+- Google OAuth2 구현
+    - ![OAuth2](Image/oauth2.gif)
+- 관리자 페이지 구현
+    - ![Admin](Image/admin.gif)
+- Phaser 게임 구현
+    - ![Game](Image/game.gif)
+- Chart-js, 유튜브 API, 그리고 슬라이드 쇼를 활용한 미디어 구현
+    - ![Main](Image/chart.gif)
+- 무한 스크롤 및 북마크 구현
+    - ![List](Image/list.gif)
+- 최신일자 뉴스와 게임 정보를 담긴 뉴스 페이지 구현
+    - ![NewsPage](Image/newspage.gif)
+
 ### 교육기관
 [코리아IT아카데미] http://gangnam.koreaisacademy.com/
 - 과정명: (디지털컨버전스) 공공데이터를 융합한 자바기반 Spring 웹개발자 양성과정
