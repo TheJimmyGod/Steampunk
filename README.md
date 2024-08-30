@@ -41,7 +41,8 @@ Steam News는 게임에 관심도 높은 유저들을 위해서 접근성이 높
 - Version control
   - Git, Github
 ### 구현
-
+- 메인화면
+    - [Main](Image/chart.gif) 
 ### 교육기관
 [코리아IT아카데미] http://gangnam.koreaisacademy.com/
 - 과정명: (디지털컨버전스) 공공데이터를 융합한 자바기반 Spring 웹개발자 양성과정
