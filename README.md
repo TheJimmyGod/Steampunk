@@ -43,7 +43,7 @@ Steam News는 게임에 관심도 높은 유저들을 위해서 접근성이 높
 ### 구현
 - AWS ubuntu와 PM2를 활용한 배포
     - ![Package](Image/package.gif) 
-- React.js와 함께 활용한 자동주소기입
+- React.js와 도로명주소 공공데이터 API를 활용한 자동주소기입
     - ![Address](Image/address.gif)
 - Google OAuth2 구현
     - ![OAuth2](Image/oauth2.gif)
